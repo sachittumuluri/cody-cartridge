@@ -60,9 +60,11 @@ async function waitForDemoRender(window) {
     `new Promise((resolve) => {
       const started = Date.now();
       const check = () => {
-        const ready = document.body?.innerText?.includes("SIGNAL DRIFT") &&
+        const ready =
+          document.querySelector(".deck-hero") &&
           document.querySelector(".metadata-panel") &&
-          document.querySelector(".track-list");
+          document.querySelector(".deck-controls") &&
+          document.querySelector(".hero-title");
 
         if (ready || Date.now() - started > 6000) {
           resolve(Boolean(ready));

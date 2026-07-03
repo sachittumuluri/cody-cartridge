@@ -67,72 +67,20 @@ async function waitForStoreSurface(window, surface) {
         const bodyText = document.body?.innerText || "";
         const requiredSelectors = [
           ".app-shell",
-          ".now-playing-bay",
-          ".library-bay",
+          ".deck",
+          ".deck-hero",
+          ".deck-catalog",
+          ".deck-controls",
           ".metadata-panel",
-          ".track-list",
-          ".focused-track-strip",
-          ".catalog-index-rail",
-          ".catalog-index-line",
-          ".catalog-index-fill",
-          ".catalog-index-thumb"
+          ".metadata-list",
+          ".hero-title",
+          ".stage-path",
+          ".transport"
         ];
         const missingSelectors = requiredSelectors.filter((selector) => !document.querySelector(selector));
         const shell = document.querySelector(".app-shell");
-        const cards = document.querySelectorAll(".song-card").length;
+        const cards = document.querySelectorAll(".metadata-cover").length;
         const rows = document.querySelectorAll(".metadata-row").length;
-        const shelfRail = document.querySelector(".catalog-index-rail");
-        const rail = document.querySelector(".catalog-index-line");
-        const fill = document.querySelector(".catalog-index-fill");
-        const thumb = document.querySelector(".catalog-index-thumb");
-        const railRect = rail?.getBoundingClientRect();
-        const fillRect = fill?.getBoundingClientRect();
-        const thumbRect = thumb?.getBoundingClientRect();
-        const railCenterY = railRect ? railRect.y + railRect.height / 2 : 0;
-        const railHeight = railRect ? railRect.height : 0;
-        const fillWidth = fillRect ? fillRect.width : 0;
-        const thumbCenterY = thumbRect ? thumbRect.y + thumbRect.height / 2 : 999;
-        const thumbHeight = thumbRect ? thumbRect.height : 0;
-        const shelfThumbDeltaY = Math.abs(thumbCenterY - railCenterY);
-        const thumbCenterX = thumbRect ? thumbRect.x + thumbRect.width / 2 : 0;
-        const transformY = (transformValue) => {
-          if (!transformValue || transformValue === "none") {
-            return 0;
-          }
-
-          const matrix = transformValue.match(/^matrix\\(([^)]+)\\)$/);
-          if (matrix) {
-            return Number(matrix[1].split(",").map((part) => part.trim())[5] || 0);
-          }
-
-          const matrix3d = transformValue.match(/^matrix3d\\(([^)]+)\\)$/);
-          if (matrix3d) {
-            return Number(matrix3d[1].split(",").map((part) => part.trim())[13] || 0);
-          }
-
-          return 999;
-        };
-        const styleSnapshot = (element) => {
-          if (!element) {
-            return {
-              animationName: "missing",
-              filter: "missing",
-              transform: "missing",
-              transitionProperty: "missing",
-              transformY: 999
-            };
-          }
-
-          const style = getComputedStyle(element);
-          const transform = style.transform;
-          return {
-            animationName: style.animationName,
-            filter: style.filter,
-            transform,
-            transitionProperty: style.transitionProperty,
-            transformY: transformY(transform)
-          };
-        };
         const rectSnapshot = (selector) => {
           const element = document.querySelector(selector);
 
@@ -153,44 +101,38 @@ async function waitForStoreSurface(window, surface) {
         const insideViewportX = (rect) => Boolean(rect) && rect.left >= -1 && rect.right <= window.innerWidth + 1 && rect.width > 0;
         const containsX = (outer, inner) =>
           Boolean(outer) && Boolean(inner) && inner.left >= outer.left -1 && inner.right <= outer.right + 1 && inner.width > 0;
-        const shelfFlowStylesBefore = {
-          fill: styleSnapshot(fill),
-          line: styleSnapshot(rail),
-          rail: styleSnapshot(shelfRail),
-          thumb: styleSnapshot(thumb)
-        };
         const layout = {
           catalogToolbar: rectSnapshot(".catalog-toolbar"),
           documentScrollWidth: Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0),
-          focusedTrackStrip: rectSnapshot(".focused-track-strip"),
-          libraryBay: rectSnapshot(".library-bay"),
+          deckHero: rectSnapshot(".deck-hero"),
+          deckCatalog: rectSnapshot(".deck-catalog"),
+          deckControls: rectSnapshot(".deck-controls"),
           metadataPanel: rectSnapshot(".metadata-panel"),
-          nowPlayingBay: rectSnapshot(".now-playing-bay"),
-          shelfFlowRail: rectSnapshot(".catalog-index-rail"),
           stagePath: rectSnapshot(".stage-path"),
-          trackList: rectSnapshot(".track-list"),
           transport: rectSnapshot(".transport"),
           viewportWidth: window.innerWidth
         };
-        layout.bayGap = layout.libraryBay && layout.nowPlayingBay ? layout.libraryBay.left - layout.nowPlayingBay.right : -999;
         layout.noHorizontalOverflow = layout.documentScrollWidth <= layout.viewportWidth + 2;
         const layoutStable =
           layout.noHorizontalOverflow &&
-          insideViewportX(layout.nowPlayingBay) &&
-          insideViewportX(layout.libraryBay) &&
-          layout.bayGap >= 8 &&
-          containsX(layout.nowPlayingBay, layout.stagePath) &&
-          containsX(layout.nowPlayingBay, layout.transport) &&
-          containsX(layout.libraryBay, layout.catalogToolbar) &&
-          containsX(layout.libraryBay, layout.focusedTrackStrip) &&
-          containsX(layout.libraryBay, layout.metadataPanel) &&
-          containsX(layout.libraryBay, layout.shelfFlowRail) &&
-          containsX(layout.libraryBay, layout.trackList) &&
-          (layout.stagePath?.height ?? 0) >= 32 &&
-          (layout.transport?.height ?? 0) >= 60 &&
-          (layout.metadataPanel?.height ?? 0) >= 180 &&
-          (layout.trackList?.height ?? 0) >= 120;
+          insideViewportX(layout.deckHero) &&
+          insideViewportX(layout.deckCatalog) &&
+          insideViewportX(layout.deckControls) &&
+          containsX(layout.deckHero, layout.stagePath) &&
+          containsX(layout.deckControls, layout.transport) &&
+          containsX(layout.deckCatalog, layout.metadataPanel) &&
+          containsX(layout.deckCatalog, layout.catalogToolbar) &&
+          (layout.deckHero?.height ?? 0) >= 200 &&
+          (layout.deckCatalog?.height ?? 0) >= 120 &&
+          (layout.deckControls?.height ?? 0) >= 60 &&
+          (layout.stagePath?.height ?? 0) >= 20 &&
+          (layout.metadataPanel?.height ?? 0) >= 100;
 
+        // Bass reactivity must never reflow layout: snapshot key rects, drive
+        // bass hard, re-measure. transform/opacity/filter-only visuals => 0 shift.
+        const beforeCatalog = rectSnapshot(".metadata-panel");
+        const beforeHero = rectSnapshot(".deck-hero");
+        const beforeRow = rectSnapshot(".metadata-row");
         if (shell) {
           shell.classList.add("is-playing");
           shell.style.setProperty("--bass-level", "1");
@@ -199,36 +141,17 @@ async function waitForStoreSurface(window, surface) {
           shell.style.setProperty("--bass-offset", "-24px");
           shell.style.setProperty("--bass-glow", "260px");
           shell.style.setProperty("--bass-opacity", "1");
+          shell.style.setProperty("--beat-pulse", "1");
           shell.style.setProperty("--playback-progress", "83%");
         }
+        const rectShift = (a, b) =>
+          a && b
+            ? Math.max(Math.abs(a.top - b.top), Math.abs(a.left - b.left), Math.abs(a.width - b.width), Math.abs(a.height - b.height))
+            : 999;
+        const catalogBassShift = rectShift(beforeCatalog, rectSnapshot(".metadata-panel"));
+        const heroBassShift = rectShift(beforeHero, rectSnapshot(".deck-hero"));
+        const rowBassShift = rectShift(beforeRow, rectSnapshot(".metadata-row"));
 
-        const reactiveRailRect = rail?.getBoundingClientRect();
-        const reactiveFillRect = fill?.getBoundingClientRect();
-        const reactiveThumbRect = thumb?.getBoundingClientRect();
-        const reactiveRailCenterY = reactiveRailRect ? reactiveRailRect.y + reactiveRailRect.height / 2 : 0;
-        const reactiveThumbCenterY = reactiveThumbRect ? reactiveThumbRect.y + reactiveThumbRect.height / 2 : 999;
-        const reactiveThumbCenterX = reactiveThumbRect ? reactiveThumbRect.x + reactiveThumbRect.width / 2 : 999;
-        const shelfRailBassShiftY = Math.abs(reactiveRailCenterY - railCenterY);
-        const shelfRailHeightShift = Math.abs((reactiveRailRect?.height ?? 0) - railHeight);
-        const shelfFillBassShiftWidth = Math.abs((reactiveFillRect?.width ?? 0) - fillWidth);
-        const shelfThumbBassDeltaY = Math.abs(reactiveThumbCenterY - reactiveRailCenterY);
-        const shelfThumbBassShiftX = Math.abs(reactiveThumbCenterX - thumbCenterX);
-        const shelfThumbHeightShift = Math.abs((reactiveThumbRect?.height ?? 0) - thumbHeight);
-        const shelfFlowStylesAfter = {
-          fill: styleSnapshot(fill),
-          line: styleSnapshot(rail),
-          rail: styleSnapshot(shelfRail),
-          thumb: styleSnapshot(thumb)
-        };
-        const shelfFlowStyleLock = Object.entries(shelfFlowStylesAfter).every(([key, style]) => {
-          const beforeStyle = shelfFlowStylesBefore[key];
-
-          return style.animationName === "none" &&
-            style.filter === "none" &&
-            style.transitionProperty === "none" &&
-            Boolean(beforeStyle) &&
-            Math.abs(style.transformY - beforeStyle.transformY) <= 0.01;
-        });
         const externalResources = performance
           .getEntriesByType("resource")
           .map((entry) => entry.name)
@@ -237,14 +160,9 @@ async function waitForStoreSurface(window, surface) {
           cards >= ${surface.minCards} &&
           rows >= ${surface.minCards} &&
           bodyText.includes(${JSON.stringify(surface.expectedText)}) &&
-          shelfThumbDeltaY <= 1 &&
-          shelfRailBassShiftY <= 0.5 &&
-          shelfRailHeightShift <= 0.5 &&
-          shelfFillBassShiftWidth <= 0.5 &&
-          shelfThumbBassDeltaY <= 1 &&
-          shelfThumbBassShiftX <= 0.5 &&
-          shelfThumbHeightShift <= 0.5 &&
-          shelfFlowStyleLock &&
+          catalogBassShift <= 0.5 &&
+          heroBassShift <= 0.5 &&
+          rowBassShift <= 0.5 &&
           layoutStable &&
           externalResources.length === 0;
 
@@ -256,17 +174,9 @@ async function waitForStoreSurface(window, surface) {
             rows,
             missingSelectors,
             externalResources,
-            shelfThumbDeltaY: Number(shelfThumbDeltaY.toFixed(3)),
-            shelfRailBassShiftY: Number(shelfRailBassShiftY.toFixed(3)),
-            shelfRailHeightShift: Number(shelfRailHeightShift.toFixed(3)),
-            shelfFillBassShiftWidth: Number(shelfFillBassShiftWidth.toFixed(3)),
-            shelfThumbBassDeltaY: Number(shelfThumbBassDeltaY.toFixed(3)),
-            shelfThumbBassShiftX: Number(shelfThumbBassShiftX.toFixed(3)),
-            shelfThumbHeightShift: Number(shelfThumbHeightShift.toFixed(3)),
-            shelfFlowStyleLock,
-            shelfFlowStylesAfter,
-            shelfFlowStylesBefore,
-            shelfProgress: shelfRail ? getComputedStyle(shelfRail).getPropertyValue("--catalog-index-position").trim() : "",
+            catalogBassShift: Number(catalogBassShift.toFixed(3)),
+            heroBassShift: Number(heroBassShift.toFixed(3)),
+            rowBassShift: Number(rowBassShift.toFixed(3)),
             layout,
             layoutStable,
             title: document.title
@@ -492,7 +402,7 @@ async function main() {
     }
 
     console.log(
-      `- ${result.name}: ${result.cards} cards, ${result.rows} rows, shelf ${result.shelfProgress}, thumb delta ${result.shelfThumbDeltaY}px, rail bass shift ${result.shelfRailBassShiftY}px, fill shift ${result.shelfFillBassShiftWidth}px, thumb bass delta ${result.shelfThumbBassDeltaY}px, style lock ${result.shelfFlowStyleLock ? "yes" : "no"}, layout ${result.layoutStable ? "stable" : "unstable"}`
+      `- ${result.name}: ${result.cards} covers, ${result.rows} rows, catalog bass shift ${result.catalogBassShift}px, hero bass shift ${result.heroBassShift}px, row bass shift ${result.rowBassShift}px, layout ${result.layoutStable ? "stable" : "unstable"}`
     );
   });
 }

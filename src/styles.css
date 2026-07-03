@@ -3501,6 +3501,7 @@ button:disabled {
 .metadata-row {
   grid-template-columns:
     44px
+    46px
     minmax(150px, 1fr)
     minmax(100px, 0.62fr)
     minmax(120px, 0.72fr)
@@ -7446,4 +7447,238 @@ button:disabled {
   .cartridge-art.is-inserting .signal-map {
     animation: none;
   }
+}
+
+/* ============================================================
+   Cinemascope Deck: single-column layout — scope hero band,
+   catalog with inline covers, bottom control strip.
+   ============================================================ */
+
+.console-stage .app-shell {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.deck {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 320px minmax(0, 1fr) auto;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* --- Scope hero band --- */
+.deck-hero {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  min-height: 0;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 40%),
+    rgba(0, 0, 0, 0.24);
+}
+
+.deck-hero .cartridge-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  align-self: stretch;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  box-shadow: none;
+  grid-template-rows: none;
+}
+
+.deck-hero .signal-map.signal-scope-only {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  margin: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 22px;
+  pointer-events: none;
+}
+
+.hero-np {
+  display: grid;
+  gap: 4px;
+}
+
+.hero-np .module-label {
+  color: var(--accent-2);
+  font-family: "Courier New", monospace;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+}
+
+.hero-title {
+  max-width: 74%;
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 1.95rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-artist {
+  color: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.16em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+.hero-meta {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  color: var(--faint);
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+.hero-meta .hero-trace {
+  margin-left: auto;
+  color: var(--accent-2);
+  letter-spacing: 0.18em;
+}
+
+/* Compact inline inspector under the seek bar. */
+.deck-inspector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  padding: 6px 10px;
+  border: 1px solid rgba(156, 199, 216, 0.12);
+  background: rgba(0, 0, 0, 0.26);
+  font-family: "Courier New", monospace;
+  font-size: 0.64rem;
+  color: var(--muted);
+}
+
+.deck-inspector > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.deck-inspector .artifact-label {
+  margin-right: 5px;
+  color: var(--accent-2);
+  letter-spacing: 0.1em;
+}
+
+.deck-inspector strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* --- Catalog section --- */
+.deck-catalog {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  min-height: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 32%),
+    rgba(0, 0, 0, 0.18);
+}
+
+/* Inline cover thumbnails per catalog row. */
+.metadata-cover {
+  position: relative;
+  align-self: center;
+  justify-self: center;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  background: #17140f;
+}
+
+.metadata-cover-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.metadata-cover.generated-cover .metadata-cover-bands {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    hsl(var(--art-hue, 0deg) 58% 46%) 0 26%,
+    hsl(var(--art-hue-2, 40deg) 52% 42%) 26% 52%,
+    hsl(var(--art-hue-3, 200deg) 48% 40%) 52% 78%
+  );
+  box-shadow: inset 0 -6px 8px rgba(0, 0, 0, 0.5);
+}
+
+.metadata-cover.is-missing {
+  opacity: 0.5;
+}
+
+/* --- Bottom control strip --- */
+.deck-controls {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 8px 24px;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.22)),
+    rgba(0, 0, 0, 0.18);
+}
+
+.deck-controls .transport {
+  grid-row: 1;
+  grid-column: 1;
+  min-height: 0;
+  padding: 0;
+  background: none;
+}
+
+.deck-controls .meter-bank {
+  grid-row: 1;
+  grid-column: 2;
+  margin: 0;
+}
+
+.deck-controls .key-hints {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  justify-content: center;
+  margin: 0;
 }

@@ -3240,79 +3240,40 @@ function App() {
           </div>
         ) : null}
 
-        <div className="cabinet-grid">
-          <section className="now-playing-bay" aria-label="Current cartridge">
-            <div className="crt-window">
-              <div className="screen-status">
-                <span>{currentTrack ? "SIGNAL" : "STANDBY"}</span>
-                <span>{isPlaying || storePosterMode ? "TRACE LIVE" : "TRACE HOLD"}</span>
-              </div>
-
-              <div
-                className={`cartridge-art ${isPlaying || storePosterMode ? "powered" : ""} ${currentTrack ? "has-track" : "is-empty"} ${
-                  cartridgeSwap ? `is-${cartridgeSwap}` : ""
-                }`}
-                data-wear={currentWearTier > 0 ? currentWearTier : undefined}
-                aria-label={currentTrack ? `Signal map for ${currentTrack.title} by ${currentTrack.artist}` : "Empty signal map"}
-              >
-                <div className="signal-map signal-scope-only" aria-hidden="true">
-                  <span className="signal-vignette" />
-                  <canvas ref={scopeCanvasRef} className="signal-scope" />
-                  <span className="signal-frame signal-frame-bezel" />
-                  {shuttle ? (
-                    <span className="shuttle-indicator">
-                      {shuttle.dir > 0 ? "▶▶ CUE" : "◀◀ REW"} ×{shuttle.rate}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-
-              <div
-                className="file-inspector"
-                ref={fileInspectorRef}
-                tabIndex={-1}
-                aria-label="Selected local file inspection"
-              >
-                {isTakeoutMatched(currentTrack) ? <span className="match-stamp">MATCHED</span> : null}
-                <div>
-                  <span className="artifact-label">SOURCE</span>
-                  <strong>{fileSourcePath}</strong>
-                </div>
-                <div>
-                  <span className="artifact-label">MATCH</span>
-                  <span>
-                    yt metadata: {matchConfidence ? `${matchConfidence}%` : "--"} · {currentSourceLabel} ·{" "}
-                    {currentTagSummary}
+        <div className="deck">
+          <section className="deck-hero" aria-label="Now playing">
+            <div
+              className={`cartridge-art ${isPlaying || storePosterMode ? "powered" : ""} ${currentTrack ? "has-track" : "is-empty"} ${
+                cartridgeSwap ? `is-${cartridgeSwap}` : ""
+              }`}
+              data-wear={currentWearTier > 0 ? currentWearTier : undefined}
+              aria-label={currentTrack ? `Signal map for ${currentTrack.title} by ${currentTrack.artist}` : "Empty signal map"}
+            >
+              <div className="signal-map signal-scope-only" aria-hidden="true">
+                <span className="signal-vignette" />
+                <canvas ref={scopeCanvasRef} className="signal-scope" />
+                <span className="signal-frame signal-frame-bezel" />
+                {shuttle ? (
+                  <span className="shuttle-indicator">
+                    {shuttle.dir > 0 ? "▶▶ CUE" : "◀◀ REW"} ×{shuttle.rate}
                   </span>
-                </div>
-                <div>
-                  <span className="artifact-label">ENCODE</span>
-                  <span>
-                    {formatCodec(currentTrack?.codec)} · {formatBitrate(currentTrack?.bitrate)} ·{" "}
-                    {formatSampleRate(currentTrack?.sampleRate)} · {formatFileSize(currentTrack?.size)}
-                  </span>
-                </div>
-                <div>
-                  <span className="artifact-label">ERRORS</span>
-                  <span>{currentTagErrors}</span>
-                </div>
+                ) : null}
               </div>
 
-              <div className="meter-bank">
-                <div ref={visualizerRef} className="visualizer visualizer-crt-wave" aria-label="Audio visualizer">
-                  {Array.from({ length: 24 }).map((_, index) => (
-                    <span
-                      key={index}
-                      style={
-                        {
-                          "--meter-height": "16px",
-                          animationDelay: `${index * 58}ms`
-                        } as CSSProperties
-                      }
-                    />
-                  ))}
+              <div className="hero-overlay" aria-live="polite">
+                <div className="hero-np">
+                  <span className="module-label">NOW PLAYING</span>
+                  <strong className="hero-title">
+                    {currentTrackNumber ? currentTrackNumber.toString().padStart(2, "0") : "--"} //{" "}
+                    {currentTrack?.title ?? "NO FILE"}
+                  </strong>
+                  <span className="hero-artist">{currentTrack?.artist ?? "No active artist"}</span>
                 </div>
-                <VuMeter containerRef={vuMeterRef} />
+                <div className="hero-meta">
+                  <span>{currentTrack?.album ?? activeShelfLabel}</span>
+                  <span>{currentQualityLine}</span>
+                  <span className="hero-trace">{isPlaying || storePosterMode ? "TRACE LIVE" : "TRACE HOLD"}</span>
+                </div>
               </div>
             </div>
 
@@ -3338,62 +3299,32 @@ function App() {
               <span>{formatTime(duration || currentTrack?.duration || 0)}</span>
             </div>
 
-            <div className="transport">
-              <div className="transport-pad">
-                <span>BACK</span>
-                <button
-                  className="icon-button"
-                  type="button"
-                  title="Previous"
-                  disabled={!hasPlayableQueue}
-                  onClick={previousTrack}
-                >
-                  <SkipBack size={24} />
-                </button>
-              </div>
-              <div className="transport-pad transport-pad-main">
-                <span>{isPlaying ? "HOLD" : "PLAY"}</span>
-                <button
-                  className="play-button"
-                  type="button"
-                  title={isPlaying ? "Pause" : "Play"}
-                  disabled={!currentTrack?.url}
-                  onClick={togglePlayback}
-                >
-                  {isPlaying ? <Pause size={31} fill="currentColor" /> : <Play size={31} fill="currentColor" />}
-                </button>
-              </div>
-              <div className="transport-pad">
-                <span>NEXT</span>
-                <button
-                  className="icon-button"
-                  type="button"
-                  title="Next"
-                  disabled={!hasPlayableQueue}
-                  onClick={nextTrack}
-                >
-                  <SkipForward size={24} />
-                </button>
-              </div>
-              <div className="volume-control">
-                <span>AMP</span>
-                <div className="volume-rail">
-                  <Volume2 size={18} />
-                  <VolumeKnob value={volume} onChange={setVolume} />
-                </div>
-              </div>
-            </div>
-            <div className="key-hints" aria-hidden="true">
-              <span>SPACE PLAY</span>
-              <span>LEFT/RIGHT SEEK</span>
-              <span>SHELF L/R MOVE</span>
-              <span>J/K TRACK</span>
-              <span>F FIND</span>
-              <span>I INSPECT</span>
+            <div
+              className="file-inspector deck-inspector"
+              ref={fileInspectorRef}
+              tabIndex={-1}
+              aria-label="Selected local file inspection"
+            >
+              {isTakeoutMatched(currentTrack) ? <span className="match-stamp">MATCHED</span> : null}
+              <span>
+                <span className="artifact-label">SOURCE</span> <strong>{fileSourcePath}</strong>
+              </span>
+              <span>
+                <span className="artifact-label">MATCH</span> yt {matchConfidence ? `${matchConfidence}%` : "--"} ·{" "}
+                {currentSourceLabel} · {currentTagSummary}
+              </span>
+              <span>
+                <span className="artifact-label">ENCODE</span> {formatCodec(currentTrack?.codec)} ·{" "}
+                {formatBitrate(currentTrack?.bitrate)} · {formatSampleRate(currentTrack?.sampleRate)} ·{" "}
+                {formatFileSize(currentTrack?.size)}
+              </span>
+              <span>
+                <span className="artifact-label">ERRORS</span> {currentTagErrors}
+              </span>
             </div>
           </section>
 
-          <section className="library-bay" aria-label="Local tracks">
+          <section className="deck-catalog" aria-label="Local tracks">
             <div className="bay-header">
               <div>
                 <span className="eyebrow">Shelf</span>
@@ -3403,210 +3334,6 @@ function App() {
                 <ListMusic size={16} />
                 <span>{filteredCards.length}</span>
               </div>
-            </div>
-
-            <div className="now-playing-module" aria-live="polite">
-              <div className="now-playing-copy">
-                <span className="module-label">NOW PLAYING</span>
-                <strong>
-                  {currentTrackNumber ? currentTrackNumber.toString().padStart(2, "0") : "--"} //{" "}
-                  {currentTrack?.title ?? "NO FILE"}
-                </strong>
-                <span>{currentTrack?.artist ?? "No active artist"}</span>
-              </div>
-              <div className="now-playing-data">
-                <span>{currentTrack?.album ?? activeShelfLabel}</span>
-                <span>{currentQualityLine}</span>
-                <span>{currentSourceLabel}</span>
-              </div>
-            </div>
-
-            <div className="signal-field" aria-hidden="true">
-              <div className="signal-grid" />
-              <div ref={signalColumnsRef} className="signal-columns">
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <span
-                    key={index}
-                    style={
-                      {
-                        "--signal-height": `${Math.max(16, Math.min(96, 28 + ((index * 17) % 31)))}%`,
-                        "--signal-delay": `${index * 42}ms`
-                      } as CSSProperties
-                    }
-                  />
-                ))}
-              </div>
-              <div className="signal-sweep">
-                <span />
-              </div>
-            </div>
-
-            <div
-              className="track-list"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === "ArrowRight") {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  selectShelfOffset(1);
-                }
-
-                if (event.key === "ArrowLeft") {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  selectShelfOffset(-1);
-                }
-              }}
-              onWheel={(event) => {
-                const now = event.timeStamp;
-                const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-
-                // Accumulate wheel/trackpad delta and advance exactly one card
-                // when it crosses a threshold, with a short cooldown so the glide
-                // can settle. Responsive, but still one card per "deck advance".
-                if (now - shelfWheelTsRef.current > 220) {
-                  shelfWheelDeltaRef.current = 0;
-                }
-
-                shelfWheelTsRef.current = now;
-                shelfWheelDeltaRef.current += delta;
-
-                if (now - shelfWheelAtRef.current < 90) {
-                  return;
-                }
-
-                if (Math.abs(shelfWheelDeltaRef.current) < 40) {
-                  return;
-                }
-
-                shelfWheelAtRef.current = now;
-                selectShelfOffset(shelfWheelDeltaRef.current > 0 ? 1 : -1);
-                shelfWheelDeltaRef.current = 0;
-              }}
-            >
-              {filteredCards.length === 0 ? (
-                <div className="empty-state">
-                  <strong>
-                    {query
-                      ? "No matches."
-                      : activeShelf === "favorites"
-                        ? "Hall empty."
-                        : activeShelf === "takeout"
-                          ? "Map empty."
-                          : activeShelf === "missing"
-                            ? "All matched."
-                        : activeSaveSlot
-                          ? "Save empty."
-                          : "Empty."}
-                  </strong>
-                  <span>
-                    {query
-                      ? "Nothing here."
-                      : activeShelf === "favorites"
-                        ? "No crowns yet."
-                        : activeShelf === "takeout"
-                          ? "No rows."
-                          : activeShelf === "missing"
-                            ? "Clean."
-                        : activeSaveSlot
-                          ? "Unused."
-                          : "Insert local audio."}
-                  </span>
-                </div>
-              ) : (
-                filteredCards.map((card, index) => {
-                  const track = card.kind === "track" ? card.track : undefined;
-                  const missingSong = card.kind === "missing" ? card.song : undefined;
-                  const artSource = card.kind === "track" ? card.track : card.artSource;
-                  const cardHash = hashText(`${artSource.title}-${artSource.artist}-${index}`)
-                    .toString(16)
-                    .toUpperCase()
-                    .padStart(4, "0")
-                    .slice(0, 4);
-                  const noCover = Boolean(track) && !track?.artworkUrl;
-                  const cassetteSide = parseInt(cardHash, 16) % 2 === 0 ? "A" : "B";
-                  const playCount = track?.playCount ?? 0;
-                  const wearTier = playCount >= 25 ? 3 : playCount >= 10 ? 2 : playCount >= 3 ? 1 : 0;
-                  // Artless tracks read as a collectible cartridge (SIDE A/B),
-                  // not a "NO COVER FOUND" error.
-                  const artifactStamp = track?.artworkUrl
-                    ? "COVER LOCKED"
-                    : card.kind === "missing"
-                      ? "MISSING FILE"
-                      : `SIDE ${cassetteSide}`;
-
-                  return (
-                    <div
-                      className={`song-card ${track?.id === currentTrack?.id ? "selected" : ""} ${
-                        card.kind === "missing" ? "missing-song-card" : ""
-                      } ${noCover ? "no-cover" : ""}`}
-                      key={card.id}
-                      data-track-id={track?.id}
-                      data-wear={wearTier > 0 ? wearTier : undefined}
-                      style={{ ...albumGraphicStyle(artSource, index), "--wear-level": wearTier } as CSSProperties}
-                      role={track ? "button" : "img"}
-                      tabIndex={track ? 0 : -1}
-                      aria-label={
-                        track
-                          ? `${track.title} by ${track.artist}`
-                          : `Missing local file for ${missingSong?.title} by ${missingSong?.artists.join(", ")}`
-                      }
-                      onDoubleClick={() => track && playTrack(track.id)}
-                      onClick={() => track && setCurrentId(track.id)}
-                      onKeyDown={(event) => {
-                        if (!track || (event.key !== "Enter" && event.key !== " ")) {
-                          return;
-                        }
-
-                        event.preventDefault();
-                        playTrack(track.id);
-                      }}
-                    >
-                      <span className="song-card-stamp">{artifactStamp}</span>
-                      <span className="song-card-code">IDX-{cardHash}</span>
-                      {playCount > 0 ? <span className="play-stamp">×{playCount}</span> : null}
-                      <span className="song-card-face" aria-hidden="true">
-                        {noCover ? <span className="song-card-bands" /> : null}
-                        <span
-                          className="song-card-title"
-                          data-scramble={scrambleLabel(track?.title ?? missingSong?.title ?? "NO FILE", cardHash)}
-                        >
-                          {track?.title ?? missingSong?.title}
-                        </span>
-                        {noCover ? <span className="song-card-sub">{track?.artist}</span> : null}
-                      </span>
-                      <span className="sr-only">
-                        {track
-                          ? `${String(index + 1).padStart(2, "0")} ${track.title} ${track.artist} ${formatTime(track.duration)}`
-                          : `${String(index + 1).padStart(2, "0")} missing ${missingSong?.title} ${missingSong?.artists.join(
-                              ", "
-                            )}`}
-                      </span>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-
-            <div className="focused-track-strip" aria-live="polite">
-              <span>{String((currentTrackIndex >= 0 ? currentTrackIndex : focusedCardIndex) + 1).padStart(2, "0")} / {currentTrack?.title ?? "NO FILE"}</span>
-              <strong>{currentTrack?.artist ?? "No active artist"}</strong>
-              <span>
-                {formatTime(currentTrack?.duration ?? playbackDuration)} · {formatBitrate(currentTrack?.bitrate)} ·{" "}
-                {formatSampleRate(currentTrack?.sampleRate)}
-              </span>
-            </div>
-
-            <div
-              className="catalog-index-rail"
-              data-static-rail="catalog-index"
-              style={catalogIndexRailStyle}
-              aria-hidden="true"
-            >
-              <span className="catalog-index-line">
-                <span className="catalog-index-fill" />
-                <span className="catalog-index-thumb" />
-              </span>
             </div>
 
             <div className="metadata-panel" aria-label="Track metadata">
@@ -3648,6 +3375,7 @@ function App() {
               </div>
               <div className="metadata-columns" aria-hidden="true">
                 <span>#</span>
+                <span />
                 <span>Track</span>
                 <span>Artist</span>
                 <span>Album</span>
@@ -3680,6 +3408,8 @@ function App() {
                       ? `yt ${missingSong.videoId}`
                       : "takeout row";
                   const isActiveRow = track?.id === currentTrack?.id;
+                  const rowArtSource = card.kind === "track" ? card.track : card.artSource;
+                  const rowHasCover = Boolean(track?.artworkUrl);
 
                   return (
                     <div
@@ -3693,6 +3423,19 @@ function App() {
                       onClick={() => track && setCurrentId(track.id)}
                       onDoubleClick={() => track && playTrack(track.id)}
                       onKeyDown={(event) => {
+                        // Arrow keys move the catalog selection; Enter/Space plays.
+                        if (event.key === "ArrowDown") {
+                          event.preventDefault();
+                          selectShelfOffset(1);
+                          return;
+                        }
+
+                        if (event.key === "ArrowUp") {
+                          event.preventDefault();
+                          selectShelfOffset(-1);
+                          return;
+                        }
+
                         if (!track || (event.key !== "Enter" && event.key !== " ")) {
                           return;
                         }
@@ -3704,6 +3447,19 @@ function App() {
                       <span className="metadata-index">
                         {String(index + 1).padStart(2, "0")}
                         <span className="metadata-play-marker">{isActiveRow && isPlaying ? "▶" : isActiveRow ? "//" : ""}</span>
+                      </span>
+                      <span
+                        className={`metadata-cover ${rowHasCover ? "has-cover" : "generated-cover"} ${
+                          card.kind === "missing" ? "is-missing" : ""
+                        }`}
+                        style={albumGraphicStyle(rowArtSource, index)}
+                        aria-hidden="true"
+                      >
+                        {rowHasCover ? (
+                          <img className="metadata-cover-img" src={track?.artworkUrl} alt="" draggable={false} />
+                        ) : (
+                          <span className="metadata-cover-bands" />
+                        )}
                       </span>
                       <span className="metadata-title">
                         <strong data-scramble={scrambleLabel(title, `${card.id}-${index}`)}>{title}</strong>
@@ -3749,6 +3505,79 @@ function App() {
                   );
                 })}
               </div>
+            </div>
+          </section>
+
+          <section className="deck-controls" aria-label="Transport and meters">
+            <div className="transport">
+              <div className="transport-pad">
+                <span>BACK</span>
+                <button
+                  className="icon-button"
+                  type="button"
+                  title="Previous"
+                  disabled={!hasPlayableQueue}
+                  onClick={previousTrack}
+                >
+                  <SkipBack size={24} />
+                </button>
+              </div>
+              <div className="transport-pad transport-pad-main">
+                <span>{isPlaying ? "HOLD" : "PLAY"}</span>
+                <button
+                  className="play-button"
+                  type="button"
+                  title={isPlaying ? "Pause" : "Play"}
+                  disabled={!currentTrack?.url}
+                  onClick={togglePlayback}
+                >
+                  {isPlaying ? <Pause size={31} fill="currentColor" /> : <Play size={31} fill="currentColor" />}
+                </button>
+              </div>
+              <div className="transport-pad">
+                <span>NEXT</span>
+                <button
+                  className="icon-button"
+                  type="button"
+                  title="Next"
+                  disabled={!hasPlayableQueue}
+                  onClick={nextTrack}
+                >
+                  <SkipForward size={24} />
+                </button>
+              </div>
+              <div className="volume-control">
+                <span>AMP</span>
+                <div className="volume-rail">
+                  <Volume2 size={18} />
+                  <VolumeKnob value={volume} onChange={setVolume} />
+                </div>
+              </div>
+            </div>
+
+            <div className="meter-bank">
+              <div ref={visualizerRef} className="visualizer visualizer-crt-wave" aria-label="Audio visualizer">
+                {Array.from({ length: 24 }).map((_, index) => (
+                  <span
+                    key={index}
+                    style={
+                      {
+                        "--meter-height": "16px",
+                        animationDelay: `${index * 58}ms`
+                      } as CSSProperties
+                    }
+                  />
+                ))}
+              </div>
+              <VuMeter containerRef={vuMeterRef} />
+            </div>
+
+            <div className="key-hints" aria-hidden="true">
+              <span>SPACE PLAY</span>
+              <span>LEFT/RIGHT SEEK</span>
+              <span>J/K TRACK</span>
+              <span>F FIND</span>
+              <span>I INSPECT</span>
             </div>
           </section>
         </div>

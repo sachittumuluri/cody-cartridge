@@ -33,8 +33,9 @@ async function waitForApp(window) {
       const started = Date.now();
       const check = () => {
         const isReady = document.querySelector(".app-shell") &&
-          document.querySelector(".track-list") &&
+          document.querySelector(".deck-catalog") &&
           document.querySelector(".metadata-panel") &&
+          document.querySelector(".metadata-row[role='button']") &&
           document.querySelector(".play-button") &&
           document.body?.innerText?.includes("Signal Drift");
 
@@ -181,10 +182,8 @@ async function main() {
     assert(state.reducedMotionClass, "Store demo did not render reduced-motion shell state.");
     assert(state.focusableCount >= 24, `Expected at least 24 focusable controls, saw ${state.focusableCount}.`);
     assert(state.unlabeled.length === 0, `Found unlabeled focusable controls: ${JSON.stringify(state.unlabeled)}`);
-    assert(state.songCardButtons >= 8, `Expected at least 8 labeled song cards, saw ${state.songCardButtons}.`);
     assert(state.metadataButtonRows >= 8, `Expected at least 8 keyboard metadata rows, saw ${state.metadataButtonRows}.`);
     assert(state.filterChipCount >= 5, `Expected fast filter buttons, saw ${state.filterChipCount}.`);
-    assert(state.trackListTabIndex === "0", "Track shelf is not keyboard focusable.");
     assert(state.searchAriaLabel === "Filter catalog", "Catalog search is missing aria-label.");
     assert(state.seekRange?.type === "range" && state.seekRange.min === "0", "Seek control is not a labeled range input.");
     assert(
@@ -202,23 +201,25 @@ async function main() {
     state = await readAccessibilityState(window);
     assert(state.activeInfo?.label === "Filter catalog", `F shortcut did not focus catalog search: ${JSON.stringify(state.activeInfo)}`);
 
-    await window.webContents.executeJavaScript(`document.querySelector(".track-list").focus()`);
+    await window.webContents.executeJavaScript(
+      `(document.querySelector(".metadata-row.active[role='button']") || document.querySelector(".metadata-row[role='button']"))?.focus()`
+    );
     const beforeRow = (await readAccessibilityState(window)).activeRow;
-    await dispatchKeyboardEvent(window, ".track-list", "ArrowRight");
+    await dispatchKeyboardEvent(window, ".metadata-row.active", "ArrowDown");
     await wait(220);
     state = await readAccessibilityState(window);
-    assert(state.activeRow && state.activeRow !== beforeRow, "ArrowRight on focused shelf did not move the active track.");
+    assert(state.activeRow && state.activeRow !== beforeRow, "ArrowDown on a focused catalog row did not move the selection.");
 
-    await dispatchKeyboardEvent(window, ".track-list", "ArrowLeft");
+    await dispatchKeyboardEvent(window, ".metadata-row.active", "ArrowUp");
     await wait(220);
     state = await readAccessibilityState(window);
-    assert(state.activeRow === beforeRow, "ArrowLeft on focused shelf did not restore the previous active track.");
+    assert(state.activeRow === beforeRow, "ArrowUp on a focused catalog row did not restore the selection.");
 
-    console.log("Accessibility smoke checks: 10 passed");
+    console.log("Accessibility smoke checks: 9 passed");
     console.log(`- focusables: ${state.focusableCount}, labeled: ${state.labeledFocusableCount}`);
-    console.log(`- song cards: ${state.songCardButtons}, metadata rows: ${state.metadataButtonRows}`);
+    console.log(`- metadata rows: ${state.metadataButtonRows}`);
     console.log("- reduced motion: active");
-    console.log("- keyboard shortcuts: search and shelf navigation passed");
+    console.log("- keyboard shortcuts: search and catalog arrow navigation passed");
   } finally {
     window.destroy();
   }
