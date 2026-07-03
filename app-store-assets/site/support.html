@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Support information for Cody Cartridge." />
+    <title>Support - Cody Cartridge</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #07080b;
+        --panel: #101217;
+        --line: rgba(156, 199, 216, 0.22);
+        --text: #efefe7;
+        --muted: rgba(239, 239, 231, 0.64);
+        --accent: #8b111b;
+        --blue: #9cc7d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          linear-gradient(90deg, rgba(156, 199, 216, 0.035) 1px, transparent 1px) 0 0 / 24px 24px,
+          linear-gradient(0deg, rgba(139, 17, 27, 0.045) 1px, transparent 1px) 0 0 / 24px 24px,
+          radial-gradient(circle at 70% 20%, rgba(139, 17, 27, 0.18), transparent 34%),
+          var(--bg);
+        font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--blue);
+      }
+
+      .shell {
+        width: min(1020px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 32px 0 56px;
+      }
+
+      header {
+        display: flex;
+        gap: 18px;
+        align-items: end;
+        justify-content: space-between;
+        padding: 14px 0 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: grid;
+        gap: 4px;
+      }
+
+      .eyebrow,
+      nav a,
+      footer {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .brand strong {
+        color: var(--text);
+        font-size: clamp(26px, 5vw, 48px);
+        line-height: 1;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+
+      nav a {
+        padding: 7px 10px;
+        border: 1px solid rgba(156, 199, 216, 0.18);
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      nav a[aria-current="page"] {
+        border-color: rgba(139, 17, 27, 0.84);
+        color: var(--text);
+        box-shadow: inset 3px 0 0 var(--accent);
+      }
+
+      main {
+        display: grid;
+        gap: 20px;
+        margin-top: 24px;
+        padding: 28px;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(90deg, rgba(139, 17, 27, 0.08), transparent 42%),
+          rgba(0, 0, 0, 0.42);
+        box-shadow:
+          inset 1px 1px 0 rgba(255, 255, 255, 0.06),
+          0 28px 80px rgba(0, 0, 0, 0.34);
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      ul {
+        margin: 0;
+      }
+
+      h1 {
+        color: #fff;
+        font-size: clamp(28px, 5vw, 54px);
+        line-height: 1.02;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin-top: 12px;
+        color: var(--blue);
+        font-size: 16px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h3 {
+        color: #fff;
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      ul {
+        display: grid;
+        gap: 7px;
+        padding-left: 22px;
+      }
+
+      code {
+        color: var(--text);
+        background: rgba(156, 199, 216, 0.08);
+      }
+
+      .notice {
+        padding: 12px 14px;
+        border: 1px solid rgba(139, 17, 27, 0.5);
+        color: var(--text);
+        background: rgba(139, 17, 27, 0.12);
+        font-size: 13px;
+      }
+
+      footer {
+        margin-top: 24px;
+      }
+
+      @media (max-width: 720px) {
+        header {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        nav {
+          justify-content: flex-start;
+        }
+
+        main {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <span class="eyebrow">Cody Noir // Local Index</span>
+          <strong>Cody Cartridge</strong>
+        </div>
+        <nav aria-label="Site">
+          <a href="index.html">Home</a><a href="privacy.html">Privacy</a><a aria-current="page" href="support.html">Support</a><a href="accessibility.html">Accessibility</a><a href="third-party-notices.html">Notices</a>
+        </nav>
+      </header>
+      <main>
+        <p class="notice">Before publishing: set CODY_SUPPORT_EMAIL to a real support contact and rebuild this site.</p>
+        <h1>Cody Cartridge Support Draft</h1>
+<p>Cody Cartridge is a local-first macOS music player for user-selected audio files.</p>
+<h2>Contact</h2>
+<p>Contact: pending public support email</p>
+<h2>Common Questions</h2>
+<h3>Does Cody Cartridge download music?</h3>
+<p>No. Cody Cartridge does not download, scrape, or redistribute music. Import audio files that you already own and have the right to use.</p>
+<h3>Where is my library stored?</h3>
+<p>The app stores playback and library state locally on your Mac. Audio files stay in their original location. In sandboxed Mac App Store builds, Cody Cartridge uses macOS security-scoped bookmarks to retain read-only access to files and folders you selected through the picker.</p>
+<h3>Does it require a YouTube Music account?</h3>
+<p>No. YouTube Music Takeout CSV import is optional and only uses CSV files you provide. The app does not sign in to YouTube Music or access streaming accounts.</p>
+<h3>How do I import music?</h3>
+<p>Use File &gt; Import Audio Files or File &gt; Import Music Folder. You can also drag local audio files into the app.</p>
+<h3>How do I import YouTube Music metadata?</h3>
+<p>Export your YouTube Music library from Google Takeout, then use File &gt; Import YouTube Music Takeout and choose the Takeout CSV or folder.</p>
+<h3>What audio formats are supported?</h3>
+<p>Cody Cartridge currently scans common local audio formats including MP3, M4A, AAC, FLAC, WAV, OGG, OPUS, AIFF, and AIF.</p>
+<h3>How do I reset the app's local library?</h3>
+<p>Use File &gt; Reset Local Library. This clears Cody Cartridge's local index, imported YouTube Music Takeout rows, saved slots, playback state, and stored file-access bookmarks. It does not delete or modify your audio files.</p>
+      </main>
+      <footer>
+        Copyright © 2026 Sachit Tumuluri
+      </footer>
+    </div>
+  </body>
+</html>

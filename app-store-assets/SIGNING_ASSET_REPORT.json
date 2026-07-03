@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-06-20T20:32:24.190Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "status": "blocked",
+    "blockerCount": 3,
+    "readyForMasSigning": false
+  },
+  "identities": {
+    "securityToolAvailable": true,
+    "securityCommandStatus": 0,
+    "codeSigningIdentityCount": 0,
+    "applicationDistributionIdentityCount": 0,
+    "installerDistributionIdentityCount": 0,
+    "developmentIdentityCount": 0,
+    "distributionTeamIdCount": 0
+  },
+  "provisioningProfiles": {
+    "scannedProfileCount": 0,
+    "decodedProfileCount": 0,
+    "decodeErrorCount": 0,
+    "matchingBundleIdProfileCount": 0,
+    "distributionStyleProfileCount": 0,
+    "macDistributionProfileCount": 0,
+    "unexpiredMacDistributionProfileCount": 0,
+    "expectedEntitlementProfileCount": 0,
+    "teamMatchedProfileCount": 0,
+    "developmentOrDeviceProfileCount": 0,
+    "storageIssueCount": 0
+  },
+  "entitlements": {
+    "path": "build/entitlements.mas.plist",
+    "exists": true,
+    "parseError": false,
+    "appSandbox": true,
+    "userSelectedReadOnly": true,
+    "appScopeBookmarks": true,
+    "networkClient": false,
+    "expectedProfileEntitlementKeys": [
+      "com.apple.security.app-sandbox",
+      "com.apple.security.files.user-selected.read-only",
+      "com.apple.security.files.bookmarks.app-scope"
+    ]
+  },
+  "readiness": {
+    "bundleIdConfigured": true,
+    "hasApplicationDistributionIdentity": false,
+    "hasInstallerDistributionIdentity": false,
+    "hasMatchingUnexpiredMacDistributionProfile": false,
+    "hasExpectedEntitlementProfile": false,
+    "hasTeamMatchedProfile": false,
+    "entitlementsConfigured": true
+  },
+  "blockers": [
+    "Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity.",
+    "Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity.",
+    "Missing unexpired macOS/Mac App Store distribution provisioning profile for com.sachittumuluri.codycartridge."
+  ],
+  "commands": [
+    "npm run check:signing-assets",
+    "npm run install:mas-profile -- --file /path/to/profile.provisionprofile --dry-run",
+    "npm run check:mas-signing -- --strict",
+    "npm run dist:mas",
+    "npm run check:mas-package -- --strict"
+  ],
+  "redaction": {
+    "storesIdentityNames": false,
+    "storesCertificateHashes": false,
+    "storesProvisioningProfileNames": false,
+    "storesProvisioningProfileUuids": false,
+    "storesLocalProfilePaths": false,
+    "storesAppleAccountValues": false
+  },
+  "sourceArtifacts": [
+    "package.json",
+    "build/entitlements.mas.plist",
+    "build/entitlements.mas.inherit.plist",
+    "scripts/install-mas-profile.cjs",
+    "scripts/check-mas-signing.cjs"
+  ]
+}

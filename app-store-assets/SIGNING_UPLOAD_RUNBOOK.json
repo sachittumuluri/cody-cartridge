@@ -1,0 +1,282 @@
+{
+  "generatedAt": "2026-06-20T20:32:25.157Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0",
+    "category": "public.app-category.music",
+    "minimumSystemVersion": "12.0"
+  },
+  "requiredSigningAssets": {
+    "applicationIdentity": "Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity in the login keychain.",
+    "installerIdentity": "Mac Installer Distribution or 3rd Party Mac Developer Installer identity in the login keychain.",
+    "provisioningProfile": "Unexpired macOS/Mac App Store distribution provisioning profile matching com.sachittumuluri.codycartridge, with no provisioned devices and get-task-allow=false.",
+    "entitlements": "build/entitlements.mas.plist",
+    "inheritedEntitlements": "build/entitlements.mas.inherit.plist"
+  },
+  "signingAssetSnapshot": {
+    "status": "blocked",
+    "blockerCount": 3,
+    "readyForMasSigning": false,
+    "applicationDistributionIdentityCount": 0,
+    "installerDistributionIdentityCount": 0,
+    "unexpiredMacDistributionProfileCount": 0,
+    "expectedEntitlementProfileCount": 0,
+    "redacted": true
+  },
+  "expectedPackageOutputs": {
+    "appBundlePath": "dist/mas-arm64/Cody Cartridge.app",
+    "uploadPackagePattern": "dist/**/*.pkg",
+    "embeddedProvisioningProfile": "dist/mas-arm64/Cody Cartridge.app/Contents/embedded.provisionprofile",
+    "packagedAsar": "dist/mas-arm64/Cody Cartridge.app/Contents/Resources/app.asar",
+    "privacyManifest": "dist/mas-arm64/Cody Cartridge.app/Contents/Resources/PrivacyInfo.xcprivacy"
+  },
+  "uploadTooling": [
+    "Transporter.app in /Applications or ~/Applications.",
+    "xcrun altool from Xcode command-line tools.",
+    "xcrun iTMSTransporter from Xcode command-line tools."
+  ],
+  "nodeWrappedShortcuts": [
+    {
+      "id": "local-dry-run",
+      "command": "npm run release:store:local:node",
+      "purpose": "Run the full local non-credentialed release gate through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "public-release-refresh",
+      "command": "npm run public-release:store:node",
+      "purpose": "Run the public URL/contact artifact refresh through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "published-public-release-refresh",
+      "command": "npm run public-release:store:published:node",
+      "purpose": "Run the public URL/contact artifact refresh plus live published-site checks through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "strict-preflight",
+      "command": "npm run release:store:preflight:node",
+      "purpose": "Run the full release-machine preflight through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "strict-release-machine-doctor",
+      "command": "npm run check:release-machine:node -- --strict",
+      "purpose": "Run the aggregate release-machine doctor through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "strict-verifier",
+      "command": "npm run verify:store:strict:node",
+      "purpose": "Run the final strict verifier through the Node version selected by .nvmrc."
+    }
+  ],
+  "signingRemediationChecklist": [
+    "Confirm Apple Developer and App Store Connect use bundle id com.sachittumuluri.codycartridge for Cody Cartridge.",
+    "Install an application distribution signing identity in the login keychain: Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application.",
+    "Install an installer distribution signing identity in the login keychain: Mac Installer Distribution or 3rd Party Mac Developer Installer.",
+    "Create, download, and install a macOS/Mac App Store distribution provisioning profile for com.sachittumuluri.codycartridge.",
+    "Validate the downloaded profile before installation with npm run install:mas-profile -- --file /path/to/profile.provisionprofile --dry-run.",
+    "Install the validated profile with npm run install:mas-profile -- --file /path/to/profile.provisionprofile, then rerun the signing asset report.",
+    "Confirm the provisioning profile is distribution-style: no provisioned devices, get-task-allow=false, unexpired, and macOS platform.",
+    "Confirm the profile supports the MAS entitlements in build/entitlements.mas.plist: app sandbox, user-selected read-only files, and app-scoped bookmarks.",
+    "Run npm run signing-assets:store and keep SIGNING_ASSET_REPORT.md with the release evidence.",
+    "Run npm run check:mas-signing -- --strict before npm run dist:mas.",
+    "Keep certificates, private keys, provisioning profiles, App Store Connect API keys, and upload credentials outside the handoff archive."
+  ],
+  "releaseMachineCommands": [
+    {
+      "id": "env",
+      "command": "npm run check:store-env",
+      "purpose": "Verify public URL, support email, and App Review contact values."
+    },
+    {
+      "id": "runtime",
+      "command": "npm run check:release-runtime -- --strict",
+      "purpose": "Verify the release machine is using the Node 22 packaging runtime."
+    },
+    {
+      "id": "version",
+      "command": "npm run check:store-version:source",
+      "purpose": "Verify package/build versions before generating App Store fields."
+    },
+    {
+      "id": "public-release-self-test",
+      "command": "npm run public-release:store -- --self-test",
+      "purpose": "Validate release-value redaction and public refresh command ordering without raw contact values."
+    },
+    {
+      "id": "public-release-self-test-node",
+      "command": "npm run public-release:store:node -- --self-test",
+      "purpose": "Validate release-value redaction and public refresh command ordering through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "public-release-refresh",
+      "command": "npm run public-release:store -- --published",
+      "purpose": "Regenerate and strictly validate public site, archive, App Store fields, copy map, App Review brief, evidence, manifest, and handoff artifacts."
+    },
+    {
+      "id": "public-release-refresh-node",
+      "command": "npm run public-release:store:published:node",
+      "purpose": "Node-safe shortcut for the same published public-release refresh when the current shell is not already on .nvmrc Node."
+    },
+    {
+      "id": "site",
+      "command": "npm run site:store && npm run check:site -- --strict",
+      "purpose": "Generate and validate public support/privacy pages."
+    },
+    {
+      "id": "archive-site",
+      "command": "npm run archive:site && npm run check:site-archive -- --strict",
+      "purpose": "Build and validate public-site archive."
+    },
+    {
+      "id": "publish-packet",
+      "command": "npm run publish-packet:store",
+      "purpose": "Generate the public-site publish packet for Support/Privacy URL handoff."
+    },
+    {
+      "id": "public-host",
+      "command": "npm run public-host:store",
+      "purpose": "Generate the public host runbook for static-site deployment and live URL verification."
+    },
+    {
+      "id": "packet",
+      "command": "npm run packet:store && npm run app-compliance:store && npm run review-brief:store && npm run copy-map:store",
+      "purpose": "Regenerate App Store fields, compliance packet, App Review brief, and copy map."
+    },
+    {
+      "id": "copy",
+      "command": "npm run check:review-brief -- --strict && npm run check:copy-map -- --strict && npm run check:app-compliance && npm run check:store-copy",
+      "purpose": "Verify copied App Review, App Store, and compliance fields."
+    },
+    {
+      "id": "public-release-sync",
+      "command": "npm run check:public-release-sync -- --strict",
+      "purpose": "Verify generated site, archive manifest, and App Store fields match release env values."
+    },
+    {
+      "id": "privacy",
+      "command": "npm run check:app-privacy && npm run check:artifact-privacy",
+      "purpose": "Verify privacy posture and release artifact privacy."
+    },
+    {
+      "id": "urls",
+      "command": "npm run check:store-urls -- --strict",
+      "purpose": "Verify published App Store URLs are reachable."
+    },
+    {
+      "id": "published-site",
+      "command": "npm run check:published-site -- --strict",
+      "purpose": "Verify every published public-site page is reachable and matches the generated source."
+    },
+    {
+      "id": "signing-assets",
+      "command": "npm run signing-assets:store",
+      "purpose": "Generate the redacted signing identity/profile inventory for this machine."
+    },
+    {
+      "id": "profile-install",
+      "command": "npm run install:mas-profile -- --file /path/to/profile.provisionprofile --dry-run",
+      "purpose": "Validate the downloaded MAS provisioning profile before installing it."
+    },
+    {
+      "id": "signing",
+      "command": "npm run check:mas-signing -- --strict",
+      "purpose": "Verify signing identities and provisioning profile."
+    },
+    {
+      "id": "package",
+      "command": "npm run dist:mas",
+      "purpose": "Build the signed MAS app bundle and upload package."
+    },
+    {
+      "id": "package-check",
+      "command": "npm run check:mas-package -- --strict",
+      "purpose": "Verify signed app bundle, embedded profile, entitlements, app.asar, and signed current-version installer package."
+    },
+    {
+      "id": "upload-tooling",
+      "command": "npm run check:upload-tooling -- --strict",
+      "purpose": "Verify Transporter/altool/iTMSTransporter and upload package availability."
+    },
+    {
+      "id": "upload-key-install",
+      "command": "npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run",
+      "purpose": "Validate the downloaded App Store Connect API key before installing it in the default private key directory."
+    },
+    {
+      "id": "upload-credentials",
+      "command": "npm run check:upload-credentials -- --strict",
+      "purpose": "Verify App Store Connect API key identifiers and private-key file posture without writing credential values."
+    },
+    {
+      "id": "upload-packet",
+      "command": "npm run upload-packet:store",
+      "purpose": "Generate the redacted upload command packet with package hashes and available upload tools."
+    },
+    {
+      "id": "apple-assets",
+      "command": "npm run apple-assets:store",
+      "purpose": "Generate the redacted Apple Developer/App Store Connect asset request packet for certificates, provisioning profile, package, and upload key."
+    },
+    {
+      "id": "upload-evidence",
+      "command": "npm run upload-evidence:store -- --log /path/to/transporter.log --tool transporter --status selected --processed-bundle-id com.sachittumuluri.codycartridge --processed-version 0.1.0 --processed-build 0.1.0",
+      "purpose": "Sanitize delivery logs and processed-build proof after App Store Connect processing."
+    },
+    {
+      "id": "evidence",
+      "command": "npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store && npm run signing-assets:store && npm run upload-packet:store && npm run copy-map:store && npm run apple-assets:store && npm run signing-runbook:store && npm run resolution-plan:store && npm run submission-checklist:store && npm run machine-report:store && npm run evidence:store && npm run check:evidence && npm run dashboard:store && npm run operator:store && npm run manifest:store && npm run check:manifest && npm run handoff:store",
+      "purpose": "Regenerate final blocker report, public-input packet, public-site publish packet, public host runbook, signing asset report, upload command packet, copy map, Apple release asset request packet, runbook, resolution plan, submission checklist, release machine report, check release evidence, dashboard, operator queue, check release manifest, and handoff archive."
+    },
+    {
+      "id": "release-machine-doctor",
+      "command": "npm run check:release-machine -- --strict",
+      "purpose": "Run the aggregate release-machine readiness doctor after refreshed blocker, signing, package, upload, and handoff artifacts."
+    },
+    {
+      "id": "strict",
+      "command": "npm run verify:store:strict",
+      "purpose": "Run final strict readiness verification before upload."
+    }
+  ],
+  "uploadChecklist": [
+    "Upload the signed MAS .pkg with Transporter, Xcode, altool, or iTMSTransporter.",
+    "Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, then rerun without --dry-run only after validation passes.",
+    "Run npm run check:upload-credentials -- --strict before entering or exporting App Store Connect API credential values for command-line upload.",
+    "Use UPLOAD_COMMAND_PACKET.md to confirm the exact package hash and available upload tool before entering Apple credentials.",
+    "Save raw Transporter/altool delivery logs outside the handoff archive, then run npm run upload-evidence:store with the log path to create sanitized UPLOAD_EVIDENCE.md.",
+    "Wait for App Store Connect build processing to finish.",
+    "Confirm processed build bundle id, version, and build version match this runbook.",
+    "Regenerate RELEASE_EVIDENCE.md, RELEASE_MANIFEST.md, and the handoff archive after UPLOAD_EVIDENCE.md is current.",
+    "Resolve export-compliance, privacy-manifest, entitlement, or processing warnings against the exact uploaded binary.",
+    "Select the processed build on the macOS app version before adding the version for review."
+  ],
+  "remainingBlockers": {
+    "total": 17,
+    "signingPackage": [
+      "MAS signing assets are installed",
+      "Signed MAS package boundary passes"
+    ],
+    "publicInputs": [
+      "CODY_SITE_URL is a real HTTPS URL",
+      "CODY_SUPPORT_EMAIL is real",
+      "App Review contact name is real",
+      "App Review contact email is real",
+      "App Review contact phone is real",
+      "Generated App Store fields have HTTPS support/privacy URLs"
+    ],
+    "generatedSite": [
+      "Generated public site has no raw placeholder tokens",
+      "Generated public site has publish-ready contact and origin",
+      "Public site archive has no publish placeholders"
+    ],
+    "submission": [
+      "Generated public release values are synced",
+      "App Store upload tooling and MAS package are available",
+      "App Store Connect upload credentials are configured",
+      "Public URL reachability gate is ready to run",
+      "Published public-site pages match the generated source",
+      "Generated App Store Connect copy has no placeholder contact data"
+    ]
+  }
+}

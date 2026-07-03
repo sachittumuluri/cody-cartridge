@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-06-20T20:32:22.342Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "status": "ready-for-app-store-connect-entry",
+    "itemCount": 13,
+    "readyCount": 8,
+    "manualCount": 5,
+    "blockerCount": 0,
+    "manualItemsAreAccountOrAppStoreConnectTasks": true
+  },
+  "sourceArtifacts": [
+    "app-store-assets/APP_STORE_CONNECT_FIELDS.json",
+    "app-store-assets/EXPORT_COMPLIANCE.json",
+    "app-store-assets/EXPORT_COMPLIANCE.md",
+    "APP_STORE_READINESS.md"
+  ],
+  "sections": [
+    {
+      "id": "age-rating",
+      "title": "Age Rating",
+      "readyCount": 2,
+      "manualCount": 0,
+      "blockerCount": 0,
+      "items": [
+        {
+          "id": "age-rating-candidate",
+          "section": "Age Rating",
+          "label": "4+ candidate rationale is present",
+          "status": "ready",
+          "evidence": "4+ candidate; App Store Connect generates the final rating from Apple's questionnaire.",
+          "action": "Answer Apple's age-rating questionnaire from the final shipped app behavior.",
+          "appStoreConnectLocation": "General > App Information > Age Ratings"
+        },
+        {
+          "id": "age-rating-risk-answers",
+          "section": "Age Rating",
+          "label": "Questionnaire risk answers are documented",
+          "status": "ready",
+          "evidence": "6 note(s)",
+          "action": "Use these notes while answering Apple age-rating questions; user-owned local media is outside the app bundle.",
+          "appStoreConnectLocation": "General > App Information > Age Ratings"
+        }
+      ]
+    },
+    {
+      "id": "privacy-data",
+      "title": "Privacy And Data",
+      "readyCount": 3,
+      "manualCount": 0,
+      "blockerCount": 0,
+      "items": [
+        {
+          "id": "privacy-no-collection",
+          "section": "Privacy And Data",
+          "label": "No data collection answer is present",
+          "status": "ready",
+          "evidence": "No, this app does not collect data from the app.",
+          "action": "Copy the App Privacy answer into App Store Connect and keep it aligned with the signed binary.",
+          "appStoreConnectLocation": "App Privacy"
+        },
+        {
+          "id": "privacy-no-tracking",
+          "section": "Privacy And Data",
+          "label": "No tracking answer is present",
+          "status": "ready",
+          "evidence": "No tracking.",
+          "action": "Confirm no analytics, ads, tracking domains, or off-device developer collection are added before upload.",
+          "appStoreConnectLocation": "App Privacy"
+        },
+        {
+          "id": "privacy-local-processing",
+          "section": "Privacy And Data",
+          "label": "Local data processing is disclosed",
+          "status": "ready",
+          "evidence": "Selected audio files, embedded tags/artwork, imported YouTube Music Takeout CSV rows, playback state, UI preferences, and security-scoped bookmarks.",
+          "action": "Use this wording to explain local-only library state if App Review asks.",
+          "appStoreConnectLocation": "App Privacy / App Review Notes"
+        }
+      ]
+    },
+    {
+      "id": "pricing-availability",
+      "title": "Pricing And Availability",
+      "readyCount": 0,
+      "manualCount": 4,
+      "blockerCount": 0,
+      "items": [
+        {
+          "id": "pricing",
+          "section": "Pricing And Availability",
+          "label": "First-release price candidate is documented",
+          "status": "manual",
+          "evidence": "Free candidate for first release.",
+          "action": "Set the final price in App Store Connect.",
+          "appStoreConnectLocation": "Monetization > Pricing and Availability"
+        },
+        {
+          "id": "availability",
+          "section": "Pricing And Availability",
+          "label": "Availability candidate is documented",
+          "status": "manual",
+          "evidence": "All countries and regions candidate unless you choose a narrower launch region in App Store Connect.",
+          "action": "Confirm launch countries/regions in App Store Connect.",
+          "appStoreConnectLocation": "Monetization > Pricing and Availability"
+        },
+        {
+          "id": "release-option",
+          "section": "Pricing And Availability",
+          "label": "Manual release recommendation is documented",
+          "status": "manual",
+          "evidence": "Manual release after approval is recommended for the first submission so the signed MAS build can be smoke-tested before launch.",
+          "action": "Choose the App Store version release option in App Store Connect.",
+          "appStoreConnectLocation": "App Store version > Pricing and Availability"
+        },
+        {
+          "id": "tax-category",
+          "section": "Pricing And Availability",
+          "label": "Tax category candidate is documented",
+          "status": "manual",
+          "evidence": "General app/software candidate; confirm in App Store Connect before submission.",
+          "action": "Confirm the final tax category in App Store Connect.",
+          "appStoreConnectLocation": "Monetization > Pricing and Availability"
+        }
+      ]
+    },
+    {
+      "id": "rights-compliance",
+      "title": "Rights And Compliance",
+      "readyCount": 3,
+      "manualCount": 1,
+      "blockerCount": 0,
+      "items": [
+        {
+          "id": "content-rights",
+          "section": "Rights And Compliance",
+          "label": "Content rights answer is local-file only",
+          "status": "ready",
+          "evidence": "The app ships without music, does not download or scrape music, and plays only user-selected files the user is responsible for owning or having rights to use.",
+          "action": "Use this answer for content-rights questions and App Review clarification.",
+          "appStoreConnectLocation": "App Information / Rights and Compliance"
+        },
+        {
+          "id": "export-compliance",
+          "section": "Rights And Compliance",
+          "label": "Export compliance answer matches prep artifact",
+          "status": "ready",
+          "evidence": "ready-for-app-store-connect-questionnaire",
+          "action": "Use EXPORT_COMPLIANCE.md for the final signed-binary export-compliance answer.",
+          "appStoreConnectLocation": "App Information > Export Compliance"
+        },
+        {
+          "id": "dsa-status",
+          "section": "Rights And Compliance",
+          "label": "EU DSA account answer is called out",
+          "status": "manual",
+          "evidence": "Must be answered in App Store Connect before EU distribution. Confirm whether the developer account is a trader or non-trader under the EU DSA.",
+          "action": "Answer trader/non-trader status in App Store Connect before enabling EU availability.",
+          "appStoreConnectLocation": "Business / Compliance information > European Union Digital Services Act"
+        },
+        {
+          "id": "login-iap-medical",
+          "section": "Rights And Compliance",
+          "label": "No login, IAP, or regulated medical device flow",
+          "status": "ready",
+          "evidence": "login=No. iap=None currently configured. medical=No.",
+          "action": "Keep these answers aligned with the signed binary and App Store Connect capabilities.",
+          "appStoreConnectLocation": "App Review / Compliance"
+        }
+      ]
+    }
+  ],
+  "finalSubmissionNotes": [
+    "Manual items are not represented as code blockers because they must be answered in App Store Connect against the final account and distribution choices.",
+    "Re-run npm run app-compliance:store after changing App Store fields, export-compliance prep, pricing, availability, or DSA guidance.",
+    "Re-run npm run check:app-compliance after the signed MAS binary is available and before Add for Review."
+  ]
+}

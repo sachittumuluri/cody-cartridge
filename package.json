@@ -1,0 +1,229 @@
+{
+  "name": "local-music-hoster",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A vintage gamer local desktop music player.",
+  "author": "Sachit Tumuluri",
+  "main": "electron/main.cjs",
+  "engines": {
+    "node": ">=20 <25"
+  },
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "web": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "version:store": "node scripts/bump-store-version.cjs",
+    "check:store-version": "node scripts/check-store-version.cjs",
+    "check:store-version:source": "node scripts/check-store-version.cjs --source-only",
+    "icon:build": "python3 build/generate-icon.py",
+    "check:icons": "node scripts/check-icons.cjs",
+    "check:app-privacy": "node scripts/check-app-privacy.cjs",
+    "export-compliance:store": "node scripts/build-export-compliance.cjs && node scripts/check-export-compliance.cjs --source-only",
+    "check:export-compliance": "node scripts/check-export-compliance.cjs",
+    "app-compliance:store": "node scripts/build-app-store-compliance.cjs && node scripts/check-app-store-compliance.cjs && npm run manual-tasks:store && npm run content-rights:store",
+    "check:app-compliance": "node scripts/check-app-store-compliance.cjs",
+    "manual-tasks:store": "node scripts/build-app-store-connect-manual-tasks.cjs && node scripts/check-app-store-connect-manual-tasks.cjs",
+    "check:manual-tasks": "node scripts/check-app-store-connect-manual-tasks.cjs",
+    "content-rights:store": "node scripts/build-app-content-rights.cjs && node scripts/check-app-content-rights.cjs",
+    "check:content-rights": "node scripts/check-app-content-rights.cjs",
+    "check:artifact-privacy": "node scripts/check-artifact-privacy.cjs",
+    "notices:store": "node scripts/build-third-party-notices.cjs",
+    "init:store-env": "node scripts/init-store-env.cjs",
+    "configure:store-env": "node scripts/configure-store-env.cjs",
+    "check:store-env": "node scripts/check-store-env.cjs",
+    "check:store-copy": "node scripts/check-store-copy.cjs",
+    "copy-map:store": "node scripts/build-app-store-copy-map.cjs && node scripts/check-app-store-copy-map.cjs",
+    "check:copy-map": "node scripts/check-app-store-copy-map.cjs",
+    "review-brief:store": "node scripts/build-app-review-brief.cjs && node scripts/check-app-review-brief.cjs",
+    "check:review-brief": "node scripts/check-app-review-brief.cjs",
+    "check:site": "node scripts/check-store-site.cjs",
+    "archive:site": "node scripts/build-public-site-archive.cjs",
+    "check:site-archive": "node scripts/check-public-site-archive.cjs",
+    "site:archive": "npm run archive:site && npm run check:site-archive",
+    "check:store-urls": "node scripts/check-store-urls.cjs",
+    "check:electron-security": "node scripts/check-electron-security.cjs",
+    "check:help-docs": "node scripts/check-help-docs.cjs",
+    "check:release-runtime": "node scripts/check-release-runtime.cjs",
+    "release:node": "node scripts/run-release-node.cjs",
+    "check:release-runtime:node": "node scripts/run-release-node.cjs npm run check:release-runtime --",
+    "check:release-machine": "node scripts/check-release-machine.cjs",
+    "check:release-machine:node": "node scripts/run-release-node.cjs npm run check:release-machine --",
+    "machine-report:store": "node scripts/build-release-machine-report.cjs && node scripts/check-release-machine-report.cjs",
+    "check:machine-report": "node scripts/check-release-machine-report.cjs",
+    "check:packaging-toolchain": "node scripts/check-packaging-toolchain.cjs",
+    "site:store": "npm run notices:store && node scripts/build-store-site.cjs && npm run check:site",
+    "packet:store": "node scripts/build-submission-packet.cjs",
+    "manifest:store": "node scripts/build-release-manifest.cjs && node scripts/check-release-manifest.cjs",
+    "check:manifest": "node scripts/check-release-manifest.cjs",
+    "handoff:store": "node scripts/build-submission-handoff.cjs && node scripts/check-submission-handoff.cjs",
+    "check:handoff": "node scripts/check-submission-handoff.cjs",
+    "report:store-blockers": "node scripts/build-release-blocker-report.cjs",
+    "public-inputs:store": "node scripts/build-public-release-inputs.cjs && node scripts/check-public-release-inputs.cjs",
+    "check:public-inputs": "node scripts/check-public-release-inputs.cjs",
+    "publish-packet:store": "node scripts/build-public-site-publish-packet.cjs && node scripts/check-public-site-publish-packet.cjs",
+    "check:publish-packet": "node scripts/check-public-site-publish-packet.cjs",
+    "public-host:store": "node scripts/build-public-host-runbook.cjs && node scripts/check-public-host-runbook.cjs",
+    "check:public-host": "node scripts/check-public-host-runbook.cjs",
+    "check:published-site": "node scripts/check-public-site-published.cjs",
+    "check:public-release-sync": "node scripts/check-public-release-sync.cjs",
+    "public-release:store": "node scripts/refresh-public-release.cjs",
+    "public-release:store:node": "node scripts/run-release-node.cjs npm run public-release:store --",
+    "public-release:store:published": "node scripts/refresh-public-release.cjs --published",
+    "public-release:store:published:node": "node scripts/run-release-node.cjs npm run public-release:store:published --",
+    "resolution-plan:store": "node scripts/build-release-resolution-plan.cjs && node scripts/check-release-resolution-plan.cjs",
+    "check:resolution-plan": "node scripts/check-release-resolution-plan.cjs",
+    "submission-checklist:store": "node scripts/build-final-submission-checklist.cjs && node scripts/check-final-submission-checklist.cjs",
+    "check:submission-checklist": "node scripts/check-final-submission-checklist.cjs",
+    "dashboard:store": "node scripts/build-release-dashboard.cjs && node scripts/check-release-dashboard.cjs",
+    "check:dashboard": "node scripts/check-release-dashboard.cjs",
+    "operator:store": "node scripts/build-release-operator-queue.cjs && node scripts/check-release-operator-queue.cjs",
+    "check:operator": "node scripts/check-release-operator-queue.cjs",
+    "signing-runbook:store": "node scripts/build-signing-upload-runbook.cjs && node scripts/check-signing-upload-runbook.cjs",
+    "check:signing-runbook": "node scripts/check-signing-upload-runbook.cjs",
+    "signing-assets:store": "node scripts/build-signing-asset-report.cjs && node scripts/check-signing-asset-report.cjs",
+    "check:signing-assets": "node scripts/check-signing-asset-report.cjs",
+    "apple-assets:store": "node scripts/build-apple-release-assets.cjs && node scripts/check-apple-release-assets.cjs",
+    "check:apple-assets": "node scripts/check-apple-release-assets.cjs",
+    "install:mas-profile": "node scripts/install-mas-profile.cjs",
+    "install:asc-key": "node scripts/install-asc-key.cjs",
+    "upload-evidence:store": "node scripts/build-upload-evidence.cjs && node scripts/check-upload-evidence.cjs",
+    "check:upload-evidence": "node scripts/check-upload-evidence.cjs",
+    "upload-packet:store": "node scripts/build-upload-command-packet.cjs && node scripts/check-upload-command-packet.cjs",
+    "check:upload-packet": "node scripts/check-upload-command-packet.cjs",
+    "evidence:store": "node scripts/build-release-evidence.cjs && node scripts/check-release-evidence.cjs",
+    "check:evidence": "node scripts/check-release-evidence.cjs",
+    "check:mas-signing": "node scripts/check-mas-signing.cjs",
+    "check:mas-package": "node scripts/check-mas-package.cjs",
+    "check:upload-tooling": "node scripts/check-upload-tooling.cjs",
+    "check:upload-credentials": "node scripts/check-upload-credentials.cjs",
+    "smoke:store": "npm run build && electron scripts/smoke-store-build.cjs",
+    "smoke:a11y": "npm run build && electron scripts/smoke-accessibility.cjs",
+    "smoke:electron-shell": "npm run build && node scripts/smoke-electron-shell.cjs",
+    "smoke:clean-profile": "npm run build && node scripts/smoke-clean-profile.cjs",
+    "smoke:mas-dir": "npm run build && node scripts/smoke-mas-dir-build.cjs",
+    "smoke:mas-runtime": "node scripts/smoke-mas-runtime.cjs",
+    "check:screenshots": "node scripts/check-store-screenshots.cjs",
+    "screenshots:store": "npm run build && electron scripts/capture-store-screenshots.cjs && npm run check:screenshots",
+    "verify:store": "node scripts/verify-store-readiness-with-build.cjs",
+    "verify:store:strict": "node scripts/run-release-node.cjs node scripts/verify-store-readiness.cjs --strict",
+    "verify:store:strict:node": "node scripts/run-release-node.cjs npm run verify:store:strict --",
+    "release:store:local": "npm run check:store-version:source && npm run check:release-runtime && npm run public-release:store -- --self-test && npm run check:icons && npm run check:electron-security && npm run check:packaging-toolchain && npm run notices:store && npm run site:store && npm run site:archive && npm run check:help-docs && npm run smoke:electron-shell && npm run smoke:clean-profile && npm run smoke:store && npm run smoke:a11y && npm run screenshots:store && npm run smoke:mas-dir && npm run smoke:mas-runtime && npm run export-compliance:store && npm run packet:store && npm run app-compliance:store && npm run review-brief:store && npm run copy-map:store && npm run check:public-release-sync && npm run check:store-version && npm run check:app-privacy && npm run check:export-compliance && npm run check:app-compliance && npm run check:store-copy && npm run check:artifact-privacy && npm run check:store-urls && npm run check:mas-signing && npm run signing-assets:store && npm run check:mas-package && npm run check:upload-tooling && npm run check:upload-credentials && npm run upload-packet:store && npm run apple-assets:store && npm run upload-evidence:store && npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store && npm run check:published-site && npm run signing-assets:store && npm run upload-packet:store && npm run copy-map:store && npm run apple-assets:store && npm run signing-runbook:store && npm run resolution-plan:store && npm run submission-checklist:store && npm run machine-report:store && npm run evidence:store && npm run check:evidence && npm run dashboard:store && npm run operator:store && npm run manifest:store && npm run check:manifest && npm run handoff:store && npm run check:release-machine && npm run verify:store",
+    "release:store:local:node": "node scripts/run-release-node.cjs npm run release:store:local --",
+    "release:store:preflight": "npm run check:store-env && npm run check:release-runtime -- --strict && npm run check:store-version:source && npm run public-release:store -- --self-test && npm run check:icons && npm run check:electron-security && npm run check:packaging-toolchain && npm run notices:store && npm run site:store && npm run check:site -- --strict && npm run archive:site && npm run check:site-archive -- --strict && npm run check:help-docs && npm run smoke:electron-shell && npm run smoke:clean-profile && npm run smoke:store && npm run smoke:a11y && npm run screenshots:store && npm run export-compliance:store && npm run packet:store && npm run app-compliance:store && npm run review-brief:store && npm run copy-map:store && npm run check:review-brief -- --strict && npm run check:copy-map -- --strict && npm run check:public-release-sync -- --strict && npm run check:store-version && npm run check:app-privacy && npm run check:export-compliance && npm run check:app-compliance && npm run check:store-copy && npm run check:artifact-privacy && npm run check:store-urls -- --strict && npm run signing-assets:store && npm run check:mas-signing -- --strict && npm run dist:mas && npm run check:mas-package -- --strict && npm run check:upload-tooling -- --strict && npm run check:upload-credentials -- --strict && npm run upload-packet:store && npm run apple-assets:store && npm run upload-evidence:store && npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store && npm run check:published-site -- --strict && npm run signing-assets:store && npm run upload-packet:store && npm run copy-map:store && npm run check:copy-map -- --strict && npm run apple-assets:store && npm run signing-runbook:store && npm run resolution-plan:store && npm run submission-checklist:store && npm run machine-report:store && npm run evidence:store && npm run check:evidence && npm run dashboard:store && npm run operator:store && npm run manifest:store && npm run check:manifest && npm run handoff:store && npm run check:release-machine -- --strict && npm run verify:store:strict",
+    "release:store:preflight:node": "node scripts/run-release-node.cjs npm run release:store:preflight --",
+    "dist:mac": "npm run notices:store && npm run build && electron-builder --mac",
+    "dist:mas": "npm run notices:store && npm run build && electron-builder --mac mas",
+    "dist:mas-dev": "npm run notices:store && npm run build && electron-builder --mac mas-dev"
+  },
+  "dependencies": {
+    "lucide-react": "0.468.0",
+    "music-metadata": "^11.13.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.7.0",
+    "concurrently": "9.1.0",
+    "electron": "41.7.1",
+    "electron-builder": "^26.15.5",
+    "typescript": "5.6.3",
+    "vite": "6.4.3",
+    "wait-on": "8.0.1"
+  },
+  "overrides": {
+    "@noble/hashes": "1.8.0"
+  },
+  "build": {
+    "appId": "com.sachittumuluri.codycartridge",
+    "productName": "Cody Cartridge",
+    "buildVersion": "0.1.0",
+    "copyright": "Copyright © 2026 Sachit Tumuluri",
+    "directories": {
+      "buildResources": "build"
+    },
+    "asar": true,
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "loadBrowserProcessSpecificV8Snapshot": false,
+      "grantFileProtocolExtraPrivileges": false
+    },
+    "extraResources": [
+      {
+        "from": "build/PrivacyInfo.xcprivacy",
+        "to": "PrivacyInfo.xcprivacy"
+      },
+      {
+        "from": "app-store-assets/THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "from": "app-store-assets/THIRD_PARTY_NOTICES.json",
+        "to": "THIRD_PARTY_NOTICES.json"
+      },
+      {
+        "from": "app-store-assets/PRIVACY_POLICY.md",
+        "to": "PRIVACY_POLICY.md"
+      },
+      {
+        "from": "app-store-assets/SUPPORT.md",
+        "to": "SUPPORT.md"
+      },
+      {
+        "from": "app-store-assets/ACCESSIBILITY.md",
+        "to": "ACCESSIBILITY.md"
+      }
+    ],
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.music",
+      "icon": "build/icon.icns",
+      "minimumSystemVersion": "12.0",
+      "extendInfo": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": null,
+        "NSAudioCaptureUsageDescription": null,
+        "NSBluetoothAlwaysUsageDescription": null,
+        "NSBluetoothPeripheralUsageDescription": null,
+        "NSCameraUsageDescription": null,
+        "NSMicrophoneUsageDescription": null
+      },
+      "target": [
+        "dmg"
+      ]
+    },
+    "mas": {
+      "category": "public.app-category.music",
+      "icon": "build/icon.icns",
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "hardenedRuntime": true,
+      "minimumSystemVersion": "12.0",
+      "target": [
+        "mas"
+      ]
+    },
+    "masDev": {
+      "category": "public.app-category.music",
+      "icon": "build/icon.icns",
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "hardenedRuntime": true,
+      "minimumSystemVersion": "12.0",
+      "target": [
+        "mas-dev"
+      ]
+    }
+  }
+}

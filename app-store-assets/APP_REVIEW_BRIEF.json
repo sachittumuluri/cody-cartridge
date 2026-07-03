@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-06-20T20:32:22.677Z",
+  "app": {
+    "appId": "com.sachittumuluri.codycartridge",
+    "buildVersion": "0.1.0",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "category": "public.app-category.music",
+    "copyright": "Copyright © 2026 Sachit Tumuluri",
+    "name": "Cody Cartridge",
+    "packageVersion": "0.1.0",
+    "productName": "Cody Cartridge",
+    "sku": "cody-cartridge-mac",
+    "subtitle": "Local music, signal mapped."
+  },
+  "summary": {
+    "validationCount": 11,
+    "readyCount": 6,
+    "blockerCount": 5
+  },
+  "appReview": {
+    "notes": "Cody Cartridge is a local-first desktop music player. It plays files selected by the user through the macOS open panel or drag/drop. It can optionally read a user-provided YouTube Music Takeout CSV to match metadata against local files.\n\nThe app does not download music, scrape YouTube Music, access streaming accounts, provide copyrighted media, or transmit the user's library off device. Testers can use the picker flow with local audio files. Store screenshots are captured from `?store-demo=1`, which uses synthetic demo metadata only.\n\nSandbox file access is intentionally read-only and uses user-selected file/folder access plus security-scoped bookmarks for persistent playback access after picker imports.",
+    "notesBytes": 713,
+    "contact": {
+      "name": "reviewName=placeholder",
+      "email": "reviewEmail=placeholder",
+      "phone": "reviewPhone=placeholder"
+    },
+    "contactState": {
+      "name": "placeholder",
+      "email": "placeholder",
+      "phone": "placeholder"
+    },
+    "demoAccount": "None. The app has no account system.",
+    "testInstructions": [
+      "Launch the app.",
+      "Use File > Import Audio Files or File > Import Music Folder with user-owned local audio files.",
+      "Treat picker imports as the primary sandbox-safe file access path; dropped paths in MAS builds are accepted only after they fall under a stored security-scoped bookmark.",
+      "Optionally use File > Import YouTube Music Takeout with a user-provided CSV export.",
+      "Confirm local playback, embedded artwork/metadata display, and missing-file visibility.",
+      "Open Help > Privacy Summary, Privacy Policy, Support, Accessibility, and Third-Party Notices to confirm in-app policy, support, accessibility, and license disclosures are available.",
+      "Use File > Reset Local Library and confirm local index data clears without deleting the source audio files."
+    ]
+  },
+  "publicLinks": {
+    "supportUrl": "supportUrl=placeholder",
+    "privacyPolicyUrl": "privacyPolicyUrl=placeholder",
+    "accessibilityUrl": "accessibilityUrl=placeholder",
+    "thirdPartyNoticesUrl": "thirdPartyNoticesUrl=placeholder"
+  },
+  "publicLinkState": {
+    "supportUrl": "placeholder",
+    "privacyPolicyUrl": "placeholder",
+    "accessibilityUrl": "placeholder",
+    "thirdPartyNoticesUrl": "placeholder"
+  },
+  "reviewerChecklist": [
+    "Launch the signed MAS build and confirm the app opens without account, network, or purchase prompts.",
+    "Import user-owned local audio through File > Import Audio Files or File > Import Music Folder.",
+    "Confirm playback, seek, volume, album art, metadata, Takeout CSV matching, and missing-file states.",
+    "Quit and relaunch to confirm sandboxed read-only access is preserved through app-scoped bookmarks.",
+    "Open Help > Privacy Summary, Privacy Policy, Support, Accessibility, and Third-Party Notices.",
+    "Run File > Reset Local Library and confirm the app clears its local index without deleting user audio files."
+  ],
+  "reviewerDisclosure": {
+    "localOnly": "Cody Cartridge ships without music, has no account system, and plays only user-selected local audio files.",
+    "noDownload": "The app does not download, scrape, stream from YouTube Music, or access a user's YouTube account.",
+    "privacy": "No, this app does not collect data from the app.",
+    "sandbox": "Picker-selected files and folders are the primary sandbox-safe access path; dropped paths in MAS builds require an existing stored security-scoped bookmark."
+  },
+  "validations": [
+    {
+      "id": "review-notes-present",
+      "label": "Review notes are present",
+      "status": "ready",
+      "action": ""
+    },
+    {
+      "id": "review-notes-limit",
+      "label": "Review notes are under 4000 characters",
+      "status": "ready",
+      "action": ""
+    },
+    {
+      "id": "demo-account",
+      "label": "Demo account declares no account system",
+      "status": "ready",
+      "action": ""
+    },
+    {
+      "id": "contact-name",
+      "label": "App Review contact name is real",
+      "status": "blocker",
+      "action": "Set CODY_REVIEW_CONTACT_NAME before regenerating packet and brief."
+    },
+    {
+      "id": "contact-email",
+      "label": "App Review contact email is real",
+      "status": "blocker",
+      "action": "Set CODY_REVIEW_CONTACT_EMAIL or CODY_SUPPORT_EMAIL before regenerating packet and brief."
+    },
+    {
+      "id": "contact-phone",
+      "label": "App Review contact phone is real",
+      "status": "blocker",
+      "action": "Set CODY_REVIEW_CONTACT_PHONE before regenerating packet and brief."
+    },
+    {
+      "id": "support-url",
+      "label": "Support URL is public HTTPS",
+      "status": "blocker",
+      "action": "Set CODY_SITE_URL and regenerate site, packet, and brief."
+    },
+    {
+      "id": "privacy-url",
+      "label": "Privacy Policy URL is public HTTPS",
+      "status": "blocker",
+      "action": "Set CODY_SITE_URL and regenerate site, packet, and brief."
+    },
+    {
+      "id": "sandbox-instructions",
+      "label": "Sandbox file-access instructions are included",
+      "status": "ready",
+      "action": ""
+    },
+    {
+      "id": "no-download-claim",
+      "label": "No-download/no-scraping claim is included",
+      "status": "ready",
+      "action": ""
+    },
+    {
+      "id": "help-docs",
+      "label": "Help document inspection is included",
+      "status": "ready",
+      "action": ""
+    }
+  ]
+}

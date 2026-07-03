@@ -1,0 +1,546 @@
+{
+  "generatedAt": "2026-06-20T20:32:23.827Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "releaseEnv": {
+    "loadedFiles": [
+      "app-store-assets/site.env"
+    ],
+    "privateFilesExcludedFromHandoff": [
+      "app-store-assets/site.env",
+      "app-store-assets/site.env.local"
+    ],
+    "publicInputReadyCount": 0,
+    "publicInputRequiredCount": 5
+  },
+  "appStoreUrls": {
+    "supportUrl": "TODO_PUBLIC_SITE_URL/support.html",
+    "privacyPolicyUrl": "TODO_PUBLIC_SITE_URL/privacy.html",
+    "marketingUrl": "Optional or TODO_PUBLIC_SITE_URL/index.html",
+    "accessibilityUrl": "Optional or TODO_PUBLIC_SITE_URL/accessibility.html",
+    "thirdPartyNoticesUrl": "Optional or TODO_PUBLIC_SITE_URL/third-party-notices.html"
+  },
+  "summary": {
+    "publishStatus": "blocked",
+    "requiredPageCount": 5,
+    "readyPageCount": 0,
+    "blockedPageCount": 5,
+    "missingOrMismatchedPageCount": 0,
+    "requiredCompanionFileCount": 2,
+    "readyCompanionFileCount": 0,
+    "blockedCompanionFileCount": 2,
+    "missingOrMismatchedCompanionFileCount": 0,
+    "requiredHostingConfigFileCount": 2,
+    "readyHostingConfigFileCount": 2,
+    "blockedHostingConfigFileCount": 0,
+    "missingOrMismatchedHostingConfigFileCount": 0,
+    "publicOriginStatus": "blocked",
+    "publicOriginValueState": "placeholder",
+    "supportEmailStatus": "placeholder",
+    "placeholderPublishValues": true,
+    "blockerCount": 17
+  },
+  "archive": {
+    "path": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+    "status": "blocked",
+    "exists": true,
+    "sizeBytes": 69000,
+    "sha256": "8c58269676f6995a55c92d48e4ecd5c948af7c7b050e991068288dc929954de7",
+    "manifestPath": "app-store-assets/public-site/PUBLIC_SITE_ARCHIVE.json",
+    "manifestSha256": "fb5bb647ec0a838391f10c594077347494e1bd6a6169478a434b6b8d7a287684",
+    "placeholderState": {
+      "supportEmail": true,
+      "siteUrl": true,
+      "files": [
+        "robots.txt",
+        "sitemap.xml"
+      ]
+    }
+  },
+  "pages": [
+    {
+      "id": "home",
+      "fileName": "index.html",
+      "label": "Marketing landing page",
+      "appStoreUse": "Marketing URL",
+      "sourcePath": "app-store-assets/site/index.html",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/index.html",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 8884,
+      "sourceSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
+      "archiveEntryExists": true,
+      "archiveSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
+      "archiveSizeBytes": 8884,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "id": "support",
+      "fileName": "support.html",
+      "label": "Support page",
+      "appStoreUse": "Support URL",
+      "sourcePath": "app-store-assets/site/support.html",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/support.html",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 6572,
+      "sourceSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
+      "archiveEntryExists": true,
+      "archiveSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
+      "archiveSizeBytes": 6572,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "id": "privacy",
+      "fileName": "privacy.html",
+      "label": "Privacy policy",
+      "appStoreUse": "Privacy Policy URL",
+      "sourcePath": "app-store-assets/site/privacy.html",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/privacy.html",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 7003,
+      "sourceSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
+      "archiveEntryExists": true,
+      "archiveSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
+      "archiveSizeBytes": 7003,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "id": "accessibility",
+      "fileName": "accessibility.html",
+      "label": "Accessibility statement",
+      "appStoreUse": "Accessibility URL",
+      "sourcePath": "app-store-assets/site/accessibility.html",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/accessibility.html",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 6329,
+      "sourceSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
+      "archiveEntryExists": true,
+      "archiveSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
+      "archiveSizeBytes": 6329,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "id": "third-party-notices",
+      "fileName": "third-party-notices.html",
+      "label": "Third-party notices",
+      "appStoreUse": "Support/legal reference",
+      "sourcePath": "app-store-assets/site/third-party-notices.html",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/third-party-notices.html",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 36835,
+      "sourceSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
+      "archiveEntryExists": true,
+      "archiveSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
+      "archiveSizeBytes": 36835,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    }
+  ],
+  "companionFiles": [
+    {
+      "id": "robots",
+      "fileName": "robots.txt",
+      "label": "Robots policy",
+      "appStoreUse": "Public site crawler metadata",
+      "sourcePath": "app-store-assets/site/robots.txt",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/robots.txt",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 66,
+      "sourceSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
+      "archiveEntryExists": true,
+      "archiveSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
+      "archiveSizeBytes": 66,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "id": "sitemap",
+      "fileName": "sitemap.xml",
+      "label": "Sitemap",
+      "appStoreUse": "Public site crawler metadata",
+      "sourcePath": "app-store-assets/site/sitemap.xml",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/sitemap.xml",
+      "expectedUrl": "pending-public-site-url",
+      "expectedContentType": "application/xml; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "urlStatus": "blocked",
+      "sourceExists": true,
+      "sourceSizeBytes": 416,
+      "sourceSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
+      "archiveEntryExists": true,
+      "archiveSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
+      "archiveSizeBytes": 416,
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    }
+  ],
+  "hostingConfigFiles": [
+    {
+      "id": "headers",
+      "fileName": "_headers",
+      "label": "Static host headers",
+      "appStoreUse": "Static host content-type and cache policy",
+      "sourcePath": "app-store-assets/site/_headers",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/_headers",
+      "expectedUrl": "host-consumed-static-config",
+      "expectedContentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "urlStatus": "not-applicable",
+      "sourceExists": true,
+      "sourceSizeBytes": 278,
+      "sourceSha256": "425631a71b65cf392c9f36b4c1eb025a6cd53bc291ffc1838f30ccde194e6833",
+      "archiveEntryExists": true,
+      "archiveSha256": "425631a71b65cf392c9f36b4c1eb025a6cd53bc291ffc1838f30ccde194e6833",
+      "archiveSizeBytes": 278,
+      "sourceMatchesArchive": true,
+      "publishStatus": "ready"
+    },
+    {
+      "id": "vercel",
+      "fileName": "vercel.json",
+      "label": "Vercel deployment headers",
+      "appStoreUse": "Static host content-type and cache policy",
+      "sourcePath": "app-store-assets/site/vercel.json",
+      "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "publishPath": "/vercel.json",
+      "expectedUrl": "host-consumed-static-config",
+      "expectedContentType": "application/json; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "urlStatus": "not-applicable",
+      "sourceExists": true,
+      "sourceSizeBytes": 831,
+      "sourceSha256": "b7b409078eac61393b89bd58f52ad0c1d0da756c459c1f8ece6b3402cb57f39b",
+      "archiveEntryExists": true,
+      "archiveSha256": "b7b409078eac61393b89bd58f52ad0c1d0da756c459c1f8ece6b3402cb57f39b",
+      "archiveSizeBytes": 831,
+      "sourceMatchesArchive": true,
+      "publishStatus": "ready"
+    }
+  ],
+  "hosting": {
+    "httpsRequired": true,
+    "publicOrigin": "pending-public-site-url",
+    "publicOriginStatus": "blocked",
+    "uploadSources": [
+      "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "app-store-assets/site/"
+    ],
+    "requiredFileCount": 9,
+    "readyFileCount": 2,
+    "blockedFileCount": 7,
+    "requiredFiles": [
+      {
+        "fileName": "index.html",
+        "label": "Marketing landing page",
+        "appStoreUse": "Marketing URL",
+        "sourcePath": "app-store-assets/site/index.html",
+        "publishPath": "/index.html",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "text/html; charset=utf-8",
+        "cacheControl": "public, max-age=300",
+        "sourceSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
+        "archiveSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "support.html",
+        "label": "Support page",
+        "appStoreUse": "Support URL",
+        "sourcePath": "app-store-assets/site/support.html",
+        "publishPath": "/support.html",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "text/html; charset=utf-8",
+        "cacheControl": "public, max-age=300",
+        "sourceSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
+        "archiveSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "privacy.html",
+        "label": "Privacy policy",
+        "appStoreUse": "Privacy Policy URL",
+        "sourcePath": "app-store-assets/site/privacy.html",
+        "publishPath": "/privacy.html",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "text/html; charset=utf-8",
+        "cacheControl": "public, max-age=300",
+        "sourceSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
+        "archiveSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "accessibility.html",
+        "label": "Accessibility statement",
+        "appStoreUse": "Accessibility URL",
+        "sourcePath": "app-store-assets/site/accessibility.html",
+        "publishPath": "/accessibility.html",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "text/html; charset=utf-8",
+        "cacheControl": "public, max-age=300",
+        "sourceSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
+        "archiveSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "third-party-notices.html",
+        "label": "Third-party notices",
+        "appStoreUse": "Support/legal reference",
+        "sourcePath": "app-store-assets/site/third-party-notices.html",
+        "publishPath": "/third-party-notices.html",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "text/html; charset=utf-8",
+        "cacheControl": "public, max-age=300",
+        "sourceSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
+        "archiveSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "robots.txt",
+        "label": "Robots policy",
+        "appStoreUse": "Public site crawler metadata",
+        "sourcePath": "app-store-assets/site/robots.txt",
+        "publishPath": "/robots.txt",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "text/plain; charset=utf-8",
+        "cacheControl": "public, max-age=3600",
+        "sourceSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
+        "archiveSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "sitemap.xml",
+        "label": "Sitemap",
+        "appStoreUse": "Public site crawler metadata",
+        "sourcePath": "app-store-assets/site/sitemap.xml",
+        "publishPath": "/sitemap.xml",
+        "expectedUrl": "pending-public-site-url",
+        "expectedContentType": "application/xml; charset=utf-8",
+        "cacheControl": "public, max-age=3600",
+        "sourceSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
+        "archiveSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
+        "publishStatus": "blocked"
+      },
+      {
+        "fileName": "_headers",
+        "label": "Static host headers",
+        "appStoreUse": "Static host content-type and cache policy",
+        "sourcePath": "app-store-assets/site/_headers",
+        "publishPath": "/_headers",
+        "expectedUrl": "host-consumed-static-config",
+        "expectedContentType": "text/plain; charset=utf-8",
+        "cacheControl": "public, max-age=3600",
+        "sourceSha256": "425631a71b65cf392c9f36b4c1eb025a6cd53bc291ffc1838f30ccde194e6833",
+        "archiveSha256": "425631a71b65cf392c9f36b4c1eb025a6cd53bc291ffc1838f30ccde194e6833",
+        "publishStatus": "ready"
+      },
+      {
+        "fileName": "vercel.json",
+        "label": "Vercel deployment headers",
+        "appStoreUse": "Static host content-type and cache policy",
+        "sourcePath": "app-store-assets/site/vercel.json",
+        "publishPath": "/vercel.json",
+        "expectedUrl": "host-consumed-static-config",
+        "expectedContentType": "application/json; charset=utf-8",
+        "cacheControl": "public, max-age=3600",
+        "sourceSha256": "b7b409078eac61393b89bd58f52ad0c1d0da756c459c1f8ece6b3402cb57f39b",
+        "archiveSha256": "b7b409078eac61393b89bd58f52ad0c1d0da756c459c1f8ece6b3402cb57f39b",
+        "publishStatus": "ready"
+      }
+    ],
+    "postPublishChecks": [
+      "npm run check:store-urls -- --strict",
+      "npm run check:published-site -- --strict"
+    ],
+    "privateFilesExcluded": [
+      "app-store-assets/site.env",
+      "app-store-assets/site.env.local"
+    ]
+  },
+  "blockerQueueAction": {
+    "categoryId": "public-inputs",
+    "categoryLabel": "Public Site And Contact Inputs",
+    "firstBlockedCheckId": "public-site-url",
+    "nextAction": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
+    "recommendedCommand": "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\" && npm run configure:store-env -- --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\" && npm run public-release:store:node -- --self-test && npm run public-inputs:store && npm run check:store-env && npm run check:release-runtime:node -- --strict"
+  },
+  "relatedBlockers": [
+    {
+      "categoryId": "public-inputs",
+      "id": "public-site-url",
+      "label": "CODY_SITE_URL is a real HTTPS URL",
+      "action": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "categoryId": "public-inputs",
+      "id": "support-email",
+      "label": "CODY_SUPPORT_EMAIL is real",
+      "action": "Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "categoryId": "public-inputs",
+      "id": "review-contact-name",
+      "label": "App Review contact name is real",
+      "action": "Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "categoryId": "public-inputs",
+      "id": "review-contact-email",
+      "label": "App Review contact email is real",
+      "action": "Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "categoryId": "public-inputs",
+      "id": "review-contact-phone",
+      "label": "App Review contact phone is real",
+      "action": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "categoryId": "public-inputs",
+      "id": "generated-fields-public-urls",
+      "label": "Generated App Store fields have HTTPS support/privacy URLs",
+      "action": "Run npm run packet:store after real CODY_SITE_URL is available.",
+      "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder"
+    },
+    {
+      "categoryId": "generated-site",
+      "id": "site-no-placeholders",
+      "label": "Generated public site has no raw placeholder tokens",
+      "action": "Set real CODY_* values, then run npm run site:store.",
+      "evidence": "raw placeholder token remains in generated public site"
+    },
+    {
+      "categoryId": "generated-site",
+      "id": "site-publish-values-ready",
+      "label": "Generated public site has publish-ready contact and origin",
+      "action": "Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.",
+      "evidence": "siteUrl=placeholder supportEmail=placeholder"
+    },
+    {
+      "categoryId": "generated-site",
+      "id": "archive-no-placeholders",
+      "label": "Public site archive has no publish placeholders",
+      "action": "Run npm run site:archive after generating the site with real public values.",
+      "evidence": "placeholder files: robots.txt, sitemap.xml"
+    },
+    {
+      "categoryId": "submission",
+      "id": "public-release-sync-strict",
+      "label": "Generated public release values are synced",
+      "action": "Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.",
+      "evidence": "strict check failed · 6 failure(s) · 0 warning(s)"
+    },
+    {
+      "categoryId": "submission",
+      "id": "upload-tooling-strict",
+      "label": "App Store upload tooling and MAS package are available",
+      "action": "Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict.",
+      "evidence": "strict check failed · 1 failure(s) · 1 warning(s)"
+    },
+    {
+      "categoryId": "submission",
+      "id": "upload-credentials-strict",
+      "label": "App Store Connect upload credentials are configured",
+      "action": "Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict.",
+      "evidence": "strict check failed · 3 failure(s) · 0 warning(s)"
+    },
+    {
+      "categoryId": "submission",
+      "id": "support-url-reachable-gate",
+      "label": "Public URL reachability gate is ready to run",
+      "action": "After publishing the public site, run npm run check:store-urls -- --strict.",
+      "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder"
+    },
+    {
+      "categoryId": "submission",
+      "id": "published-site-strict",
+      "label": "Published public-site pages match the generated source",
+      "action": "After publishing the public site, run npm run check:published-site -- --strict.",
+      "evidence": "strict check failed · 8 failure(s) · 0 warning(s)"
+    },
+    {
+      "categoryId": "submission",
+      "id": "app-store-connect-copy-ready",
+      "label": "Generated App Store Connect copy has no placeholder contact data",
+      "action": "Run npm run packet:store after real public support and App Review contact values are set.",
+      "evidence": "supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder"
+    }
+  ],
+  "commands": [
+    "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\"",
+    "npm run public-release:store -- --self-test",
+    "npm run public-release:store:node -- --self-test",
+    "npm run public-release:store -- --dry-run",
+    "npm run public-release:store:node -- --dry-run",
+    "npm run site:store && npm run site:archive",
+    "Upload app-store-assets/public-site/cody-cartridge-public-site.zip or the app-store-assets/site/ directory to the HTTPS public host.",
+    "npm run public-release:store -- --published",
+    "npm run public-release:store:published:node",
+    "npm run public-host:store",
+    "npm run check:store-urls -- --strict",
+    "npm run check:published-site -- --strict",
+    "npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store"
+  ],
+  "sourceArtifacts": [
+    "app-store-assets/PUBLIC_RELEASE_INPUTS.json",
+    "app-store-assets/RELEASE_BLOCKERS.json",
+    "app-store-assets/APP_STORE_CONNECT_FIELDS.json",
+    "app-store-assets/public-site/PUBLIC_SITE_ARCHIVE.json",
+    "app-store-assets/public-site/cody-cartridge-public-site.zip",
+    "scripts/build-public-site-publish-packet.cjs",
+    "scripts/check-public-site-publish-packet.cjs",
+    "scripts/build-public-host-runbook.cjs",
+    "scripts/check-public-host-runbook.cjs",
+    "scripts/check-public-site-published.cjs",
+    "scripts/check-store-urls.cjs",
+    "scripts/refresh-public-release.cjs"
+  ],
+  "redaction": {
+    "storesRawPrivateContactValues": false,
+    "storesSigningSecrets": false,
+    "privateEnvFileIncluded": false
+  }
+}

@@ -1,0 +1,404 @@
+{
+  "generatedAt": "2026-06-20T20:32:25.507Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "sectionCount": 8,
+    "itemCount": 42,
+    "blockerCount": 18,
+    "readyForAddForReview": false
+  },
+  "sourceArtifacts": [
+    "app-store-assets/APP_STORE_CONNECT_FIELDS.json",
+    "app-store-assets/APP_STORE_COMPLIANCE.json",
+    "app-store-assets/APP_STORE_COMPLIANCE.md",
+    "app-store-assets/APP_STORE_CONNECT_MANUAL_TASKS.json",
+    "app-store-assets/APP_STORE_CONNECT_MANUAL_TASKS.md",
+    "app-store-assets/APP_STORE_CONNECT_COPY_MAP.json",
+    "app-store-assets/EXPORT_COMPLIANCE.json",
+    "app-store-assets/APP_REVIEW_BRIEF.json",
+    "app-store-assets/PUBLIC_RELEASE_INPUTS.json",
+    "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.json",
+    "app-store-assets/PUBLIC_HOST_RUNBOOK.json",
+    "app-store-assets/SIGNING_ASSET_REPORT.json",
+    "app-store-assets/APPLE_RELEASE_ASSETS.json",
+    "app-store-assets/UPLOAD_COMMAND_PACKET.json",
+    "app-store-assets/RELEASE_BLOCKERS.json",
+    "app-store-assets/SIGNING_UPLOAD_RUNBOOK.json",
+    "app-store-assets/RELEASE_RESOLUTION_PLAN.json",
+    "scripts/install-asc-key.cjs",
+    "scripts/check-upload-credentials.cjs"
+  ],
+  "sections": [
+    {
+      "id": "preflight",
+      "title": "Release Preflight",
+      "appStoreConnectLocation": "Local release machine",
+      "status": "blocked",
+      "blockerCount": 5,
+      "items": [
+        {
+          "id": "strict-verifier-clean",
+          "label": "Strict verifier exits cleanly",
+          "status": "blocked",
+          "evidence": "release blocker count: 17",
+          "action": "Clear public URL/contact, generated site, signing, package, and submission blockers, then run npm run verify:store:strict."
+        },
+        {
+          "id": "public-inputs-ready",
+          "label": "Public release-input packet is ready",
+          "status": "blocked",
+          "evidence": "5 blocked public input(s)",
+          "action": "Run npm run public-inputs:store after setting CODY_* public URL/contact values."
+        },
+        {
+          "id": "public-site-publish-packet",
+          "label": "Public site publish packet is current",
+          "status": "blocked",
+          "evidence": "0 ready / 5 public page(s)",
+          "action": "Run npm run publish-packet:store after rebuilding the public site archive."
+        },
+        {
+          "id": "public-host-runbook",
+          "label": "Public host runbook is current",
+          "status": "blocked",
+          "evidence": "9 hosted file(s) · public values blocked",
+          "action": "Run npm run public-host:store after rebuilding the public site archive and publish packet."
+        },
+        {
+          "id": "public-release-sync",
+          "label": "Generated public release values are synced",
+          "status": "blocked",
+          "evidence": "strict check failed · 6 failure(s) · 0 warning(s)",
+          "action": "Set real CODY_* values, rebuild site/archive/packet/copy/review artifacts, then run npm run check:public-release-sync -- --strict and npm run report:store-blockers."
+        },
+        {
+          "id": "resolution-plan-current",
+          "label": "Resolution plan has final proof steps",
+          "status": "ready",
+          "evidence": "9 final proof item(s)",
+          "action": ""
+        },
+        {
+          "id": "runbook-current",
+          "label": "Signing/upload runbook records MAS outputs",
+          "status": "ready",
+          "evidence": "dist/mas-arm64/Cody Cartridge.app / dist/**/*.pkg",
+          "action": ""
+        },
+        {
+          "id": "signing-asset-report-current",
+          "label": "Redacted signing asset report is current",
+          "status": "ready",
+          "evidence": "blocked · 3 signing asset blocker(s)",
+          "action": ""
+        },
+        {
+          "id": "upload-command-packet-current",
+          "label": "Upload command packet is current",
+          "status": "ready",
+          "evidence": "blocked · 0 signed package(s) · 2 upload tool(s)",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": "product-page",
+      "title": "Product Page",
+      "appStoreConnectLocation": "App Store Connect > App version > Product Page",
+      "status": "blocked",
+      "blockerCount": 3,
+      "items": [
+        {
+          "id": "name-ready",
+          "label": "Name is ready",
+          "status": "ready",
+          "evidence": "Cody Cartridge",
+          "action": ""
+        },
+        {
+          "id": "subtitle-ready",
+          "label": "Subtitle is ready",
+          "status": "ready",
+          "evidence": "Local music, signal mapped.",
+          "action": ""
+        },
+        {
+          "id": "description-ready",
+          "label": "Description is ready and local-only",
+          "status": "ready",
+          "evidence": "description inspected",
+          "action": ""
+        },
+        {
+          "id": "keywords-ready",
+          "label": "Keywords fit App Store limit",
+          "status": "ready",
+          "evidence": "70/100 bytes",
+          "action": ""
+        },
+        {
+          "id": "support-url-ready",
+          "label": "Support URL is public HTTPS",
+          "status": "blocked",
+          "evidence": "supportUrl=placeholder",
+          "action": "Set CODY_SITE_URL, rebuild site/archive/publish packet, and publish the site."
+        },
+        {
+          "id": "privacy-url-ready",
+          "label": "Privacy Policy URL is public HTTPS",
+          "status": "blocked",
+          "evidence": "privacyPolicyUrl=placeholder",
+          "action": "Set CODY_SITE_URL, rebuild site/archive/publish packet, and publish the site."
+        },
+        {
+          "id": "published-site-ready",
+          "label": "Published public-site pages match the generated source",
+          "status": "blocked",
+          "evidence": "strict check failed · 8 failure(s) · 0 warning(s)",
+          "action": "Publish the generated site directory or archive contents, then run npm run check:published-site -- --strict."
+        }
+      ]
+    },
+    {
+      "id": "screenshots",
+      "title": "Screenshots",
+      "appStoreConnectLocation": "App Store Connect > Product Page > Mac screenshots",
+      "status": "ready",
+      "blockerCount": 0,
+      "items": [
+        {
+          "id": "screenshots-present",
+          "label": "Screenshot inventory has at least three Mac screenshots",
+          "status": "ready",
+          "evidence": "3 screenshot(s)",
+          "action": ""
+        },
+        {
+          "id": "screenshots-apple-mac-spec",
+          "label": "Screenshots match Apple Mac screenshot specifications",
+          "status": "ready",
+          "evidence": "16:10 · 1280x800, 1440x900, 2560x1600, 2880x1800",
+          "action": ""
+        },
+        {
+          "id": "screenshot-manifest",
+          "label": "Screenshot manifest is recorded",
+          "status": "ready",
+          "evidence": "app-store-assets/screenshots/STORE_SCREENSHOTS.json",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": "privacy-and-compliance",
+      "title": "Privacy And Compliance",
+      "appStoreConnectLocation": "App Store Connect > App Privacy, Age Rating, Pricing, Compliance, DSA",
+      "status": "ready",
+      "blockerCount": 0,
+      "items": [
+        {
+          "id": "privacy-no-collection",
+          "label": "App Privacy declares no data collection",
+          "status": "ready",
+          "evidence": "No, this app does not collect data from the app.",
+          "action": ""
+        },
+        {
+          "id": "app-compliance-packet",
+          "label": "Standalone compliance packet is ready",
+          "status": "ready",
+          "evidence": "8 ready / 5 manual / 0 blocker(s)",
+          "action": ""
+        },
+        {
+          "id": "age-rating-draft",
+          "label": "Age rating draft is present",
+          "status": "ready",
+          "evidence": "4+ candidate; App Store Connect generates the final rating from Apple's questionnaire.",
+          "action": ""
+        },
+        {
+          "id": "pricing-draft",
+          "label": "Pricing and availability draft is present",
+          "status": "ready",
+          "evidence": "Free candidate for first release.",
+          "action": ""
+        },
+        {
+          "id": "export-compliance-draft",
+          "label": "Export compliance draft and evidence are present",
+          "status": "ready",
+          "evidence": "app-store-assets/EXPORT_COMPLIANCE.json",
+          "action": ""
+        },
+        {
+          "id": "rights-dsa-draft",
+          "label": "Rights and DSA guidance is present",
+          "status": "ready",
+          "evidence": "rights/DSA fields inspected",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": "testflight",
+      "title": "TestFlight",
+      "appStoreConnectLocation": "App Store Connect > TestFlight",
+      "status": "blocked",
+      "blockerCount": 1,
+      "items": [
+        {
+          "id": "beta-description",
+          "label": "Beta app description is present",
+          "status": "ready",
+          "evidence": "present",
+          "action": ""
+        },
+        {
+          "id": "what-to-test",
+          "label": "What To Test has clean-account coverage",
+          "status": "ready",
+          "evidence": "11 item(s)",
+          "action": ""
+        },
+        {
+          "id": "feedback-email",
+          "label": "Feedback email is public support contact",
+          "status": "blocked",
+          "evidence": "supportEmail=placeholder",
+          "action": "Set CODY_SUPPORT_EMAIL and regenerate packet."
+        }
+      ]
+    },
+    {
+      "id": "build-upload",
+      "title": "Build Upload",
+      "appStoreConnectLocation": "Transporter/Xcode/altool > App Store Connect processing",
+      "status": "blocked",
+      "blockerCount": 5,
+      "items": [
+        {
+          "id": "apple-release-assets",
+          "label": "Apple Developer/App Store Connect release assets are requested",
+          "status": "blocked",
+          "evidence": "5 blocked asset request(s); 1 manual/account confirmation(s)",
+          "action": "Use APPLE_RELEASE_ASSETS.md to request certificates, provisioning profile, signed package, and upload API key, then run npm run apple-assets:store."
+        },
+        {
+          "id": "mas-signing-assets",
+          "label": "MAS signing assets are verified",
+          "status": "blocked",
+          "evidence": "strict check failed · 4 failure(s) · 0 warning(s)",
+          "action": "Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run signing-assets:store and npm run check:mas-signing -- --strict."
+        },
+        {
+          "id": "mas-package-verified",
+          "label": "Signed current-version MAS package boundary is verified",
+          "status": "blocked",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
+          "action": "Run npm run dist:mas, then npm run check:mas-package -- --strict."
+        },
+        {
+          "id": "upload-tooling",
+          "label": "Upload tooling and MAS package are verified",
+          "status": "blocked",
+          "evidence": "strict check failed · 1 failure(s) · 1 warning(s)",
+          "action": "Run npm run dist:mas, npm run check:mas-package -- --strict, then npm run check:upload-tooling -- --strict."
+        },
+        {
+          "id": "upload-credentials",
+          "label": "Upload credentials are verified",
+          "status": "blocked",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
+          "action": "Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key after validation, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict."
+        },
+        {
+          "id": "mas-package-path",
+          "label": "MAS package output expectation is documented",
+          "status": "ready",
+          "evidence": "dist/**/*.pkg",
+          "action": ""
+        },
+        {
+          "id": "processed-build-match",
+          "label": "Processed build must match package metadata",
+          "status": "ready",
+          "evidence": "com.sachittumuluri.codycartridge 0.1.0 (0.1.0)",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": "app-review",
+      "title": "App Review",
+      "appStoreConnectLocation": "App version > App Review > Add for Review",
+      "status": "blocked",
+      "blockerCount": 3,
+      "items": [
+        {
+          "id": "review-contact",
+          "label": "App Review contact fields are real",
+          "status": "blocked",
+          "evidence": "reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder",
+          "action": "Set CODY_REVIEW_CONTACT_* values and regenerate packet/review brief."
+        },
+        {
+          "id": "review-brief-clear",
+          "label": "App Review brief has no blockers",
+          "status": "blocked",
+          "evidence": "5 blocker(s)",
+          "action": "Run npm run review-brief:store after real public/contact values are available."
+        },
+        {
+          "id": "copy-map-clear",
+          "label": "App Store Connect copy map workflow has no blockers",
+          "status": "blocked",
+          "evidence": "3 blocker field(s); 4 blocker workflow step(s); 1 warning workflow step(s)",
+          "action": "Run npm run copy-map:store after real public/contact values, signed MAS package, and upload readiness are available."
+        },
+        {
+          "id": "demo-account-none",
+          "label": "Demo account declares no account system",
+          "status": "ready",
+          "evidence": "None. The app has no account system.",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": "submit-for-review",
+      "title": "Submit For Review",
+      "appStoreConnectLocation": "App Review > Draft Submissions > Submit for Review",
+      "status": "blocked",
+      "blockerCount": 1,
+      "items": [
+        {
+          "id": "blocker-report-clean",
+          "label": "Release blocker report is clean",
+          "status": "blocked",
+          "evidence": "17 blocker(s)",
+          "action": "Run npm run report:store-blockers after signing/package/public URL work is complete."
+        },
+        {
+          "id": "final-evidence",
+          "label": "Final proof includes evidence and manifest",
+          "status": "ready",
+          "evidence": "final proof inspected",
+          "action": ""
+        },
+        {
+          "id": "post-submit-monitoring",
+          "label": "Post-submission monitoring guidance is present",
+          "status": "ready",
+          "evidence": "4 item(s)",
+          "action": ""
+        }
+      ]
+    }
+  ]
+}

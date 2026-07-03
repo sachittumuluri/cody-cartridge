@@ -1,0 +1,1148 @@
+{
+  "generatedAt": "2026-06-20T20:32:30.787Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "releaseEnv": {
+    "loadedFiles": [
+      "app-store-assets/site.env"
+    ]
+  },
+  "masSubmission": {
+    "mode": "local-rehearsal-only",
+    "submissionReady": false,
+    "localRehearsalOnly": true,
+    "bundlePath": "dist/mas-arm64/Cody Cartridge.app",
+    "hasBundle": true,
+    "bundleFileCount": 259,
+    "bundleSizeBytes": 592095077,
+    "hasEmbeddedProvisioningProfile": false,
+    "codeSignatureVerified": false,
+    "codeSignatureToolAvailable": true,
+    "codeSignatureStatus": 1,
+    "uploadPackageCount": 0,
+    "signedUploadPackageCount": 0,
+    "currentVersionUploadPackageCount": 0,
+    "signedCurrentVersionUploadPackageCount": 0,
+    "hasSignedUploadPackage": false,
+    "hasCurrentVersionUploadPackage": false,
+    "hasSignedCurrentVersionUploadPackage": false,
+    "packageSignatures": []
+  },
+  "blockers": {
+    "blockerCount": 17,
+    "readyForStrictPreflight": false
+  },
+  "artifacts": [
+    {
+      "path": "package.json",
+      "exists": true,
+      "sizeBytes": 15999,
+      "sha256": "4b1072f82fa4b3d5ba6f4e3e4cc81add4726e26a8928beb7413d5f813bc3d667"
+    },
+    {
+      "path": "package-lock.json",
+      "exists": true,
+      "sizeBytes": 215918,
+      "sha256": "7d87f2ab76dbc7f827c77ff8289d0458649cc359b39861eb106a0f1aad4461c5"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_CONNECT_FIELDS.json",
+      "exists": true,
+      "sizeBytes": 27895,
+      "sha256": "2dcf1e31638332e045e3f957de74ecab4ca7c41a7edf0a3a545a9953924aa651"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_CONNECT_COPY_MAP.json",
+      "exists": true,
+      "sizeBytes": 54734,
+      "sha256": "b7f427ac80e88c194e651befd46b57fcebf43118250b1e90547d47c0aeb35f10"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_CONNECT_COPY_MAP.md",
+      "exists": true,
+      "sizeBytes": 38334,
+      "sha256": "f891a337219857b1da4f2d4cf0087bc2df0439a87d2254fb99cc3f7ecd4327bd"
+    },
+    {
+      "path": "app-store-assets/EXPORT_COMPLIANCE.json",
+      "exists": true,
+      "sizeBytes": 5819,
+      "sha256": "76e1ba8bc4b16ae0a57f8f99e1d5d9daa2e088c2f1f4af1ba3703bf4ee2323cf"
+    },
+    {
+      "path": "app-store-assets/EXPORT_COMPLIANCE.md",
+      "exists": true,
+      "sizeBytes": 3568,
+      "sha256": "e0cecbb30f935b7088378d0dfcef11ff84f2e566cb84c8fc514ba0857d3a2b20"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_COMPLIANCE.json",
+      "exists": true,
+      "sizeBytes": 7935,
+      "sha256": "0ed2e6d3fa1f3333cc9ac8b36535ad51c3b54832f447905dbb0ed560e81dd4de"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_COMPLIANCE.md",
+      "exists": true,
+      "sizeBytes": 4309,
+      "sha256": "a2c0e810eb60643928fd1da1bf421b716eabfe4c0e8a86b4e737d806dc2a3221"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_CONNECT_MANUAL_TASKS.json",
+      "exists": true,
+      "sizeBytes": 10450,
+      "sha256": "e4aae4bf4de2a330c6c61acbc46a267341bd900822b4e0af97e558272f9ab397"
+    },
+    {
+      "path": "app-store-assets/APP_STORE_CONNECT_MANUAL_TASKS.md",
+      "exists": true,
+      "sizeBytes": 5177,
+      "sha256": "e502d9c72e5eb66e64aa75c675986107c8c9deecfffec53bc6f21dc51c1b1f28"
+    },
+    {
+      "path": "app-store-assets/APP_REVIEW_BRIEF.json",
+      "exists": true,
+      "sizeBytes": 6026,
+      "sha256": "811fef797de1a3258f8edf792c4a48c06f67218e4a777fa095c76487f50f9598"
+    },
+    {
+      "path": "app-store-assets/APP_REVIEW_BRIEF.md",
+      "exists": true,
+      "sizeBytes": 4411,
+      "sha256": "94676789acb306f45df61e3eae2374029be3b20a3da3c6271663e906aa9ca909"
+    },
+    {
+      "path": "app-store-assets/PUBLIC_RELEASE_INPUTS.json",
+      "exists": true,
+      "sizeBytes": 6248,
+      "sha256": "837c13481fcb5827e27949bd846a691c9026159e9bde4d19c501e18ac3a10066"
+    },
+    {
+      "path": "app-store-assets/PUBLIC_RELEASE_INPUTS.md",
+      "exists": true,
+      "sizeBytes": 4664,
+      "sha256": "c892a54b6ed340052354a0c24998baf80b998bdf98bc0687a7bc88b0f365fbef"
+    },
+    {
+      "path": "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.json",
+      "exists": true,
+      "sizeBytes": 24448,
+      "sha256": "07f69a708a56c8032eda7a40cd323ba679489eea17d833a39732687059095ded"
+    },
+    {
+      "path": "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.md",
+      "exists": true,
+      "sizeBytes": 8716,
+      "sha256": "1850d3492b0dbb6a3822404324f691c749627491defd82643d58514c892bfc33"
+    },
+    {
+      "path": "app-store-assets/PUBLIC_HOST_RUNBOOK.json",
+      "exists": true,
+      "sizeBytes": 9987,
+      "sha256": "bfea31e8d9d3102129fd830a17336d85b7875a7f862ae7caf26f0dea2a8827e5"
+    },
+    {
+      "path": "app-store-assets/PUBLIC_HOST_RUNBOOK.md",
+      "exists": true,
+      "sizeBytes": 6641,
+      "sha256": "99ac36d35da935c107e1a1bfe7dd817f1df8dfc843c5df04318495dffbb277b7"
+    },
+    {
+      "path": "app-store-assets/RELEASE_RESOLUTION_PLAN.json",
+      "exists": true,
+      "sizeBytes": 21928,
+      "sha256": "8309831a75235b5072302dc40be4423a717585429ce6bf0c7d96da9cbd794988"
+    },
+    {
+      "path": "app-store-assets/RELEASE_RESOLUTION_PLAN.md",
+      "exists": true,
+      "sizeBytes": 15401,
+      "sha256": "184f91c4c1a1b321ff5127e0ee3f6fef37dd847167eff9a43ebcf77866cf8a4e"
+    },
+    {
+      "path": "app-store-assets/FINAL_SUBMISSION_CHECKLIST.json",
+      "exists": true,
+      "sizeBytes": 15007,
+      "sha256": "6ceab56267785463add97696620e034b45fdc98fea202570e643474f39ba2db4"
+    },
+    {
+      "path": "app-store-assets/FINAL_SUBMISSION_CHECKLIST.md",
+      "exists": true,
+      "sizeBytes": 8115,
+      "sha256": "1b8227d93f6c52f27870a3eb845f2cc19079cf2402277d4bb112ad516ec6e05c"
+    },
+    {
+      "path": "app-store-assets/RELEASE_MACHINE_REPORT.json",
+      "exists": true,
+      "sizeBytes": 10868,
+      "sha256": "828eea7b67cbf07a3da9f2ae99b185afc481e2ebacbc747c95affb15340b34d2"
+    },
+    {
+      "path": "app-store-assets/RELEASE_MACHINE_REPORT.md",
+      "exists": true,
+      "sizeBytes": 6156,
+      "sha256": "f26fe1ee67f0af849c71065ef8123fc492a083dddd6ef0308cdd941878fc2d57"
+    },
+    {
+      "path": "app-store-assets/SIGNING_UPLOAD_RUNBOOK.json",
+      "exists": true,
+      "sizeBytes": 14602,
+      "sha256": "51b3756d2c38c4ee6ca60ac1efe5401d361071f32efb4c04bb0728192aff672b"
+    },
+    {
+      "path": "app-store-assets/SIGNING_UPLOAD_RUNBOOK.md",
+      "exists": true,
+      "sizeBytes": 13356,
+      "sha256": "64c6a967b8cb6da0baa36be16b7c56d5956c0d1a3a12c6e1b9ea97627c0a8de7"
+    },
+    {
+      "path": "app-store-assets/SIGNING_ASSET_REPORT.json",
+      "exists": true,
+      "sizeBytes": 2816,
+      "sha256": "d5a579719fab5dc7a4627f0eca56731268894858bb9dca46a1432c584170ad66"
+    },
+    {
+      "path": "app-store-assets/SIGNING_ASSET_REPORT.md",
+      "exists": true,
+      "sizeBytes": 2068,
+      "sha256": "260ee92016848c1146b95a881d5a1d5149a557744d4d6d9bf963dc76871e588c"
+    },
+    {
+      "path": "app-store-assets/APPLE_RELEASE_ASSETS.json",
+      "exists": true,
+      "sizeBytes": 7178,
+      "sha256": "a6f43dbed838e32ce1e760b8d265eab1cdc4c5b514574fcd62c1d60a6fcaec8a"
+    },
+    {
+      "path": "app-store-assets/APPLE_RELEASE_ASSETS.md",
+      "exists": true,
+      "sizeBytes": 6945,
+      "sha256": "ad000249aeb5ae24875670d38639562c26fc6fe19419c84152760540f918123c"
+    },
+    {
+      "path": "app-store-assets/UPLOAD_COMMAND_PACKET.json",
+      "exists": true,
+      "sizeBytes": 3405,
+      "sha256": "334341a915e7d434ecaffcc54d46a214eb882e8f9d64fc36bf6c293da92d2bd6"
+    },
+    {
+      "path": "app-store-assets/UPLOAD_COMMAND_PACKET.md",
+      "exists": true,
+      "sizeBytes": 2754,
+      "sha256": "fc0ec7c1e424a4684f9740f1c3510c6c43a3545956727188cea58e81f8b8c1fa"
+    },
+    {
+      "path": "app-store-assets/UPLOAD_EVIDENCE.json",
+      "exists": true,
+      "sizeBytes": 1841,
+      "sha256": "66468868510ea80a15a10b3d689d5da50921bdc826b56f093d7fefb897957422"
+    },
+    {
+      "path": "app-store-assets/UPLOAD_EVIDENCE.md",
+      "exists": true,
+      "sizeBytes": 1789,
+      "sha256": "cf6258566d18000537395986307611479adad7e1c161ddcbe2740dabac5128e7"
+    },
+    {
+      "path": "app-store-assets/SUBMISSION_PACKET.md",
+      "exists": true,
+      "sizeBytes": 40384,
+      "sha256": "7b980d6294a9367e1576a2b95e8e1c297d9a423acd603390487cce3e5717a071"
+    },
+    {
+      "path": "app-store-assets/RELEASE_BLOCKERS.json",
+      "exists": true,
+      "sizeBytes": 31695,
+      "sha256": "d2ed6f751414c2e74cf3fb6831dbb57ff30f81482daeb93b42f306c7b82fb0a1"
+    },
+    {
+      "path": "app-store-assets/RELEASE_BLOCKERS.md",
+      "exists": true,
+      "sizeBytes": 18035,
+      "sha256": "cbb78fafa2e36ec954309ed1ed186b5792fb537c43a8734bc2c9c36293fa2a7f"
+    },
+    {
+      "path": "app-store-assets/THIRD_PARTY_NOTICES.md",
+      "exists": true,
+      "sizeBytes": 28926,
+      "sha256": "c346ddf9c262ae2d2156ff41ccb6ee8cc5351167c43a6e6a38a35d2082eb4db6"
+    },
+    {
+      "path": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+      "exists": true,
+      "sizeBytes": 69000,
+      "sha256": "8c58269676f6995a55c92d48e4ecd5c948af7c7b050e991068288dc929954de7"
+    },
+    {
+      "path": "app-store-assets/public-site/PUBLIC_SITE_ARCHIVE.json",
+      "exists": true,
+      "sizeBytes": 2819,
+      "sha256": "fb5bb647ec0a838391f10c594077347494e1bd6a6169478a434b6b8d7a287684"
+    },
+    {
+      "path": "app-store-assets/screenshots/STORE_SCREENSHOTS.json",
+      "exists": true,
+      "sizeBytes": 2506,
+      "sha256": "a9d9805f59fe49319837d41a139440885daaf41f924163ffb492a6ed5e2d8d5d"
+    },
+    {
+      "path": "app-store-assets/screenshots/01-library-1440x900.png",
+      "exists": true,
+      "sizeBytes": 572041,
+      "sha256": "4f4d19817268a25ce0752145d1e812aa4c37492e7cbeb4e74b4fa28c093bc2ba"
+    },
+    {
+      "path": "app-store-assets/screenshots/02-takeout-map-1440x900.png",
+      "exists": true,
+      "sizeBytes": 572377,
+      "sha256": "4cfc7a00bf70a001a3ae5a79babd2978ce83a3ea8d91d68fd6430b8e958211a7"
+    },
+    {
+      "path": "app-store-assets/screenshots/03-missing-files-1440x900.png",
+      "exists": true,
+      "sizeBytes": 461406,
+      "sha256": "a4e450866a19f2898a9304a6c557c95f686c6d23baceb61d38da4da9c908ddd0"
+    },
+    {
+      "path": "build/icon.icns",
+      "exists": true,
+      "sizeBytes": 293384,
+      "sha256": "5c3436741b3d3f4d4d55399ba1a838a0fcea08dfa83bf4dfde4e60b68fbb08d0"
+    },
+    {
+      "path": "build/PrivacyInfo.xcprivacy",
+      "exists": true,
+      "sizeBytes": 1061,
+      "sha256": "32fe5eea512109544fb49d7fdd0652fbd1f716ee9e02a483dbbf66afcac5ca77"
+    },
+    {
+      "path": "build/entitlements.mas.plist",
+      "exists": true,
+      "sizeBytes": 615,
+      "sha256": "d18e1b6f9be4f02d2e24fac19f04e136948dd66a18b06135a3d482d4f3b3f809"
+    },
+    {
+      "path": "build/entitlements.mas.inherit.plist",
+      "exists": true,
+      "sizeBytes": 521,
+      "sha256": "34be4860dc82cfcc882421b40f998bc3842aabd6566ca5b58193cb2aad73f8c0"
+    },
+    {
+      "path": "scripts/build-release-evidence.cjs",
+      "exists": true,
+      "sizeBytes": 20613,
+      "sha256": "37ae9c409f2812cc61f93f98543e7bf8c024ad3db4e3cb04e52716dddb780eea"
+    },
+    {
+      "path": "scripts/check-release-evidence.cjs",
+      "exists": true,
+      "sizeBytes": 12927,
+      "sha256": "8dd7aa55f8e545cefc81c7875ea37a0a82d1544eea3193e1ea1d1cc5488ce7aa"
+    },
+    {
+      "path": "scripts/build-public-site-publish-packet.cjs",
+      "exists": true,
+      "sizeBytes": 20645,
+      "sha256": "3773f3e0d0ae2cafdbf789f7c8f2e1388552614d71eeae9416564fc1f1e77270"
+    },
+    {
+      "path": "scripts/check-public-site-publish-packet.cjs",
+      "exists": true,
+      "sizeBytes": 23525,
+      "sha256": "4fe0b852b2abf379fd0ad203c8869441ad17c8e1213c9cf0491724c8b5c87fc7"
+    },
+    {
+      "path": "scripts/build-public-host-runbook.cjs",
+      "exists": true,
+      "sizeBytes": 11916,
+      "sha256": "a562809640e0812878ac6509e29a4f15024e83d89c6a18a0afd9ca876527ec31"
+    },
+    {
+      "path": "scripts/check-public-host-runbook.cjs",
+      "exists": true,
+      "sizeBytes": 8948,
+      "sha256": "f2ff9257f6268d1b54d324c23ff1d1680c204c659ba9b97e74b03675d258435f"
+    },
+    {
+      "path": "scripts/check-public-site-published.cjs",
+      "exists": true,
+      "sizeBytes": 10538,
+      "sha256": "820903c4d21051c8aee2f666e5856825489472df44362fecd137190202951f7c"
+    },
+    {
+      "path": "scripts/configure-store-env.cjs",
+      "exists": true,
+      "sizeBytes": 7459,
+      "sha256": "81171f56d2a2ea443b7717ed1c67a866ffcc07c9d4884437aae70ec767592ec1"
+    },
+    {
+      "path": "scripts/refresh-public-release.cjs",
+      "exists": true,
+      "sizeBytes": 11917,
+      "sha256": "add3e09254da96bdcd0717ac3941fc2b361e57c385e5ba769eca248a44f09220"
+    },
+    {
+      "path": "scripts/install-mas-profile.cjs",
+      "exists": true,
+      "sizeBytes": 9573,
+      "sha256": "eefaebcc8d90a2775d306660b16c5100198bb7d0832726944647af99ed4a39a9"
+    },
+    {
+      "path": "scripts/install-asc-key.cjs",
+      "exists": true,
+      "sizeBytes": 7121,
+      "sha256": "d326235410e3c3339cc8efa7b3d5df822001bf87d173b2a1ae4c145e8f1778dc"
+    },
+    {
+      "path": "scripts/build-apple-release-assets.cjs",
+      "exists": true,
+      "sizeBytes": 12781,
+      "sha256": "e75faff653119a1726c81b9091e51ece5eaefd543d3c6fda0b8306bf1c8d4bea"
+    },
+    {
+      "path": "scripts/check-apple-release-assets.cjs",
+      "exists": true,
+      "sizeBytes": 8360,
+      "sha256": "d2644f829a51f80376a1cf99a2db090ba0bbcff99618e788a609fe48fbc2cd08"
+    },
+    {
+      "path": "scripts/build-upload-command-packet.cjs",
+      "exists": true,
+      "sizeBytes": 14988,
+      "sha256": "881eaa2860cfd77f4bef1c59d51579c08c19d3264073fda15150107ffc87fdc0"
+    },
+    {
+      "path": "scripts/check-upload-command-packet.cjs",
+      "exists": true,
+      "sizeBytes": 17776,
+      "sha256": "45812f03a5b5c21176136de6d543b746e956de215f577364f1e0cd6180ba654e"
+    },
+    {
+      "path": "scripts/check-upload-credentials.cjs",
+      "exists": true,
+      "sizeBytes": 6330,
+      "sha256": "d3a085ba23b21a9e51c7a8a717b1687cdf70918e216cd44ea8efefcd121885f6"
+    },
+    {
+      "path": "scripts/build-upload-evidence.cjs",
+      "exists": true,
+      "sizeBytes": 11896,
+      "sha256": "a2c54f9ba3a7c8049cf74b72d018452f55ba1988fd659cf56e02436f9ed7db89"
+    },
+    {
+      "path": "scripts/check-upload-evidence.cjs",
+      "exists": true,
+      "sizeBytes": 8871,
+      "sha256": "57164b309314ea2af9c12dee6fca4e894a1d18b86471072cde8a08e2e6e68d62"
+    },
+    {
+      "path": "scripts/build-release-manifest.cjs",
+      "exists": true,
+      "sizeBytes": 32871,
+      "sha256": "619b2764775796bdd2ba3118115d72f13e53d5cda0abbb033cbed458ded8dbf6"
+    },
+    {
+      "path": "scripts/check-release-manifest.cjs",
+      "exists": true,
+      "sizeBytes": 21590,
+      "sha256": "c8c33e9aba924485d966b4ffe1361740a807fdd6a84c1247ae7e8ea33ff7b855"
+    }
+  ],
+  "commands": [
+    {
+      "id": "store-version",
+      "title": "Store version",
+      "command": "node scripts/check-store-version.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Store version checks: 9 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "icons",
+      "title": "Icon audit",
+      "command": "node scripts/check-icons.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Icon audit passed: 11 PNG files and build/icon.icns",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "electron-security",
+      "title": "Electron security",
+      "command": "node scripts/check-electron-security.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Electron security checks: 52 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "packaging-toolchain",
+      "title": "Packaging toolchain",
+      "command": "node scripts/check-packaging-toolchain.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Packaging toolchain checks: 5 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Node v18.20.8 can run the local gates, but the release machine should use Node >=20 <25, preferably the Node 22 version selected by .nvmrc."
+      ],
+      "error": null
+    },
+    {
+      "id": "help-docs",
+      "title": "Help documents",
+      "command": "node scripts/check-help-docs.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Help document checks: 76 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "copy-map",
+      "title": "App Store Connect copy map",
+      "command": "node scripts/check-app-store-copy-map.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App Store Connect copy-map checks: 128 passed, 5 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 5,
+      "failures": [],
+      "warnings": [
+        "Product Page / Support URL still has placeholder value",
+        "Product Page / Privacy Policy URL still has placeholder value",
+        "App Review / App Review Contact still has placeholder value",
+        "Copy map records 3 blocker field(s)",
+        "Copy map workflow records 4 blocker step(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "review-brief",
+      "title": "App Review brief",
+      "command": "node scripts/check-app-review-brief.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App Review brief checks: 37 passed, 5 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 5,
+      "failures": [],
+      "warnings": [
+        "Review brief blocker remains: App Review contact name is real",
+        "Review brief blocker remains: App Review contact email is real",
+        "Review brief blocker remains: App Review contact phone is real",
+        "Review brief blocker remains: Support URL is public HTTPS",
+        "Review brief blocker remains: Privacy Policy URL is public HTTPS"
+      ],
+      "error": null
+    },
+    {
+      "id": "app-compliance",
+      "title": "App Store compliance packet",
+      "command": "node scripts/check-app-store-compliance.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App Store compliance checks: 48 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "App Store compliance packet records 5 manual App Store Connect item(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "manual-tasks",
+      "title": "App Store Connect manual task packet",
+      "command": "node scripts/check-app-store-connect-manual-tasks.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App Store Connect manual task checks: 53 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "App Store Connect manual task packet records 5 blocked task(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "app-privacy",
+      "title": "App privacy",
+      "command": "node scripts/check-app-privacy.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App privacy checks: 56 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "export-compliance",
+      "title": "Export compliance",
+      "command": "node scripts/check-export-compliance.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Export compliance checks: 41 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "store-copy",
+      "title": "App Store copy",
+      "command": "node scripts/check-store-copy.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Store copy checks: 49 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "artifact-privacy",
+      "title": "Artifact privacy",
+      "command": "node scripts/check-artifact-privacy.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Artifact privacy checks: 22 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 0,
+      "failures": [],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "site-advisory",
+      "title": "Generated site",
+      "command": "node scripts/check-store-site.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Store site checks: 93 passed, 4 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 4,
+      "failures": [],
+      "warnings": [
+        "robots.txt still contains placeholder public site URL",
+        "sitemap.xml still contains placeholder public site URL",
+        "Support email is missing, placeholder, or invalid for public site publishing",
+        "Public site URL origin is missing, placeholder, or invalid for public site publishing"
+      ],
+      "error": null
+    },
+    {
+      "id": "site-archive-advisory",
+      "title": "Public site archive",
+      "command": "node scripts/check-public-site-archive.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Public site archive checks: 75 passed, 3 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 3,
+      "failures": [],
+      "warnings": [
+        "Public site archive support email is missing, placeholder, or invalid",
+        "Public site archive site URL origin is missing, placeholder, or invalid",
+        "Public site archive still has placeholder publish values in robots.txt, sitemap.xml"
+      ],
+      "error": null
+    },
+    {
+      "id": "public-release-sync-advisory",
+      "title": "Public release sync",
+      "command": "node scripts/check-public-release-sync.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Public release sync checks: 1 passed, 6 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 6,
+      "failures": [],
+      "warnings": [
+        "CODY_SITE_URL is missing, placeholder, or invalid.",
+        "CODY_SUPPORT_EMAIL is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_NAME is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_EMAIL is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.",
+        "Public release sync skipped until all CODY_* release values are configured."
+      ],
+      "error": null
+    },
+    {
+      "id": "store-urls-advisory",
+      "title": "Public URLs",
+      "command": "node scripts/check-store-urls.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Store public URL checks: 2 passed, 2 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 2,
+      "failures": [],
+      "warnings": [
+        "Support URL is missing, placeholder, or not a complete https URL.",
+        "Privacy Policy URL is missing, placeholder, or not a complete https URL."
+      ],
+      "error": null
+    },
+    {
+      "id": "public-inputs",
+      "title": "Public release inputs",
+      "command": "node scripts/check-public-release-inputs.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Public release inputs checks: 68 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Public release inputs record 5 blocked field(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "publish-packet",
+      "title": "Public site publish packet",
+      "command": "node scripts/check-public-site-publish-packet.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Public site publish packet checks: 283 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Public site publish packet is blocked with 5 page(s) and 2 companion file(s) blocked"
+      ],
+      "error": null
+    },
+    {
+      "id": "public-host",
+      "title": "Public host runbook",
+      "command": "node scripts/check-public-host-runbook.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Public host runbook checks: 62 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Public host runbook is advisory until public release values are configured and the site is published"
+      ],
+      "error": null
+    },
+    {
+      "id": "published-site-advisory",
+      "title": "Published public site",
+      "command": "node scripts/check-public-site-published.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Published public site checks: 2 passed, 8 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 8,
+      "failures": [],
+      "warnings": [
+        "Public site publish packet is blocked before live verification",
+        "index.html expected URL is missing, placeholder, or not HTTPS",
+        "support.html expected URL is missing, placeholder, or not HTTPS",
+        "privacy.html expected URL is missing, placeholder, or not HTTPS",
+        "accessibility.html expected URL is missing, placeholder, or not HTTPS",
+        "third-party-notices.html expected URL is missing, placeholder, or not HTTPS",
+        "robots.txt expected URL is missing, placeholder, or not HTTPS",
+        "sitemap.xml expected URL is missing, placeholder, or not HTTPS"
+      ],
+      "error": null
+    },
+    {
+      "id": "mas-signing-advisory",
+      "title": "MAS signing",
+      "command": "node scripts/check-mas-signing.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "MAS signing preflight: 1 passed, 4 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 4,
+      "failures": [],
+      "warnings": [
+        "No valid code-signing identities found in the keychain",
+        "Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity",
+        "Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export",
+        "No installed provisioning profiles found"
+      ],
+      "error": null
+    },
+    {
+      "id": "signing-assets",
+      "title": "Signing asset report",
+      "command": "node scripts/check-signing-asset-report.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Signing asset report checks: 60 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Signing asset report records 3 blocker(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "apple-assets",
+      "title": "Apple release asset requests",
+      "command": "node scripts/check-apple-release-assets.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Apple release asset checks: 87 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Apple release asset packet records 5 blocked asset request(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "mas-package-advisory",
+      "title": "MAS package boundary",
+      "command": "node scripts/check-mas-package.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "MAS package boundary checks: 61 passed, 3 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 3,
+      "failures": [],
+      "warnings": [
+        "Packaged MAS app does not contain Contents/embedded.provisionprofile",
+        "No MAS upload .pkg artifact found in dist; Transporter upload expects a signed current-version installer package",
+        "Packaged MAS app code signature does not verify"
+      ],
+      "error": null
+    },
+    {
+      "id": "upload-tooling-advisory",
+      "title": "Upload tooling",
+      "command": "node scripts/check-upload-tooling.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App Store upload tooling checks: 4 passed, 2 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 2,
+      "failures": [],
+      "warnings": [
+        "Transporter app is not installed in /Applications",
+        "No MAS .pkg upload artifact found in dist; run npm run dist:mas on the release machine before upload"
+      ],
+      "error": null
+    },
+    {
+      "id": "upload-credentials-advisory",
+      "title": "Upload credentials",
+      "command": "node scripts/check-upload-credentials.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "App Store upload credential checks: 0 passed, 3 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 3,
+      "failures": [],
+      "warnings": [
+        "App Store Connect API key id env is missing; set ASC_KEY_ID or APP_STORE_CONNECT_KEY_ID",
+        "App Store Connect issuer id env is missing; set ASC_ISSUER_ID or APP_STORE_CONNECT_ISSUER_ID",
+        "App Store Connect private key path is missing; set ASC_PRIVATE_KEY_PATH or APP_STORE_CONNECT_PRIVATE_KEY_PATH"
+      ],
+      "error": null
+    },
+    {
+      "id": "release-machine-doctor",
+      "title": "Release machine doctor",
+      "command": "node scripts/check-release-machine.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "PASS Source App Store version: Store version checks (source-only): 7 passed, 0 failures",
+      "failureCount": 0,
+      "warningCount": 11,
+      "failures": [],
+      "warnings": [
+        "Public URL/contact env: Store env preflight: 1 passed, 5 failures",
+        "Public release generated-field sync: Public release sync checks: 1 passed, 6 warnings, 0 failures",
+        "Release Node runtime: Release runtime checks: 4 passed, 1 warnings, 0 failures",
+        "Packaging toolchain: Packaging toolchain checks: 5 passed, 1 warnings, 0 failures",
+        "Published support/privacy URLs: Store public URL checks: 2 passed, 2 warnings, 0 failures",
+        "Published public site pages: Published public site checks: 2 passed, 8 warnings, 0 failures",
+        "MAS signing assets: MAS signing preflight: 1 passed, 4 warnings, 0 failures",
+        "MAS package boundary: MAS package boundary checks: 61 passed, 3 warnings, 0 failures",
+        "App Store upload tooling: App Store upload tooling checks: 4 passed, 2 warnings, 0 failures",
+        "App Store upload credentials: App Store upload credential checks: 0 passed, 3 warnings, 0 failures",
+        "Release blocker report records 17 blocker(s)."
+      ],
+      "error": null
+    },
+    {
+      "id": "resolution-plan",
+      "title": "Release resolution plan",
+      "command": "node scripts/check-release-resolution-plan.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Release resolution plan checks: 147 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Resolution plan records 17 remaining blocker(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "submission-checklist",
+      "title": "Final submission checklist",
+      "command": "node scripts/check-final-submission-checklist.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Final submission checklist checks: 71 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Final submission checklist records 18 blocker(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "machine-report",
+      "title": "Release machine report",
+      "command": "node scripts/check-release-machine-report.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Release machine report checks: 155 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Release machine report records 2 blocked gate(s) and 17 release blocker(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "signing-runbook",
+      "title": "Signing and upload runbook",
+      "command": "node scripts/check-signing-upload-runbook.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Signing/upload runbook checks: 123 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Runbook records 17 remaining blocker(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "upload-packet",
+      "title": "Upload command packet",
+      "command": "node scripts/check-upload-command-packet.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Upload command packet checks: 60 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Upload command packet is blocked with 3 blocker(s)"
+      ],
+      "error": null
+    },
+    {
+      "id": "upload-evidence",
+      "title": "Upload evidence",
+      "command": "node scripts/check-upload-evidence.cjs",
+      "strict": false,
+      "exitCode": 0,
+      "summary": "Upload evidence checks: 36 passed, 1 warnings, 0 failures",
+      "failureCount": 0,
+      "warningCount": 1,
+      "failures": [],
+      "warnings": [
+        "Upload evidence is pending delivery logs, processed-build proof, or selected-build proof"
+      ],
+      "error": null
+    },
+    {
+      "id": "public-release-sync-strict",
+      "title": "Strict public release sync",
+      "command": "node scripts/check-public-release-sync.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "Public release sync checks (strict): 1 passed, 0 warnings, 6 failures",
+      "failureCount": 6,
+      "warningCount": 0,
+      "failures": [
+        "CODY_SITE_URL is missing, placeholder, or invalid.",
+        "CODY_SUPPORT_EMAIL is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_NAME is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_EMAIL is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.",
+        "Public release sync skipped until all CODY_* release values are configured."
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "store-urls-strict",
+      "title": "Strict public URLs",
+      "command": "node scripts/check-store-urls.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "Store public URL checks (strict): 2 passed, 0 warnings, 2 failures",
+      "failureCount": 2,
+      "warningCount": 0,
+      "failures": [
+        "Support URL is missing, placeholder, or not a complete https URL.",
+        "Privacy Policy URL is missing, placeholder, or not a complete https URL."
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "published-site-strict",
+      "title": "Strict published public site",
+      "command": "node scripts/check-public-site-published.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "Published public site checks (strict): 2 passed, 0 warnings, 8 failures",
+      "failureCount": 8,
+      "warningCount": 0,
+      "failures": [
+        "Public site publish packet is blocked before live verification",
+        "index.html expected URL is missing, placeholder, or not HTTPS",
+        "support.html expected URL is missing, placeholder, or not HTTPS",
+        "privacy.html expected URL is missing, placeholder, or not HTTPS",
+        "accessibility.html expected URL is missing, placeholder, or not HTTPS",
+        "third-party-notices.html expected URL is missing, placeholder, or not HTTPS",
+        "robots.txt expected URL is missing, placeholder, or not HTTPS",
+        "sitemap.xml expected URL is missing, placeholder, or not HTTPS"
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "mas-signing-strict",
+      "title": "Strict MAS signing",
+      "command": "node scripts/check-mas-signing.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "MAS signing preflight: 1 passed, 0 warnings, 4 failures",
+      "failureCount": 4,
+      "warningCount": 0,
+      "failures": [
+        "No valid code-signing identities found in the keychain",
+        "Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity",
+        "Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export",
+        "No installed provisioning profiles found"
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "mas-package-strict",
+      "title": "Strict MAS package boundary",
+      "command": "node scripts/check-mas-package.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "MAS package boundary checks (strict): 61 passed, 0 warnings, 3 failures",
+      "failureCount": 3,
+      "warningCount": 0,
+      "failures": [
+        "Packaged MAS app does not contain Contents/embedded.provisionprofile",
+        "No MAS upload .pkg artifact found in dist; Transporter upload expects a signed current-version installer package",
+        "Packaged MAS app code signature does not verify"
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "upload-tooling-strict",
+      "title": "Strict upload tooling",
+      "command": "node scripts/check-upload-tooling.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "App Store upload tooling checks (strict): 4 passed, 1 warnings, 1 failures",
+      "failureCount": 1,
+      "warningCount": 1,
+      "failures": [
+        "No MAS .pkg upload artifact found in dist; run npm run dist:mas on the release machine before upload"
+      ],
+      "warnings": [
+        "Transporter app is not installed in /Applications"
+      ],
+      "error": null
+    },
+    {
+      "id": "upload-credentials-strict",
+      "title": "Strict upload credentials",
+      "command": "node scripts/check-upload-credentials.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "App Store upload credential checks (strict): 0 passed, 0 warnings, 3 failures",
+      "failureCount": 3,
+      "warningCount": 0,
+      "failures": [
+        "App Store Connect API key id env is missing; set ASC_KEY_ID or APP_STORE_CONNECT_KEY_ID",
+        "App Store Connect issuer id env is missing; set ASC_ISSUER_ID or APP_STORE_CONNECT_ISSUER_ID",
+        "App Store Connect private key path is missing; set ASC_PRIVATE_KEY_PATH or APP_STORE_CONNECT_PRIVATE_KEY_PATH"
+      ],
+      "warnings": [],
+      "error": null
+    },
+    {
+      "id": "release-machine-doctor-strict",
+      "title": "Strict release machine doctor",
+      "command": "node scripts/check-release-machine.cjs --strict",
+      "strict": true,
+      "exitCode": 1,
+      "summary": "PASS Source App Store version: Store version checks (source-only): 7 passed, 0 failures",
+      "failureCount": 10,
+      "warningCount": 1,
+      "failures": [
+        "Public URL/contact env: Store env preflight: 1 passed, 5 failures",
+        "Public release generated-field sync: Public release sync checks (strict): 1 passed, 0 warnings, 6 failures",
+        "Release Node runtime: Release runtime checks (strict): 4 passed, 0 warnings, 1 failures",
+        "Published support/privacy URLs: Store public URL checks (strict): 2 passed, 0 warnings, 2 failures",
+        "Published public site pages: Published public site checks (strict): 2 passed, 0 warnings, 8 failures",
+        "MAS signing assets: MAS signing preflight: 1 passed, 0 warnings, 4 failures",
+        "MAS package boundary: MAS package boundary checks (strict): 61 passed, 0 warnings, 3 failures",
+        "App Store upload tooling: App Store upload tooling checks (strict): 4 passed, 1 warnings, 1 failures",
+        "App Store upload credentials: App Store upload credential checks (strict): 0 passed, 0 warnings, 3 failures",
+        "Release blocker report records 17 blocker(s)."
+      ],
+      "warnings": [
+        "Packaging toolchain: Packaging toolchain checks: 5 passed, 1 warnings, 0 failures"
+      ],
+      "error": null
+    }
+  ]
+}

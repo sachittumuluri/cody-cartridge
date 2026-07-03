@@ -1,0 +1,4305 @@
+{
+  "generatedAt": "2026-06-20T20:01:09.526Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0"
+  },
+  "summary": {
+    "totalPackages": 461,
+    "licenseCounts": {
+      "MIT": 369,
+      "BSD-2-Clause": 6,
+      "BSD-3-Clause": 17,
+      "ISC": 45,
+      "Apache-2.0": 9,
+      "Python-2.0": 1,
+      "CC-BY-4.0": 1,
+      "BlueOak-1.0.0": 8,
+      "WTFPL OR ISC": 1,
+      "WTFPL": 1,
+      "0BSD": 1,
+      "(MIT OR CC0-1.0)": 1,
+      "(WTFPL OR MIT)": 1
+    },
+    "relationshipCounts": {
+      "transitive development/build": 432,
+      "transitive runtime": 16,
+      "direct development/build": 9,
+      "direct runtime": 4
+    },
+    "unknownLicenseCount": 0
+  },
+  "directRuntime": [
+    {
+      "name": "lucide-react",
+      "version": "0.468.0",
+      "license": "ISC",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/lucide-react",
+      "homepage": "https://lucide.dev",
+      "repository": "https://github.com/lucide-icons/lucide.git"
+    },
+    {
+      "name": "music-metadata",
+      "version": "11.13.0",
+      "license": "MIT",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/music-metadata",
+      "homepage": null,
+      "repository": "github:Borewit/music-metadata"
+    },
+    {
+      "name": "react",
+      "version": "18.3.1",
+      "license": "MIT",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/react",
+      "homepage": "https://reactjs.org/",
+      "repository": "https://github.com/facebook/react.git"
+    },
+    {
+      "name": "react-dom",
+      "version": "18.3.1",
+      "license": "MIT",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/react-dom",
+      "homepage": "https://reactjs.org/",
+      "repository": "https://github.com/facebook/react.git"
+    }
+  ],
+  "directDevelopment": [
+    {
+      "name": "@types/react",
+      "version": "18.3.12",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/@types/react",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "18.3.1",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/@types/react-dom",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-dom",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "version": "4.7.0",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/@vitejs/plugin-react",
+      "homepage": "https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#readme",
+      "repository": "git+https://github.com/vitejs/vite-plugin-react.git"
+    },
+    {
+      "name": "concurrently",
+      "version": "9.1.0",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/concurrently",
+      "homepage": null,
+      "repository": "https://github.com/open-cli-tools/concurrently.git"
+    },
+    {
+      "name": "electron",
+      "version": "41.7.1",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/electron",
+      "homepage": null,
+      "repository": "https://github.com/electron/electron"
+    },
+    {
+      "name": "electron-builder",
+      "version": "26.15.5",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/electron-builder",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "typescript",
+      "version": "5.6.3",
+      "license": "Apache-2.0",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/typescript",
+      "homepage": "https://www.typescriptlang.org/",
+      "repository": "https://github.com/microsoft/TypeScript.git"
+    },
+    {
+      "name": "vite",
+      "version": "6.4.3",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/vite",
+      "homepage": "https://vite.dev",
+      "repository": "git+https://github.com/vitejs/vite.git"
+    },
+    {
+      "name": "wait-on",
+      "version": "8.0.1",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/wait-on",
+      "homepage": null,
+      "repository": "http://github.com/jeffbski/wait-on.git"
+    }
+  ],
+  "packages": [
+    {
+      "name": "@babel/code-frame",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/code-frame",
+      "homepage": "https://babel.dev/docs/en/next/babel-code-frame",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/compat-data",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/compat-data",
+      "homepage": null,
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/core",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/core",
+      "homepage": "https://babel.dev/docs/en/next/babel-core",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/generator",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/generator",
+      "homepage": "https://babel.dev/docs/en/next/babel-generator",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-compilation-targets",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-compilation-targets",
+      "homepage": null,
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-globals",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-globals",
+      "homepage": null,
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-module-imports",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-module-imports",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-module-imports",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-module-transforms",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-module-transforms",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-module-transforms",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-plugin-utils",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-plugin-utils",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-plugin-utils",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-string-parser",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-string-parser",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-string-parser",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-validator-identifier",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-validator-identifier",
+      "homepage": null,
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helper-validator-option",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helper-validator-option",
+      "homepage": null,
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/helpers",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/helpers",
+      "homepage": "https://babel.dev/docs/en/next/babel-helpers",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/parser",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/parser",
+      "homepage": "https://babel.dev/docs/en/next/babel-parser",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/plugin-transform-react-jsx-self",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/plugin-transform-react-jsx-self",
+      "homepage": "https://babel.dev/docs/en/next/babel-plugin-transform-react-jsx-self",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/plugin-transform-react-jsx-source",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/plugin-transform-react-jsx-source",
+      "homepage": "https://babel.dev/docs/en/next/babel-plugin-transform-react-jsx-source",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/template",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/template",
+      "homepage": "https://babel.dev/docs/en/next/babel-template",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/traverse",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/traverse",
+      "homepage": "https://babel.dev/docs/en/next/babel-traverse",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@babel/types",
+      "version": "7.29.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@babel/types",
+      "homepage": "https://babel.dev/docs/en/next/babel-types",
+      "repository": "https://github.com/babel/babel.git"
+    },
+    {
+      "name": "@borewit/text-codec",
+      "version": "0.2.2",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/@borewit/text-codec",
+      "homepage": null,
+      "repository": "git+https://github.com/Borewit/text-codec.git"
+    },
+    {
+      "name": "@electron/asar",
+      "version": "3.4.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/asar",
+      "homepage": "https://github.com/electron/asar",
+      "repository": "git+https://github.com/electron/asar.git"
+    },
+    {
+      "name": "@electron/fuses",
+      "version": "1.8.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/fuses",
+      "homepage": "https://github.com/electron/fuses#readme",
+      "repository": "git+https://github.com/electron/fuses.git"
+    },
+    {
+      "name": "@electron/get",
+      "version": "2.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/get",
+      "homepage": null,
+      "repository": "https://github.com/electron/get"
+    },
+    {
+      "name": "@electron/get",
+      "version": "3.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/@electron/get",
+      "homepage": null,
+      "repository": "https://github.com/electron/get"
+    },
+    {
+      "name": "@electron/notarize",
+      "version": "2.5.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/notarize",
+      "homepage": "https://github.com/electron/notarize#readme",
+      "repository": "git+https://github.com/electron/notarize.git"
+    },
+    {
+      "name": "@electron/osx-sign",
+      "version": "1.3.3",
+      "license": "BSD-2-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/osx-sign",
+      "homepage": "https://github.com/electron/osx-sign",
+      "repository": "git+https://github.com/electron/osx-sign.git"
+    },
+    {
+      "name": "@electron/rebuild",
+      "version": "4.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/rebuild",
+      "homepage": "https://github.com/electron/rebuild",
+      "repository": "git+https://github.com/electron/rebuild.git"
+    },
+    {
+      "name": "@electron/universal",
+      "version": "2.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal",
+      "homepage": null,
+      "repository": "git+https://github.com/electron/universal.git"
+    },
+    {
+      "name": "@electron/windows-sign",
+      "version": "1.2.2",
+      "license": "BSD-2-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/windows-sign",
+      "homepage": "https://github.com/electron/windows-sign",
+      "repository": "git+https://github.com/electron/windows-sign.git"
+    },
+    {
+      "name": "@esbuild/aix-ppc64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/aix-ppc64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/android-arm",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/android-arm",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/android-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/android-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/android-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/android-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/darwin-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/darwin-arm64",
+      "homepage": null,
+      "repository": "git+https://github.com/evanw/esbuild.git"
+    },
+    {
+      "name": "@esbuild/darwin-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/darwin-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/freebsd-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/freebsd-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/freebsd-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/freebsd-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-arm",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-arm",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-ia32",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-ia32",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-loong64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-loong64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-mips64el",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-mips64el",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-ppc64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-ppc64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-riscv64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-riscv64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-s390x",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-s390x",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/linux-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/linux-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/netbsd-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/netbsd-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/netbsd-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/netbsd-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/openbsd-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/openbsd-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/openbsd-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/openbsd-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/openharmony-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/openharmony-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/sunos-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/sunos-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/win32-arm64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/win32-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/win32-ia32",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/win32-ia32",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@esbuild/win32-x64",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@esbuild/win32-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@hapi/hoek",
+      "version": "9.3.0",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@hapi/hoek",
+      "homepage": null,
+      "repository": "git://github.com/hapijs/hoek"
+    },
+    {
+      "name": "@hapi/topo",
+      "version": "5.1.0",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@hapi/topo",
+      "homepage": null,
+      "repository": "git://github.com/hapijs/topo"
+    },
+    {
+      "name": "@isaacs/fs-minipass",
+      "version": "4.0.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@isaacs/fs-minipass",
+      "homepage": null,
+      "repository": "https://github.com/npm/fs-minipass.git"
+    },
+    {
+      "name": "@jridgewell/gen-mapping",
+      "version": "0.3.13",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@jridgewell/gen-mapping",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/gen-mapping",
+      "repository": "git+https://github.com/jridgewell/sourcemaps.git"
+    },
+    {
+      "name": "@jridgewell/remapping",
+      "version": "2.3.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@jridgewell/remapping",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/remapping",
+      "repository": "git+https://github.com/jridgewell/sourcemaps.git"
+    },
+    {
+      "name": "@jridgewell/resolve-uri",
+      "version": "3.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@jridgewell/resolve-uri",
+      "homepage": null,
+      "repository": "https://github.com/jridgewell/resolve-uri"
+    },
+    {
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.5.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@jridgewell/sourcemap-codec",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/sourcemap-codec",
+      "repository": "git+https://github.com/jridgewell/sourcemaps.git"
+    },
+    {
+      "name": "@jridgewell/trace-mapping",
+      "version": "0.3.31",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@jridgewell/trace-mapping",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/trace-mapping",
+      "repository": "git+https://github.com/jridgewell/sourcemaps.git"
+    },
+    {
+      "name": "@malept/cross-spawn-promise",
+      "version": "2.0.0",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@malept/cross-spawn-promise",
+      "homepage": null,
+      "repository": "https://github.com/malept/cross-spawn-promise"
+    },
+    {
+      "name": "@malept/flatpak-bundler",
+      "version": "0.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@malept/flatpak-bundler",
+      "homepage": "https://github.com/malept/flatpak-bundler#readme",
+      "repository": "git+https://github.com/malept/flatpak-bundler.git"
+    },
+    {
+      "name": "@noble/hashes",
+      "version": "1.8.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/@noble/hashes",
+      "homepage": "https://paulmillr.com/noble/",
+      "repository": "git+https://github.com/paulmillr/noble-hashes.git"
+    },
+    {
+      "name": "@noble/hashes",
+      "version": "1.8.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pkijs/node_modules/@noble/hashes",
+      "homepage": "https://paulmillr.com/noble/",
+      "repository": "git+https://github.com/paulmillr/noble-hashes.git"
+    },
+    {
+      "name": "@peculiar/asn1-schema",
+      "version": "2.8.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@peculiar/asn1-schema",
+      "homepage": "https://github.com/PeculiarVentures/asn1-schema/tree/master/packages/schema#readme",
+      "repository": "https://github.com/PeculiarVentures/asn1-schema"
+    },
+    {
+      "name": "@peculiar/json-schema",
+      "version": "1.1.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@peculiar/json-schema",
+      "homepage": "https://github.com/PeculiarVentures/json-schema#readme",
+      "repository": "git+https://github.com/PeculiarVentures/json-schema.git"
+    },
+    {
+      "name": "@peculiar/utils",
+      "version": "2.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@peculiar/utils",
+      "homepage": "https://github.com/PeculiarVentures/pvtsutils#readme",
+      "repository": "https://github.com/PeculiarVentures/pvtsutils"
+    },
+    {
+      "name": "@peculiar/webcrypto",
+      "version": "1.7.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@peculiar/webcrypto",
+      "homepage": "https://github.com/PeculiarVentures/webcrypto#readme",
+      "repository": "https://github.com/PeculiarVentures/webcrypto"
+    },
+    {
+      "name": "@rolldown/pluginutils",
+      "version": "1.0.0-beta.27",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rolldown/pluginutils",
+      "homepage": null,
+      "repository": "git+https://github.com/rolldown/rolldown.git"
+    },
+    {
+      "name": "@rollup/rollup-android-arm-eabi",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-android-arm-eabi",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-android-arm64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-android-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-darwin-arm64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-darwin-arm64",
+      "homepage": "https://rollupjs.org/",
+      "repository": "git+https://github.com/rollup/rollup.git"
+    },
+    {
+      "name": "@rollup/rollup-darwin-x64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-darwin-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-freebsd-arm64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-freebsd-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-freebsd-x64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-freebsd-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-arm-gnueabihf",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-arm-gnueabihf",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-arm-musleabihf",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-arm-musleabihf",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-arm64-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-arm64-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-arm64-musl",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-arm64-musl",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-loong64-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-loong64-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-loong64-musl",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-loong64-musl",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-ppc64-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-ppc64-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-ppc64-musl",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-ppc64-musl",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-riscv64-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-riscv64-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-riscv64-musl",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-riscv64-musl",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-s390x-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-s390x-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-x64-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-x64-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-linux-x64-musl",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-linux-x64-musl",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-openbsd-x64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-openbsd-x64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-openharmony-arm64",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-openharmony-arm64",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-win32-arm64-msvc",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-win32-arm64-msvc",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-win32-ia32-msvc",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-win32-ia32-msvc",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-win32-x64-gnu",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-win32-x64-gnu",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@rollup/rollup-win32-x64-msvc",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@rollup/rollup-win32-x64-msvc",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@sideway/address",
+      "version": "4.1.5",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@sideway/address",
+      "homepage": null,
+      "repository": "git://github.com/sideway/address"
+    },
+    {
+      "name": "@sideway/formula",
+      "version": "3.0.1",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@sideway/formula",
+      "homepage": null,
+      "repository": "git://github.com/sideway/formula"
+    },
+    {
+      "name": "@sideway/pinpoint",
+      "version": "2.0.0",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@sideway/pinpoint",
+      "homepage": null,
+      "repository": "git://github.com/sideway/pinpoint"
+    },
+    {
+      "name": "@sindresorhus/is",
+      "version": "4.6.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@sindresorhus/is",
+      "homepage": null,
+      "repository": "sindresorhus/is"
+    },
+    {
+      "name": "@szmarczak/http-timer",
+      "version": "4.0.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@szmarczak/http-timer",
+      "homepage": "https://github.com/szmarczak/http-timer#readme",
+      "repository": "git+https://github.com/szmarczak/http-timer.git"
+    },
+    {
+      "name": "@tokenizer/inflate",
+      "version": "0.4.1",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/@tokenizer/inflate",
+      "homepage": null,
+      "repository": "https://github.com/Borewit/tokenizer-inflate.git"
+    },
+    {
+      "name": "@tokenizer/token",
+      "version": "0.3.0",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/@tokenizer/token",
+      "homepage": null,
+      "repository": "https://github.com/Borewit/tokenizer-token.git"
+    },
+    {
+      "name": "@types/babel__core",
+      "version": "7.20.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/babel__core",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__core",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/babel__generator",
+      "version": "7.27.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/babel__generator",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__generator",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/babel__template",
+      "version": "7.4.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/babel__template",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__template",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/babel__traverse",
+      "version": "7.28.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/babel__traverse",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/cacheable-request",
+      "version": "6.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/cacheable-request",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/cacheable-request",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/debug",
+      "version": "4.1.13",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/debug",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/debug",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/estree",
+      "version": "1.0.9",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/estree",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/estree",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/fs-extra",
+      "version": "9.0.13",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/fs-extra",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/fs-extra",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/http-cache-semantics",
+      "version": "4.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/http-cache-semantics",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/http-cache-semantics",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/keyv",
+      "version": "3.1.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/keyv",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/keyv",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/ms",
+      "version": "2.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/ms",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/ms",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/node",
+      "version": "24.13.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/node",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/prop-types",
+      "version": "15.7.15",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/prop-types",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/prop-types",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/react",
+      "version": "18.3.12",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/@types/react",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "18.3.1",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/@types/react-dom",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-dom",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/responselike",
+      "version": "1.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/responselike",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/responselike",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@types/yauzl",
+      "version": "2.10.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@types/yauzl",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/yauzl",
+      "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "version": "4.7.0",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/@vitejs/plugin-react",
+      "homepage": "https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#readme",
+      "repository": "git+https://github.com/vitejs/vite-plugin-react.git"
+    },
+    {
+      "name": "@xmldom/xmldom",
+      "version": "0.8.13",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@xmldom/xmldom",
+      "homepage": "https://github.com/xmldom/xmldom",
+      "repository": "git://github.com/xmldom/xmldom.git"
+    },
+    {
+      "name": "abbrev",
+      "version": "4.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/abbrev",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/abbrev-js.git"
+    },
+    {
+      "name": "agent-base",
+      "version": "7.1.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/agent-base",
+      "homepage": null,
+      "repository": "https://github.com/TooTallNate/proxy-agents.git"
+    },
+    {
+      "name": "agent-base",
+      "version": "6.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/axios/node_modules/agent-base",
+      "homepage": null,
+      "repository": "git://github.com/TooTallNate/node-agent-base.git"
+    },
+    {
+      "name": "ajv",
+      "version": "8.20.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/ajv",
+      "homepage": "https://ajv.js.org",
+      "repository": "ajv-validator/ajv"
+    },
+    {
+      "name": "ansi-regex",
+      "version": "5.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/ansi-regex",
+      "homepage": null,
+      "repository": "chalk/ansi-regex"
+    },
+    {
+      "name": "ansi-styles",
+      "version": "4.3.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/ansi-styles",
+      "homepage": null,
+      "repository": "chalk/ansi-styles"
+    },
+    {
+      "name": "app-builder-lib",
+      "version": "26.15.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "argparse",
+      "version": "2.0.1",
+      "license": "Python-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/argparse",
+      "homepage": null,
+      "repository": "nodeca/argparse"
+    },
+    {
+      "name": "asn1js",
+      "version": "3.0.10",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/asn1js",
+      "homepage": null,
+      "repository": "https://github.com/PeculiarVentures/ASN1.js"
+    },
+    {
+      "name": "async",
+      "version": "3.2.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/async",
+      "homepage": "https://caolan.github.io/async/",
+      "repository": "https://github.com/caolan/async.git"
+    },
+    {
+      "name": "async-exit-hook",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/async-exit-hook",
+      "homepage": null,
+      "repository": "https://github.com/tapppi/async-exit-hook.git"
+    },
+    {
+      "name": "asynckit",
+      "version": "0.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/asynckit",
+      "homepage": "https://github.com/alexindigo/asynckit#readme",
+      "repository": "git+https://github.com/alexindigo/asynckit.git"
+    },
+    {
+      "name": "at-least-node",
+      "version": "1.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/at-least-node",
+      "homepage": "https://github.com/RyanZim/at-least-node#readme",
+      "repository": "git+https://github.com/RyanZim/at-least-node.git"
+    },
+    {
+      "name": "aws4",
+      "version": "1.13.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/aws4",
+      "homepage": null,
+      "repository": "github:mhart/aws4"
+    },
+    {
+      "name": "axios",
+      "version": "1.18.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/axios",
+      "homepage": "https://axios-http.com",
+      "repository": "https://github.com/axios/axios.git"
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/asar/node_modules/balanced-match",
+      "homepage": "https://github.com/juliangruber/balanced-match",
+      "repository": "git://github.com/juliangruber/balanced-match.git"
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal/node_modules/balanced-match",
+      "homepage": "https://github.com/juliangruber/balanced-match",
+      "repository": "git://github.com/juliangruber/balanced-match.git"
+    },
+    {
+      "name": "balanced-match",
+      "version": "4.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/balanced-match",
+      "homepage": null,
+      "repository": "git://github.com/juliangruber/balanced-match.git"
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dir-compare/node_modules/balanced-match",
+      "homepage": "https://github.com/juliangruber/balanced-match",
+      "repository": "git://github.com/juliangruber/balanced-match.git"
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/filelist/node_modules/balanced-match",
+      "homepage": "https://github.com/juliangruber/balanced-match",
+      "repository": "git://github.com/juliangruber/balanced-match.git"
+    },
+    {
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/glob/node_modules/balanced-match",
+      "homepage": "https://github.com/juliangruber/balanced-match",
+      "repository": "git://github.com/juliangruber/balanced-match.git"
+    },
+    {
+      "name": "base64-js",
+      "version": "1.5.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/base64-js",
+      "homepage": "https://github.com/beatgammit/base64-js",
+      "repository": "git://github.com/beatgammit/base64-js.git"
+    },
+    {
+      "name": "baseline-browser-mapping",
+      "version": "2.10.38",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/baseline-browser-mapping",
+      "homepage": null,
+      "repository": "git+https://github.com/web-platform-dx/baseline-browser-mapping.git"
+    },
+    {
+      "name": "bluebird",
+      "version": "3.7.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/bluebird",
+      "homepage": "https://github.com/petkaantonov/bluebird",
+      "repository": "git://github.com/petkaantonov/bluebird.git"
+    },
+    {
+      "name": "boolean",
+      "version": "3.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/boolean",
+      "homepage": null,
+      "repository": "git://github.com/thenativeweb/boolean.git"
+    },
+    {
+      "name": "brace-expansion",
+      "version": "1.1.15",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/asar/node_modules/brace-expansion",
+      "homepage": "https://github.com/juliangruber/brace-expansion",
+      "repository": "git://github.com/juliangruber/brace-expansion.git"
+    },
+    {
+      "name": "brace-expansion",
+      "version": "2.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal/node_modules/brace-expansion",
+      "homepage": "https://github.com/juliangruber/brace-expansion",
+      "repository": "git://github.com/juliangruber/brace-expansion.git"
+    },
+    {
+      "name": "brace-expansion",
+      "version": "5.0.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/brace-expansion",
+      "homepage": null,
+      "repository": "git+ssh://git@github.com/juliangruber/brace-expansion.git"
+    },
+    {
+      "name": "brace-expansion",
+      "version": "1.1.15",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dir-compare/node_modules/brace-expansion",
+      "homepage": "https://github.com/juliangruber/brace-expansion",
+      "repository": "git://github.com/juliangruber/brace-expansion.git"
+    },
+    {
+      "name": "brace-expansion",
+      "version": "2.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/filelist/node_modules/brace-expansion",
+      "homepage": "https://github.com/juliangruber/brace-expansion",
+      "repository": "git://github.com/juliangruber/brace-expansion.git"
+    },
+    {
+      "name": "brace-expansion",
+      "version": "1.1.15",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/glob/node_modules/brace-expansion",
+      "homepage": "https://github.com/juliangruber/brace-expansion",
+      "repository": "git://github.com/juliangruber/brace-expansion.git"
+    },
+    {
+      "name": "browserslist",
+      "version": "4.28.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/browserslist",
+      "homepage": null,
+      "repository": "browserslist/browserslist"
+    },
+    {
+      "name": "buffer-crc32",
+      "version": "0.2.13",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/buffer-crc32",
+      "homepage": "https://github.com/brianloveswords/buffer-crc32",
+      "repository": "git://github.com/brianloveswords/buffer-crc32.git"
+    },
+    {
+      "name": "buffer-from",
+      "version": "1.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/buffer-from",
+      "homepage": null,
+      "repository": "LinusU/buffer-from"
+    },
+    {
+      "name": "builder-util",
+      "version": "26.15.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/builder-util",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "builder-util-runtime",
+      "version": "9.7.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/builder-util-runtime",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "bytestreamjs",
+      "version": "2.0.1",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/bytestreamjs",
+      "homepage": null,
+      "repository": "git://github.com/PeculiarVentures/ByteStream.js.git"
+    },
+    {
+      "name": "cacheable-lookup",
+      "version": "5.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cacheable-lookup",
+      "homepage": "https://github.com/szmarczak/cacheable-lookup#readme",
+      "repository": "git+https://github.com/szmarczak/cacheable-lookup.git"
+    },
+    {
+      "name": "cacheable-request",
+      "version": "7.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cacheable-request",
+      "homepage": null,
+      "repository": "lukechilds/cacheable-request"
+    },
+    {
+      "name": "call-bind-apply-helpers",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/call-bind-apply-helpers",
+      "homepage": "https://github.com/ljharb/call-bind-apply-helpers#readme",
+      "repository": "git+https://github.com/ljharb/call-bind-apply-helpers.git"
+    },
+    {
+      "name": "caniuse-lite",
+      "version": "1.0.30001799",
+      "license": "CC-BY-4.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/caniuse-lite",
+      "homepage": null,
+      "repository": "browserslist/caniuse-lite"
+    },
+    {
+      "name": "chalk",
+      "version": "4.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/chalk",
+      "homepage": null,
+      "repository": "chalk/chalk"
+    },
+    {
+      "name": "chownr",
+      "version": "3.0.0",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/chownr",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/chownr.git"
+    },
+    {
+      "name": "chromium-pickle-js",
+      "version": "0.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/chromium-pickle-js",
+      "homepage": null,
+      "repository": "https://github.com/electron/node-chromium-pickle-js.git"
+    },
+    {
+      "name": "ci-info",
+      "version": "4.3.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/ci-info",
+      "homepage": "https://github.com/watson/ci-info",
+      "repository": "github:watson/ci-info"
+    },
+    {
+      "name": "ci-info",
+      "version": "4.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/ci-info",
+      "homepage": "https://github.com/watson/ci-info",
+      "repository": "github:watson/ci-info"
+    },
+    {
+      "name": "cliui",
+      "version": "8.0.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cliui",
+      "homepage": null,
+      "repository": "yargs/cliui"
+    },
+    {
+      "name": "clone-response",
+      "version": "1.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/clone-response",
+      "homepage": null,
+      "repository": "git+https://github.com/sindresorhus/clone-response.git"
+    },
+    {
+      "name": "color-convert",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/color-convert",
+      "homepage": null,
+      "repository": "Qix-/color-convert"
+    },
+    {
+      "name": "color-name",
+      "version": "1.1.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/color-name",
+      "homepage": "https://github.com/colorjs/color-name",
+      "repository": "git@github.com:colorjs/color-name.git"
+    },
+    {
+      "name": "combined-stream",
+      "version": "1.0.8",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/combined-stream",
+      "homepage": "https://github.com/felixge/node-combined-stream",
+      "repository": "git://github.com/felixge/node-combined-stream.git"
+    },
+    {
+      "name": "commander",
+      "version": "5.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/commander",
+      "homepage": null,
+      "repository": "https://github.com/tj/commander.js.git"
+    },
+    {
+      "name": "commander",
+      "version": "9.5.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/postject/node_modules/commander",
+      "homepage": null,
+      "repository": "https://github.com/tj/commander.js.git"
+    },
+    {
+      "name": "compare-version",
+      "version": "0.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/compare-version",
+      "homepage": null,
+      "repository": "kevva/compare-version"
+    },
+    {
+      "name": "concat-map",
+      "version": "0.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/concat-map",
+      "homepage": null,
+      "repository": "git://github.com/substack/node-concat-map.git"
+    },
+    {
+      "name": "concurrently",
+      "version": "9.1.0",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/concurrently",
+      "homepage": null,
+      "repository": "https://github.com/open-cli-tools/concurrently.git"
+    },
+    {
+      "name": "content-type",
+      "version": "2.0.0",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/content-type",
+      "homepage": null,
+      "repository": "jshttp/content-type"
+    },
+    {
+      "name": "convert-source-map",
+      "version": "2.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/convert-source-map",
+      "homepage": "https://github.com/thlorenz/convert-source-map",
+      "repository": "git://github.com/thlorenz/convert-source-map.git"
+    },
+    {
+      "name": "core-util-is",
+      "version": "1.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/core-util-is",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/core-util-is"
+    },
+    {
+      "name": "cross-dirname",
+      "version": "0.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cross-dirname",
+      "homepage": null,
+      "repository": "https://github.com/JumpLink/cross-dirname.git"
+    },
+    {
+      "name": "cross-spawn",
+      "version": "7.0.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cross-spawn",
+      "homepage": "https://github.com/moxystudio/node-cross-spawn",
+      "repository": "git@github.com:moxystudio/node-cross-spawn.git"
+    },
+    {
+      "name": "csstype",
+      "version": "3.2.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/csstype",
+      "homepage": null,
+      "repository": "https://github.com/frenic/csstype"
+    },
+    {
+      "name": "debug",
+      "version": "4.4.3",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/debug",
+      "homepage": null,
+      "repository": "git://github.com/debug-js/debug.git"
+    },
+    {
+      "name": "decompress-response",
+      "version": "6.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/decompress-response",
+      "homepage": null,
+      "repository": "sindresorhus/decompress-response"
+    },
+    {
+      "name": "defer-to-connect",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/defer-to-connect",
+      "homepage": "https://github.com/szmarczak/defer-to-connect#readme",
+      "repository": "git+https://github.com/szmarczak/defer-to-connect.git"
+    },
+    {
+      "name": "define-data-property",
+      "version": "1.1.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/define-data-property",
+      "homepage": "https://github.com/ljharb/define-data-property#readme",
+      "repository": "git+https://github.com/ljharb/define-data-property.git"
+    },
+    {
+      "name": "define-properties",
+      "version": "1.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/define-properties",
+      "homepage": null,
+      "repository": "git://github.com/ljharb/define-properties.git"
+    },
+    {
+      "name": "delayed-stream",
+      "version": "1.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/delayed-stream",
+      "homepage": "https://github.com/felixge/node-delayed-stream",
+      "repository": "git://github.com/felixge/node-delayed-stream.git"
+    },
+    {
+      "name": "detect-node",
+      "version": "2.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/detect-node",
+      "homepage": "https://github.com/iliakan/detect-node",
+      "repository": "https://github.com/iliakan/detect-node"
+    },
+    {
+      "name": "dir-compare",
+      "version": "4.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dir-compare",
+      "homepage": null,
+      "repository": "https://github.com/gliviu/dir-compare"
+    },
+    {
+      "name": "dmg-builder",
+      "version": "26.15.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dmg-builder",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "dotenv",
+      "version": "16.6.1",
+      "license": "BSD-2-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dotenv",
+      "homepage": "https://github.com/motdotla/dotenv#readme",
+      "repository": "git://github.com/motdotla/dotenv.git"
+    },
+    {
+      "name": "dotenv-expand",
+      "version": "11.0.7",
+      "license": "BSD-2-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dotenv-expand",
+      "homepage": null,
+      "repository": "https://github.com/motdotla/dotenv-expand"
+    },
+    {
+      "name": "dunder-proto",
+      "version": "1.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dunder-proto",
+      "homepage": "https://github.com/es-shims/dunder-proto#readme",
+      "repository": "git+https://github.com/es-shims/dunder-proto.git"
+    },
+    {
+      "name": "duplexer2",
+      "version": "0.1.4",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/duplexer2",
+      "homepage": null,
+      "repository": "deoxxa/duplexer2"
+    },
+    {
+      "name": "ejs",
+      "version": "3.1.10",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/ejs",
+      "homepage": "https://github.com/mde/ejs",
+      "repository": "git://github.com/mde/ejs.git"
+    },
+    {
+      "name": "electron",
+      "version": "41.7.1",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/electron",
+      "homepage": null,
+      "repository": "https://github.com/electron/electron"
+    },
+    {
+      "name": "electron-builder",
+      "version": "26.15.5",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/electron-builder",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "electron-builder-squirrel-windows",
+      "version": "26.15.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-builder-squirrel-windows",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "electron-publish",
+      "version": "26.15.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-publish",
+      "homepage": "https://github.com/electron-userland/electron-builder",
+      "repository": "git+https://github.com/electron-userland/electron-builder.git"
+    },
+    {
+      "name": "electron-to-chromium",
+      "version": "1.5.376",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-to-chromium",
+      "homepage": null,
+      "repository": "git+https://github.com/Kilian/electron-to-chromium.git"
+    },
+    {
+      "name": "electron-winstaller",
+      "version": "5.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-winstaller",
+      "homepage": null,
+      "repository": "https://github.com/electron/windows-installer"
+    },
+    {
+      "name": "emoji-regex",
+      "version": "8.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/emoji-regex",
+      "homepage": "https://mths.be/emoji-regex",
+      "repository": "https://github.com/mathiasbynens/emoji-regex.git"
+    },
+    {
+      "name": "end-of-stream",
+      "version": "1.4.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/end-of-stream",
+      "homepage": "https://github.com/mafintosh/end-of-stream",
+      "repository": "git://github.com/mafintosh/end-of-stream.git"
+    },
+    {
+      "name": "env-paths",
+      "version": "2.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/env-paths",
+      "homepage": null,
+      "repository": "sindresorhus/env-paths"
+    },
+    {
+      "name": "err-code",
+      "version": "2.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/err-code",
+      "homepage": null,
+      "repository": "git://github.com/IndigoUnited/js-err-code.git"
+    },
+    {
+      "name": "es-define-property",
+      "version": "1.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/es-define-property",
+      "homepage": "https://github.com/ljharb/es-define-property#readme",
+      "repository": "git+https://github.com/ljharb/es-define-property.git"
+    },
+    {
+      "name": "es-errors",
+      "version": "1.3.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/es-errors",
+      "homepage": "https://github.com/ljharb/es-errors#readme",
+      "repository": "git+https://github.com/ljharb/es-errors.git"
+    },
+    {
+      "name": "es-object-atoms",
+      "version": "1.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/es-object-atoms",
+      "homepage": "https://github.com/ljharb/es-object-atoms#readme",
+      "repository": "git+https://github.com/ljharb/es-object-atoms.git"
+    },
+    {
+      "name": "es-set-tostringtag",
+      "version": "2.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/es-set-tostringtag",
+      "homepage": "https://github.com/es-shims/es-set-tostringtag#readme",
+      "repository": "git+https://github.com/es-shims/es-set-tostringtag.git"
+    },
+    {
+      "name": "es6-error",
+      "version": "4.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/es6-error",
+      "homepage": "https://github.com/bjyoungblood/es6-error",
+      "repository": "https://github.com/bjyoungblood/es6-error.git"
+    },
+    {
+      "name": "esbuild",
+      "version": "0.25.12",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/esbuild",
+      "homepage": null,
+      "repository": "git+https://github.com/evanw/esbuild.git"
+    },
+    {
+      "name": "escalade",
+      "version": "3.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/escalade",
+      "homepage": null,
+      "repository": "lukeed/escalade"
+    },
+    {
+      "name": "escape-string-regexp",
+      "version": "4.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/escape-string-regexp",
+      "homepage": null,
+      "repository": "sindresorhus/escape-string-regexp"
+    },
+    {
+      "name": "exponential-backoff",
+      "version": "3.1.3",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/exponential-backoff",
+      "homepage": "https://github.com/coveooss/exponential-backoff#readme",
+      "repository": "git+https://github.com/coveooss/exponential-backoff.git"
+    },
+    {
+      "name": "extract-zip",
+      "version": "2.0.1",
+      "license": "BSD-2-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/extract-zip",
+      "homepage": null,
+      "repository": "maxogden/extract-zip"
+    },
+    {
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fast-deep-equal",
+      "homepage": "https://github.com/epoberezkin/fast-deep-equal#readme",
+      "repository": "git+https://github.com/epoberezkin/fast-deep-equal.git"
+    },
+    {
+      "name": "fast-uri",
+      "version": "3.1.2",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fast-uri",
+      "homepage": "https://github.com/fastify/fast-uri",
+      "repository": "git+https://github.com/fastify/fast-uri.git"
+    },
+    {
+      "name": "fd-slicer",
+      "version": "1.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fd-slicer",
+      "homepage": null,
+      "repository": "git://github.com/andrewrk/node-fd-slicer.git"
+    },
+    {
+      "name": "fdir",
+      "version": "6.5.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fdir",
+      "homepage": "https://github.com/thecodrr/fdir#readme",
+      "repository": "git+https://github.com/thecodrr/fdir.git"
+    },
+    {
+      "name": "file-type",
+      "version": "21.3.4",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/file-type",
+      "homepage": null,
+      "repository": "sindresorhus/file-type"
+    },
+    {
+      "name": "filelist",
+      "version": "1.0.6",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/filelist",
+      "homepage": "https://github.com/mde/filelist",
+      "repository": "git://github.com/mde/filelist.git"
+    },
+    {
+      "name": "follow-redirects",
+      "version": "1.16.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/follow-redirects",
+      "homepage": "https://github.com/follow-redirects/follow-redirects",
+      "repository": "git+ssh://git@github.com/follow-redirects/follow-redirects.git"
+    },
+    {
+      "name": "form-data",
+      "version": "4.0.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/form-data",
+      "homepage": null,
+      "repository": "git://github.com/form-data/form-data.git"
+    },
+    {
+      "name": "fs-extra",
+      "version": "9.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/fuses/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "9.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/notarize/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/osx-sign/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "11.3.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "git+https://github.com/jprichardson/node-fs-extra.git"
+    },
+    {
+      "name": "fs-extra",
+      "version": "11.3.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/windows-sign/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "git+https://github.com/jprichardson/node-fs-extra.git"
+    },
+    {
+      "name": "fs-extra",
+      "version": "9.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@malept/flatpak-bundler/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "8.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/@electron/get/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/builder-util/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dmg-builder/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-builder/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-publish/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "7.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-winstaller/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "8.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "10.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/temp-file/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "name": "fs-extra",
+      "version": "11.3.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/unzipper/node_modules/fs-extra",
+      "homepage": "https://github.com/jprichardson/node-fs-extra",
+      "repository": "git+https://github.com/jprichardson/node-fs-extra.git"
+    },
+    {
+      "name": "fs.realpath",
+      "version": "1.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fs.realpath",
+      "homepage": null,
+      "repository": "git+https://github.com/isaacs/fs.realpath.git"
+    },
+    {
+      "name": "fsevents",
+      "version": "2.3.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/fsevents",
+      "homepage": "https://github.com/fsevents/fsevents",
+      "repository": "https://github.com/fsevents/fsevents.git"
+    },
+    {
+      "name": "function-bind",
+      "version": "1.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/function-bind",
+      "homepage": "https://github.com/Raynos/function-bind",
+      "repository": "https://github.com/Raynos/function-bind.git"
+    },
+    {
+      "name": "gensync",
+      "version": "1.0.0-beta.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/gensync",
+      "homepage": "https://github.com/loganfsmyth/gensync",
+      "repository": "https://github.com/loganfsmyth/gensync.git"
+    },
+    {
+      "name": "get-caller-file",
+      "version": "2.0.5",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/get-caller-file",
+      "homepage": "https://github.com/stefanpenner/get-caller-file#readme",
+      "repository": "git+https://github.com/stefanpenner/get-caller-file.git"
+    },
+    {
+      "name": "get-intrinsic",
+      "version": "1.3.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/get-intrinsic",
+      "homepage": "https://github.com/ljharb/get-intrinsic#readme",
+      "repository": "git+https://github.com/ljharb/get-intrinsic.git"
+    },
+    {
+      "name": "get-proto",
+      "version": "1.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/get-proto",
+      "homepage": "https://github.com/ljharb/get-proto#readme",
+      "repository": "git+https://github.com/ljharb/get-proto.git"
+    },
+    {
+      "name": "get-stream",
+      "version": "5.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/get-stream",
+      "homepage": null,
+      "repository": "sindresorhus/get-stream"
+    },
+    {
+      "name": "glob",
+      "version": "7.2.3",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/glob",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/node-glob.git"
+    },
+    {
+      "name": "global-agent",
+      "version": "3.0.0",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/global-agent",
+      "homepage": null,
+      "repository": "https://github.com/gajus/global-agent"
+    },
+    {
+      "name": "globalthis",
+      "version": "1.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/globalthis",
+      "homepage": null,
+      "repository": "git://github.com/ljharb/System.global.git"
+    },
+    {
+      "name": "gopd",
+      "version": "1.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/gopd",
+      "homepage": "https://github.com/ljharb/gopd#readme",
+      "repository": "git+https://github.com/ljharb/gopd.git"
+    },
+    {
+      "name": "got",
+      "version": "11.8.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/got",
+      "homepage": null,
+      "repository": "sindresorhus/got"
+    },
+    {
+      "name": "graceful-fs",
+      "version": "4.2.11",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/graceful-fs",
+      "homepage": null,
+      "repository": "https://github.com/isaacs/node-graceful-fs"
+    },
+    {
+      "name": "has-flag",
+      "version": "4.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/has-flag",
+      "homepage": null,
+      "repository": "sindresorhus/has-flag"
+    },
+    {
+      "name": "has-property-descriptors",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/has-property-descriptors",
+      "homepage": "https://github.com/inspect-js/has-property-descriptors#readme",
+      "repository": "git+https://github.com/inspect-js/has-property-descriptors.git"
+    },
+    {
+      "name": "has-symbols",
+      "version": "1.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/has-symbols",
+      "homepage": "https://github.com/ljharb/has-symbols#readme",
+      "repository": "git://github.com/inspect-js/has-symbols.git"
+    },
+    {
+      "name": "has-tostringtag",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/has-tostringtag",
+      "homepage": "https://github.com/inspect-js/has-tostringtag#readme",
+      "repository": "git+https://github.com/inspect-js/has-tostringtag.git"
+    },
+    {
+      "name": "hasown",
+      "version": "2.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/hasown",
+      "homepage": "https://github.com/inspect-js/hasOwn#readme",
+      "repository": "git+https://github.com/inspect-js/hasOwn.git"
+    },
+    {
+      "name": "hosted-git-info",
+      "version": "4.1.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/hosted-git-info",
+      "homepage": "https://github.com/npm/hosted-git-info",
+      "repository": "git+https://github.com/npm/hosted-git-info.git"
+    },
+    {
+      "name": "http-cache-semantics",
+      "version": "4.2.0",
+      "license": "BSD-2-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/http-cache-semantics",
+      "homepage": null,
+      "repository": "git+https://github.com/kornelski/http-cache-semantics.git"
+    },
+    {
+      "name": "http-proxy-agent",
+      "version": "7.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/http-proxy-agent",
+      "homepage": null,
+      "repository": "https://github.com/TooTallNate/proxy-agents.git"
+    },
+    {
+      "name": "http2-wrapper",
+      "version": "1.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/http2-wrapper",
+      "homepage": "https://github.com/szmarczak/http2-wrapper#readme",
+      "repository": "git+https://github.com/szmarczak/http2-wrapper.git"
+    },
+    {
+      "name": "https-proxy-agent",
+      "version": "5.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/axios/node_modules/https-proxy-agent",
+      "homepage": null,
+      "repository": "git://github.com/TooTallNate/node-https-proxy-agent.git"
+    },
+    {
+      "name": "https-proxy-agent",
+      "version": "7.0.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/https-proxy-agent",
+      "homepage": null,
+      "repository": "https://github.com/TooTallNate/proxy-agents.git"
+    },
+    {
+      "name": "ieee754",
+      "version": "1.2.1",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/ieee754",
+      "homepage": null,
+      "repository": "git://github.com/feross/ieee754.git"
+    },
+    {
+      "name": "inflight",
+      "version": "1.0.6",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/inflight",
+      "homepage": "https://github.com/isaacs/inflight",
+      "repository": "https://github.com/npm/inflight.git"
+    },
+    {
+      "name": "inherits",
+      "version": "2.0.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/inherits",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/inherits"
+    },
+    {
+      "name": "is-fullwidth-code-point",
+      "version": "3.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/is-fullwidth-code-point",
+      "homepage": null,
+      "repository": "sindresorhus/is-fullwidth-code-point"
+    },
+    {
+      "name": "isarray",
+      "version": "1.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/isarray",
+      "homepage": "https://github.com/juliangruber/isarray",
+      "repository": "git://github.com/juliangruber/isarray.git"
+    },
+    {
+      "name": "isbinaryfile",
+      "version": "4.0.10",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/osx-sign/node_modules/isbinaryfile",
+      "homepage": null,
+      "repository": "https://github.com/gjtorikian/isBinaryFile"
+    },
+    {
+      "name": "isbinaryfile",
+      "version": "5.0.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/isbinaryfile",
+      "homepage": null,
+      "repository": "https://github.com/gjtorikian/isBinaryFile"
+    },
+    {
+      "name": "isexe",
+      "version": "2.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cross-spawn/node_modules/isexe",
+      "homepage": "https://github.com/isaacs/isexe#readme",
+      "repository": "git+https://github.com/isaacs/isexe.git"
+    },
+    {
+      "name": "isexe",
+      "version": "3.1.5",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/isexe",
+      "homepage": null,
+      "repository": "https://github.com/isaacs/isexe"
+    },
+    {
+      "name": "isexe",
+      "version": "4.0.0",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-gyp/node_modules/isexe",
+      "homepage": null,
+      "repository": "https://github.com/isaacs/isexe"
+    },
+    {
+      "name": "jake",
+      "version": "10.9.4",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/jake",
+      "homepage": null,
+      "repository": "git://github.com/jakejs/jake.git"
+    },
+    {
+      "name": "jiti",
+      "version": "2.7.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/jiti",
+      "homepage": null,
+      "repository": "unjs/jiti"
+    },
+    {
+      "name": "joi",
+      "version": "17.13.4",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/joi",
+      "homepage": null,
+      "repository": "git://github.com/hapijs/joi"
+    },
+    {
+      "name": "js-tokens",
+      "version": "4.0.0",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/js-tokens",
+      "homepage": null,
+      "repository": "lydell/js-tokens"
+    },
+    {
+      "name": "js-yaml",
+      "version": "4.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/js-yaml",
+      "homepage": null,
+      "repository": "nodeca/js-yaml"
+    },
+    {
+      "name": "jsesc",
+      "version": "3.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/jsesc",
+      "homepage": "https://mths.be/jsesc",
+      "repository": "https://github.com/mathiasbynens/jsesc.git"
+    },
+    {
+      "name": "json-buffer",
+      "version": "3.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/json-buffer",
+      "homepage": "https://github.com/dominictarr/json-buffer",
+      "repository": "git://github.com/dominictarr/json-buffer.git"
+    },
+    {
+      "name": "json-schema-traverse",
+      "version": "1.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/json-schema-traverse",
+      "homepage": "https://github.com/epoberezkin/json-schema-traverse#readme",
+      "repository": "git+https://github.com/epoberezkin/json-schema-traverse.git"
+    },
+    {
+      "name": "json-stringify-safe",
+      "version": "5.0.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/json-stringify-safe",
+      "homepage": "https://github.com/isaacs/json-stringify-safe",
+      "repository": "git://github.com/isaacs/json-stringify-safe"
+    },
+    {
+      "name": "json5",
+      "version": "2.2.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/json5",
+      "homepage": "http://json5.org/",
+      "repository": "git+https://github.com/json5/json5.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/fuses/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/notarize/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/osx-sign/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/windows-sign/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@malept/flatpak-bundler/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/fs-extra/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/builder-util/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dmg-builder/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-builder/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-publish/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "4.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/temp-file/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "jsonfile",
+      "version": "6.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/unzipper/node_modules/jsonfile",
+      "homepage": null,
+      "repository": "git@github.com:jprichardson/node-jsonfile.git"
+    },
+    {
+      "name": "keyv",
+      "version": "4.5.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/keyv",
+      "homepage": "https://github.com/jaredwray/keyv",
+      "repository": "git+https://github.com/jaredwray/keyv.git"
+    },
+    {
+      "name": "lazy-val",
+      "version": "1.0.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/lazy-val",
+      "homepage": "https://github.com/develar/lazy-val",
+      "repository": "develar/lazy-val"
+    },
+    {
+      "name": "lodash",
+      "version": "4.18.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/lodash",
+      "homepage": "https://lodash.com/",
+      "repository": "lodash/lodash"
+    },
+    {
+      "name": "loose-envify",
+      "version": "1.4.0",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/loose-envify",
+      "homepage": "https://github.com/zertosh/loose-envify",
+      "repository": "git://github.com/zertosh/loose-envify.git"
+    },
+    {
+      "name": "lowercase-keys",
+      "version": "2.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/lowercase-keys",
+      "homepage": null,
+      "repository": "sindresorhus/lowercase-keys"
+    },
+    {
+      "name": "lru-cache",
+      "version": "6.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/hosted-git-info/node_modules/lru-cache",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/node-lru-cache.git"
+    },
+    {
+      "name": "lru-cache",
+      "version": "5.1.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/lru-cache",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/node-lru-cache.git"
+    },
+    {
+      "name": "lucide-react",
+      "version": "0.468.0",
+      "license": "ISC",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/lucide-react",
+      "homepage": "https://lucide.dev",
+      "repository": "https://github.com/lucide-icons/lucide.git"
+    },
+    {
+      "name": "matcher",
+      "version": "3.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/matcher",
+      "homepage": null,
+      "repository": "sindresorhus/matcher"
+    },
+    {
+      "name": "math-intrinsics",
+      "version": "1.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/math-intrinsics",
+      "homepage": "https://github.com/es-shims/math-intrinsics#readme",
+      "repository": "git+https://github.com/es-shims/math-intrinsics.git"
+    },
+    {
+      "name": "media-typer",
+      "version": "2.0.0",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/media-typer",
+      "homepage": null,
+      "repository": "jshttp/media-typer"
+    },
+    {
+      "name": "mime",
+      "version": "2.6.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/mime",
+      "homepage": null,
+      "repository": "https://github.com/broofa/mime"
+    },
+    {
+      "name": "mime-db",
+      "version": "1.52.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/mime-db",
+      "homepage": null,
+      "repository": "jshttp/mime-db"
+    },
+    {
+      "name": "mime-types",
+      "version": "2.1.35",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/mime-types",
+      "homepage": null,
+      "repository": "jshttp/mime-types"
+    },
+    {
+      "name": "mimic-response",
+      "version": "3.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/decompress-response/node_modules/mimic-response",
+      "homepage": null,
+      "repository": "sindresorhus/mimic-response"
+    },
+    {
+      "name": "mimic-response",
+      "version": "1.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/mimic-response",
+      "homepage": null,
+      "repository": "sindresorhus/mimic-response"
+    },
+    {
+      "name": "minimatch",
+      "version": "3.1.5",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/asar/node_modules/minimatch",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/minimatch.git"
+    },
+    {
+      "name": "minimatch",
+      "version": "9.0.9",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal/node_modules/minimatch",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/minimatch.git"
+    },
+    {
+      "name": "minimatch",
+      "version": "3.1.5",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dir-compare/node_modules/minimatch",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/minimatch.git"
+    },
+    {
+      "name": "minimatch",
+      "version": "5.1.9",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/filelist/node_modules/minimatch",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/minimatch.git"
+    },
+    {
+      "name": "minimatch",
+      "version": "3.1.5",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/glob/node_modules/minimatch",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/minimatch.git"
+    },
+    {
+      "name": "minimatch",
+      "version": "10.2.5",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/minimatch",
+      "homepage": null,
+      "repository": "git@github.com:isaacs/minimatch"
+    },
+    {
+      "name": "minimist",
+      "version": "1.2.8",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/minimist",
+      "homepage": "https://github.com/minimistjs/minimist",
+      "repository": "git://github.com/minimistjs/minimist.git"
+    },
+    {
+      "name": "minipass",
+      "version": "7.1.3",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/minipass",
+      "homepage": null,
+      "repository": "https://github.com/isaacs/minipass"
+    },
+    {
+      "name": "minizlib",
+      "version": "3.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/minizlib",
+      "homepage": null,
+      "repository": "git+https://github.com/isaacs/minizlib.git"
+    },
+    {
+      "name": "mkdirp",
+      "version": "0.5.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/mkdirp",
+      "homepage": null,
+      "repository": "https://github.com/substack/node-mkdirp.git"
+    },
+    {
+      "name": "ms",
+      "version": "2.1.3",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/ms",
+      "homepage": null,
+      "repository": "vercel/ms"
+    },
+    {
+      "name": "music-metadata",
+      "version": "11.13.0",
+      "license": "MIT",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/music-metadata",
+      "homepage": null,
+      "repository": "github:Borewit/music-metadata"
+    },
+    {
+      "name": "nanoid",
+      "version": "3.3.13",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/nanoid",
+      "homepage": null,
+      "repository": "ai/nanoid"
+    },
+    {
+      "name": "node-abi",
+      "version": "4.31.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-abi",
+      "homepage": "https://github.com/electron/node-abi#readme",
+      "repository": "git+https://github.com/electron/node-abi.git"
+    },
+    {
+      "name": "node-api-version",
+      "version": "0.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-api-version",
+      "homepage": null,
+      "repository": "https://github.com/timfish/node-api-version"
+    },
+    {
+      "name": "node-gyp",
+      "version": "12.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-gyp",
+      "homepage": null,
+      "repository": "git://github.com/nodejs/node-gyp.git"
+    },
+    {
+      "name": "node-int64",
+      "version": "0.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-int64",
+      "homepage": null,
+      "repository": "https://github.com/broofa/node-int64"
+    },
+    {
+      "name": "node-releases",
+      "version": "2.0.48",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-releases",
+      "homepage": null,
+      "repository": "https://github.com/chicoxyzzy/node-releases.git"
+    },
+    {
+      "name": "nopt",
+      "version": "9.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/nopt",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/nopt.git"
+    },
+    {
+      "name": "normalize-url",
+      "version": "6.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/normalize-url",
+      "homepage": null,
+      "repository": "sindresorhus/normalize-url"
+    },
+    {
+      "name": "object-keys",
+      "version": "1.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/object-keys",
+      "homepage": null,
+      "repository": "git://github.com/ljharb/object-keys.git"
+    },
+    {
+      "name": "once",
+      "version": "1.4.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/once",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/once"
+    },
+    {
+      "name": "p-cancelable",
+      "version": "2.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/p-cancelable",
+      "homepage": null,
+      "repository": "sindresorhus/p-cancelable"
+    },
+    {
+      "name": "p-limit",
+      "version": "3.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/p-limit",
+      "homepage": null,
+      "repository": "sindresorhus/p-limit"
+    },
+    {
+      "name": "path-is-absolute",
+      "version": "1.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/path-is-absolute",
+      "homepage": null,
+      "repository": "sindresorhus/path-is-absolute"
+    },
+    {
+      "name": "path-key",
+      "version": "3.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/path-key",
+      "homepage": null,
+      "repository": "sindresorhus/path-key"
+    },
+    {
+      "name": "pe-library",
+      "version": "0.4.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pe-library",
+      "homepage": "https://github.com/jet2jet/pe-library-js",
+      "repository": "https://github.com/jet2jet/pe-library-js.git"
+    },
+    {
+      "name": "pend",
+      "version": "1.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pend",
+      "homepage": null,
+      "repository": "git://github.com/andrewrk/node-pend.git"
+    },
+    {
+      "name": "picocolors",
+      "version": "1.1.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/picocolors",
+      "homepage": null,
+      "repository": "alexeyraspopov/picocolors"
+    },
+    {
+      "name": "picomatch",
+      "version": "4.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/picomatch",
+      "homepage": "https://github.com/micromatch/picomatch",
+      "repository": "micromatch/picomatch"
+    },
+    {
+      "name": "pkijs",
+      "version": "3.4.0",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pkijs",
+      "homepage": null,
+      "repository": "git://github.com/PeculiarVentures/PKI.js.git"
+    },
+    {
+      "name": "plist",
+      "version": "3.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/plist",
+      "homepage": null,
+      "repository": "git://github.com/TooTallNate/node-plist.git"
+    },
+    {
+      "name": "postcss",
+      "version": "8.5.15",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/postcss",
+      "homepage": "https://postcss.org/",
+      "repository": "postcss/postcss"
+    },
+    {
+      "name": "postject",
+      "version": "1.0.0-alpha.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/postject",
+      "homepage": "https://github.com/nodejs/postject#readme",
+      "repository": "git@github.com:nodejs/postject.git"
+    },
+    {
+      "name": "proc-log",
+      "version": "6.1.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/proc-log",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/proc-log.git"
+    },
+    {
+      "name": "process-nextick-args",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/process-nextick-args",
+      "homepage": "https://github.com/calvinmetcalf/process-nextick-args",
+      "repository": "https://github.com/calvinmetcalf/process-nextick-args.git"
+    },
+    {
+      "name": "progress",
+      "version": "2.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/progress",
+      "homepage": null,
+      "repository": "git://github.com/visionmedia/node-progress"
+    },
+    {
+      "name": "promise-retry",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/promise-retry",
+      "homepage": null,
+      "repository": "git://github.com/IndigoUnited/node-promise-retry.git"
+    },
+    {
+      "name": "proper-lockfile",
+      "version": "4.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/proper-lockfile",
+      "homepage": "https://github.com/moxystudio/node-proper-lockfile",
+      "repository": "git@github.com:moxystudio/node-proper-lockfile.git"
+    },
+    {
+      "name": "proxy-from-env",
+      "version": "2.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/proxy-from-env",
+      "homepage": "https://github.com/Rob--W/proxy-from-env#readme",
+      "repository": "git+https://github.com/Rob--W/proxy-from-env.git"
+    },
+    {
+      "name": "pump",
+      "version": "3.0.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pump",
+      "homepage": null,
+      "repository": "git://github.com/mafintosh/pump.git"
+    },
+    {
+      "name": "pvtsutils",
+      "version": "1.3.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pvtsutils",
+      "homepage": "https://github.com/PeculiarVentures/pvtsutils#readme",
+      "repository": "git+https://github.com/PeculiarVentures/pvtsutils"
+    },
+    {
+      "name": "pvutils",
+      "version": "1.1.5",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/pvutils",
+      "homepage": null,
+      "repository": "https://github.com/PeculiarVentures/pvutils.git"
+    },
+    {
+      "name": "quick-lru",
+      "version": "5.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/quick-lru",
+      "homepage": null,
+      "repository": "sindresorhus/quick-lru"
+    },
+    {
+      "name": "react",
+      "version": "18.3.1",
+      "license": "MIT",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/react",
+      "homepage": "https://reactjs.org/",
+      "repository": "https://github.com/facebook/react.git"
+    },
+    {
+      "name": "react-dom",
+      "version": "18.3.1",
+      "license": "MIT",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/react-dom",
+      "homepage": "https://reactjs.org/",
+      "repository": "https://github.com/facebook/react.git"
+    },
+    {
+      "name": "react-refresh",
+      "version": "0.17.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/react-refresh",
+      "homepage": "https://react.dev/",
+      "repository": "https://github.com/facebook/react.git"
+    },
+    {
+      "name": "read-binary-file-arch",
+      "version": "1.0.6",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/read-binary-file-arch",
+      "homepage": "https://github.com/samuelmaddock/read-binary-file-arch#readme",
+      "repository": "git+ssh://git@github.com/samuelmaddock/read-binary-file-arch.git"
+    },
+    {
+      "name": "readable-stream",
+      "version": "2.3.8",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/readable-stream",
+      "homepage": null,
+      "repository": "git://github.com/nodejs/readable-stream"
+    },
+    {
+      "name": "require-directory",
+      "version": "2.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/require-directory",
+      "homepage": "https://github.com/troygoode/node-require-directory/",
+      "repository": "git://github.com/troygoode/node-require-directory.git"
+    },
+    {
+      "name": "require-from-string",
+      "version": "2.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/require-from-string",
+      "homepage": null,
+      "repository": "floatdrop/require-from-string"
+    },
+    {
+      "name": "resedit",
+      "version": "1.7.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/resedit",
+      "homepage": "https://github.com/jet2jet/resedit-js",
+      "repository": "https://github.com/jet2jet/resedit-js.git"
+    },
+    {
+      "name": "resolve-alpn",
+      "version": "1.2.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/resolve-alpn",
+      "homepage": "https://github.com/szmarczak/resolve-alpn#readme",
+      "repository": "git+https://github.com/szmarczak/resolve-alpn.git"
+    },
+    {
+      "name": "responselike",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/responselike",
+      "homepage": null,
+      "repository": "https://github.com/sindresorhus/responselike.git"
+    },
+    {
+      "name": "retry",
+      "version": "0.12.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/retry",
+      "homepage": "https://github.com/tim-kos/node-retry",
+      "repository": "git://github.com/tim-kos/node-retry.git"
+    },
+    {
+      "name": "rimraf",
+      "version": "2.6.3",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/rimraf",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/rimraf.git"
+    },
+    {
+      "name": "roarr",
+      "version": "2.15.4",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/roarr",
+      "homepage": null,
+      "repository": "git@github.com:gajus/roarr.git"
+    },
+    {
+      "name": "rollup",
+      "version": "4.62.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/rollup",
+      "homepage": "https://rollupjs.org/",
+      "repository": "git+https://github.com/rollup/rollup.git"
+    },
+    {
+      "name": "rxjs",
+      "version": "7.8.2",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/rxjs",
+      "homepage": "https://rxjs.dev",
+      "repository": "https://github.com/reactivex/rxjs.git"
+    },
+    {
+      "name": "safe-buffer",
+      "version": "5.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/safe-buffer",
+      "homepage": "https://github.com/feross/safe-buffer",
+      "repository": "git://github.com/feross/safe-buffer.git"
+    },
+    {
+      "name": "sanitize-filename",
+      "version": "1.6.4",
+      "license": "WTFPL OR ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/sanitize-filename",
+      "homepage": null,
+      "repository": "git@github.com:parshap/node-sanitize-filename.git"
+    },
+    {
+      "name": "sax",
+      "version": "1.6.0",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/sax",
+      "homepage": null,
+      "repository": "git+ssh://git@github.com/isaacs/sax-js.git"
+    },
+    {
+      "name": "scheduler",
+      "version": "0.23.2",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/scheduler",
+      "homepage": "https://reactjs.org/",
+      "repository": "https://github.com/facebook/react.git"
+    },
+    {
+      "name": "semver",
+      "version": "6.3.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/@electron/get/node_modules/semver",
+      "homepage": null,
+      "repository": "https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "7.7.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/semver",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "7.8.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/global-agent/node_modules/semver",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "7.8.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-abi/node_modules/semver",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "7.8.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-api-version/node_modules/semver",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "7.8.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-gyp/node_modules/semver",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "6.3.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/semver",
+      "homepage": null,
+      "repository": "https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "7.8.4",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/simple-update-notifier/node_modules/semver",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver",
+      "version": "5.7.2",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tiny-async-pool/node_modules/semver",
+      "homepage": null,
+      "repository": "https://github.com/npm/node-semver.git"
+    },
+    {
+      "name": "semver-compare",
+      "version": "1.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/semver-compare",
+      "homepage": "https://github.com/substack/semver-compare",
+      "repository": "git://github.com/substack/semver-compare.git"
+    },
+    {
+      "name": "serialize-error",
+      "version": "7.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/serialize-error",
+      "homepage": null,
+      "repository": "sindresorhus/serialize-error"
+    },
+    {
+      "name": "shebang-command",
+      "version": "2.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/shebang-command",
+      "homepage": null,
+      "repository": "kevva/shebang-command"
+    },
+    {
+      "name": "shebang-regex",
+      "version": "3.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/shebang-regex",
+      "homepage": null,
+      "repository": "sindresorhus/shebang-regex"
+    },
+    {
+      "name": "shell-quote",
+      "version": "1.8.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/shell-quote",
+      "homepage": "https://github.com/ljharb/shell-quote",
+      "repository": "http://github.com/ljharb/shell-quote.git"
+    },
+    {
+      "name": "signal-exit",
+      "version": "3.0.7",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/signal-exit",
+      "homepage": "https://github.com/tapjs/signal-exit",
+      "repository": "https://github.com/tapjs/signal-exit.git"
+    },
+    {
+      "name": "simple-update-notifier",
+      "version": "2.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/simple-update-notifier",
+      "homepage": "https://github.com/alexbrazier/simple-update-notifier.git",
+      "repository": "https://github.com/alexbrazier/simple-update-notifier.git"
+    },
+    {
+      "name": "source-map",
+      "version": "0.6.1",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/source-map",
+      "homepage": "https://github.com/mozilla/source-map",
+      "repository": "http://github.com/mozilla/source-map.git"
+    },
+    {
+      "name": "source-map-js",
+      "version": "1.2.1",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/source-map-js",
+      "homepage": "https://github.com/7rulnik/source-map-js",
+      "repository": "7rulnik/source-map-js"
+    },
+    {
+      "name": "source-map-support",
+      "version": "0.5.21",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/source-map-support",
+      "homepage": null,
+      "repository": "https://github.com/evanw/node-source-map-support"
+    },
+    {
+      "name": "sprintf-js",
+      "version": "1.1.3",
+      "license": "BSD-3-Clause",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/sprintf-js",
+      "homepage": null,
+      "repository": "https://github.com/alexei/sprintf.js.git"
+    },
+    {
+      "name": "stat-mode",
+      "version": "1.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/stat-mode",
+      "homepage": "https://github.com/TooTallNate/stat-mode",
+      "repository": "git://github.com/TooTallNate/stat-mode.git"
+    },
+    {
+      "name": "string_decoder",
+      "version": "1.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/string_decoder",
+      "homepage": "https://github.com/nodejs/string_decoder",
+      "repository": "git://github.com/nodejs/string_decoder.git"
+    },
+    {
+      "name": "string-width",
+      "version": "4.2.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/string-width",
+      "homepage": null,
+      "repository": "sindresorhus/string-width"
+    },
+    {
+      "name": "strip-ansi",
+      "version": "6.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/strip-ansi",
+      "homepage": null,
+      "repository": "chalk/strip-ansi"
+    },
+    {
+      "name": "strtok3",
+      "version": "10.3.5",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/strtok3",
+      "homepage": null,
+      "repository": "git+https://github.com/Borewit/strtok3.git"
+    },
+    {
+      "name": "sumchecker",
+      "version": "3.0.1",
+      "license": "Apache-2.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/sumchecker",
+      "homepage": "https://github.com/malept/sumchecker#readme",
+      "repository": "git+https://github.com/malept/sumchecker.git"
+    },
+    {
+      "name": "supports-color",
+      "version": "7.2.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/chalk/node_modules/supports-color",
+      "homepage": null,
+      "repository": "chalk/supports-color"
+    },
+    {
+      "name": "supports-color",
+      "version": "8.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/supports-color",
+      "homepage": null,
+      "repository": "chalk/supports-color"
+    },
+    {
+      "name": "tar",
+      "version": "7.5.16",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tar",
+      "homepage": null,
+      "repository": "https://github.com/isaacs/node-tar.git"
+    },
+    {
+      "name": "temp",
+      "version": "0.9.4",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/temp",
+      "homepage": null,
+      "repository": "git://github.com/bruce/node-temp.git"
+    },
+    {
+      "name": "temp-file",
+      "version": "3.4.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/temp-file",
+      "homepage": "https://github.com/develar/temp-file",
+      "repository": "develar/temp-file"
+    },
+    {
+      "name": "tiny-async-pool",
+      "version": "1.3.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tiny-async-pool",
+      "homepage": null,
+      "repository": "git@github.com:rxaviers/async-pool.git"
+    },
+    {
+      "name": "tinyglobby",
+      "version": "0.2.17",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tinyglobby",
+      "homepage": "https://superchupu.dev/tinyglobby",
+      "repository": "git+https://github.com/SuperchupuDev/tinyglobby.git"
+    },
+    {
+      "name": "tmp",
+      "version": "0.2.7",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tmp",
+      "homepage": "http://github.com/raszi/node-tmp",
+      "repository": "https://github.com/raszi/node-tmp.git"
+    },
+    {
+      "name": "tmp-promise",
+      "version": "3.0.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tmp-promise",
+      "homepage": null,
+      "repository": "git://github.com/benjamingr/tmp-promise.git"
+    },
+    {
+      "name": "token-types",
+      "version": "6.1.2",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/token-types",
+      "homepage": null,
+      "repository": "git+https://github.com/Borewit/token-types.git"
+    },
+    {
+      "name": "tree-kill",
+      "version": "1.2.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tree-kill",
+      "homepage": "https://github.com/pkrumins/node-tree-kill",
+      "repository": "git://github.com/pkrumins/node-tree-kill.git"
+    },
+    {
+      "name": "truncate-utf8-bytes",
+      "version": "1.0.2",
+      "license": "WTFPL",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/truncate-utf8-bytes",
+      "homepage": "https://github.com/parshap/truncate-utf8-bytes#readme",
+      "repository": "git+https://github.com/parshap/truncate-utf8-bytes.git"
+    },
+    {
+      "name": "tslib",
+      "version": "2.8.1",
+      "license": "0BSD",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tslib",
+      "homepage": "https://www.typescriptlang.org/",
+      "repository": "https://github.com/Microsoft/tslib.git"
+    },
+    {
+      "name": "type-fest",
+      "version": "0.13.1",
+      "license": "(MIT OR CC0-1.0)",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/type-fest",
+      "homepage": null,
+      "repository": "sindresorhus/type-fest"
+    },
+    {
+      "name": "typescript",
+      "version": "5.6.3",
+      "license": "Apache-2.0",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/typescript",
+      "homepage": "https://www.typescriptlang.org/",
+      "repository": "https://github.com/microsoft/TypeScript.git"
+    },
+    {
+      "name": "uint8array-extras",
+      "version": "1.5.0",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/uint8array-extras",
+      "homepage": null,
+      "repository": "sindresorhus/uint8array-extras"
+    },
+    {
+      "name": "undici",
+      "version": "6.27.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/undici",
+      "homepage": "https://undici.nodejs.org",
+      "repository": "git+https://github.com/nodejs/undici.git"
+    },
+    {
+      "name": "undici-types",
+      "version": "7.18.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/undici-types",
+      "homepage": "https://undici.nodejs.org",
+      "repository": "git+https://github.com/nodejs/undici.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/fuses/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/notarize/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/osx-sign/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/universal/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@electron/windows-sign/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/@malept/flatpak-bundler/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/app-builder-lib/node_modules/fs-extra/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/builder-util/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/dmg-builder/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-builder/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/electron-publish/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/temp-file/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "0.1.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "universalify",
+      "version": "2.0.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/unzipper/node_modules/universalify",
+      "homepage": "https://github.com/RyanZim/universalify#readme",
+      "repository": "git+https://github.com/RyanZim/universalify.git"
+    },
+    {
+      "name": "unzipper",
+      "version": "0.12.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/unzipper",
+      "homepage": null,
+      "repository": "https://github.com/ZJONSSON/node-unzipper.git"
+    },
+    {
+      "name": "update-browserslist-db",
+      "version": "1.2.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/update-browserslist-db",
+      "homepage": null,
+      "repository": "browserslist/update-db"
+    },
+    {
+      "name": "utf8-byte-length",
+      "version": "1.0.5",
+      "license": "(WTFPL OR MIT)",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/utf8-byte-length",
+      "homepage": "https://github.com/parshap/utf8-byte-length#readme",
+      "repository": "git+https://github.com/parshap/utf8-byte-length.git"
+    },
+    {
+      "name": "util-deprecate",
+      "version": "1.0.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/util-deprecate",
+      "homepage": "https://github.com/TooTallNate/util-deprecate",
+      "repository": "git://github.com/TooTallNate/util-deprecate.git"
+    },
+    {
+      "name": "vite",
+      "version": "6.4.3",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/vite",
+      "homepage": "https://vite.dev",
+      "repository": "git+https://github.com/vitejs/vite.git"
+    },
+    {
+      "name": "wait-on",
+      "version": "8.0.1",
+      "license": "MIT",
+      "relationship": "direct development/build",
+      "lockPath": "node_modules/wait-on",
+      "homepage": null,
+      "repository": "http://github.com/jeffbski/wait-on.git"
+    },
+    {
+      "name": "webcrypto-core",
+      "version": "1.9.2",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/webcrypto-core",
+      "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme",
+      "repository": "https://github.com/PeculiarVentures/webcrypto-core"
+    },
+    {
+      "name": "which",
+      "version": "2.0.2",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/cross-spawn/node_modules/which",
+      "homepage": null,
+      "repository": "git://github.com/isaacs/node-which.git"
+    },
+    {
+      "name": "which",
+      "version": "6.0.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/node-gyp/node_modules/which",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-which.git"
+    },
+    {
+      "name": "which",
+      "version": "5.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/which",
+      "homepage": null,
+      "repository": "git+https://github.com/npm/node-which.git"
+    },
+    {
+      "name": "win-guid",
+      "version": "0.2.1",
+      "license": "MIT",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/win-guid",
+      "homepage": null,
+      "repository": "git+https://github.com/Borewit/win-guid.git"
+    },
+    {
+      "name": "wrap-ansi",
+      "version": "7.0.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/wrap-ansi",
+      "homepage": null,
+      "repository": "chalk/wrap-ansi"
+    },
+    {
+      "name": "wrappy",
+      "version": "1.0.2",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/wrappy",
+      "homepage": "https://github.com/npm/wrappy",
+      "repository": "https://github.com/npm/wrappy"
+    },
+    {
+      "name": "xmlbuilder",
+      "version": "15.1.1",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/xmlbuilder",
+      "homepage": "http://github.com/oozcitak/xmlbuilder-js",
+      "repository": "git://github.com/oozcitak/xmlbuilder-js.git"
+    },
+    {
+      "name": "y18n",
+      "version": "5.0.8",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/y18n",
+      "homepage": "https://github.com/yargs/y18n",
+      "repository": "yargs/y18n"
+    },
+    {
+      "name": "yallist",
+      "version": "4.0.0",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/hosted-git-info/node_modules/yallist",
+      "homepage": null,
+      "repository": "git+https://github.com/isaacs/yallist.git"
+    },
+    {
+      "name": "yallist",
+      "version": "5.0.0",
+      "license": "BlueOak-1.0.0",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/tar/node_modules/yallist",
+      "homepage": null,
+      "repository": "git+https://github.com/isaacs/yallist.git"
+    },
+    {
+      "name": "yallist",
+      "version": "3.1.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/yallist",
+      "homepage": null,
+      "repository": "git+https://github.com/isaacs/yallist.git"
+    },
+    {
+      "name": "yargs",
+      "version": "17.7.3",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/yargs",
+      "homepage": "https://yargs.js.org/",
+      "repository": "https://github.com/yargs/yargs.git"
+    },
+    {
+      "name": "yargs-parser",
+      "version": "21.1.1",
+      "license": "ISC",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/yargs-parser",
+      "homepage": null,
+      "repository": "https://github.com/yargs/yargs-parser.git"
+    },
+    {
+      "name": "yauzl",
+      "version": "2.10.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/yauzl",
+      "homepage": "https://github.com/thejoshwolfe/yauzl",
+      "repository": "https://github.com/thejoshwolfe/yauzl.git"
+    },
+    {
+      "name": "yocto-queue",
+      "version": "0.1.0",
+      "license": "MIT",
+      "relationship": "transitive development/build",
+      "lockPath": "node_modules/yocto-queue",
+      "homepage": null,
+      "repository": "sindresorhus/yocto-queue"
+    }
+  ]
+}

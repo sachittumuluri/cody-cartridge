@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-06-20T20:32:24.991Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "upload": {
+    "status": "pending",
+    "logCount": 0,
+    "hasDeliveryLogs": false,
+    "hasProcessedBuildProof": false
+  },
+  "processedBuild": {
+    "bundleId": "",
+    "version": "",
+    "buildVersion": "",
+    "matchesPackage": false
+  },
+  "buildSelection": {
+    "appStoreConnectLocation": "App Store Connect > macOS app version > Build",
+    "requiredStatus": "selected",
+    "status": "pending",
+    "selectedInAppStoreConnect": false,
+    "hasProcessedBuildValues": false,
+    "hasDeliveryLogs": false,
+    "processedBuildMatchesPackage": false,
+    "proofComplete": false,
+    "requiredProof": [
+      "Transporter/altool/Xcode delivery log summary is attached through --log.",
+      "Upload status is recorded as --status selected after App Store Connect processing finishes.",
+      "Processed bundle id, marketing version, and build version match package.json.",
+      "The selected macOS app-version Build field in App Store Connect points at that processed build."
+    ],
+    "postSelectionCommands": [
+      "npm run check:upload-evidence -- --strict",
+      "npm run evidence:store",
+      "npm run manifest:store",
+      "npm run handoff:store"
+    ]
+  },
+  "logs": [],
+  "redaction": {
+    "storesRawLogs": false,
+    "redactsLocalPaths": true,
+    "redactsEmailAddresses": true,
+    "redactsPhoneNumbers": true,
+    "redactsApiCredentials": true,
+    "redactsSigningMaterial": true
+  },
+  "commands": [
+    "npm run upload-evidence:store",
+    "npm run check:upload-evidence",
+    "npm run check:upload-evidence -- --strict",
+    "npm run evidence:store",
+    "npm run manifest:store",
+    "npm run handoff:store"
+  ]
+}

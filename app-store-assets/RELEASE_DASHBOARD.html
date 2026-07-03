@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cody Cartridge Release Dashboard</title>
+  <style>
+    :root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #0b0c0d; color: #e8edf0; }
+    body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #0b0c0d 0%, #101314 100%); }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+    header { border: 1px solid #41515a; padding: 18px 20px; background: #111415; box-shadow: inset 0 0 0 1px #101112; }
+    h1, h2 { margin: 0; letter-spacing: 0; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 15px; margin-top: 10px; }
+    p { color: #9facb3; line-height: 1.55; }
+    code { color: #f4f0e8; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+    .stat, .card, .next, table { border: 1px solid #2d3a40; background: rgba(17, 20, 21, 0.9); }
+    .stat { padding: 14px; }
+    .stat strong { display: block; font-size: 24px; color: #f4f0e8; }
+    .stat span, .kicker { color: #8fb5c7; font-size: 11px; text-transform: uppercase; }
+    .next { margin-top: 18px; padding: 16px; border-color: #7b1d29; box-shadow: inset 4px 0 0 #9f1021; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+    .card { padding: 14px; min-height: 190px; }
+    .card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .pill { border: 1px solid #5b6870; padding: 3px 7px; font-size: 10px; text-transform: uppercase; }
+    .pill.blocked { border-color: #9f1021; color: #ffb3bc; }
+    .pill.ready { border-color: #547260; color: #b9e1c2; }
+    ul { margin: 12px 0 0; padding-left: 18px; color: #d4dbde; }
+    li { margin: 8px 0; }
+    li span { color: #8e9aa0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    th, td { text-align: left; border-bottom: 1px solid #263238; padding: 10px; vertical-align: top; }
+    th { color: #8fb5c7; font-size: 11px; text-transform: uppercase; }
+    @media (max-width: 860px) { main { padding: 16px; } .grid, .cards { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="kicker">Cody Cartridge // Release Operator Dashboard</div>
+      <h1>Cody Cartridge 0.1.0 (0.1.0)</h1>
+      <p>Generated 2026-06-20T20:32:30.991Z. This dashboard is redacted and safe for the handoff archive.</p>
+    </header>
+    <section class="grid" aria-label="Release status">
+      <div class="stat"><span>Release blockers</span><strong>17</strong></div>
+      <div class="stat"><span>Public inputs ready</span><strong>0/5</strong></div>
+      <div class="stat"><span>Final checklist blockers</span><strong>18</strong></div>
+      <div class="stat"><span>MAS posture</span><strong>local-rehearsal-only</strong></div>
+    </section>
+    <section class="next">
+      <div class="kicker">MAS submission posture</div>
+      <h2>Not ready for upload</h2>
+      <p>Bundle: <code>dist/mas-arm64/Cody Cartridge.app</code>. Embedded profile: missing. Code signature: not verified. Signed upload packages: 0/0. Signed current-version packages: 0/0.</p>
+    </section>
+    <section class="next">
+      <div class="kicker">Next release-machine move</div>
+      <h2>Public Site And Contact Inputs</h2>
+      <p>Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.</p>
+      <code>npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email &quot;&lt;support-email&gt;&quot; --review-name &quot;&lt;review-contact-name&gt;&quot; --review-email &quot;&lt;review-contact-email&gt;&quot; --review-phone &quot;&lt;review-contact-phone&gt;&quot; &amp;&amp; npm run configure:store-env -- --site-url https://your-public-site.example --support-email &quot;&lt;support-email&gt;&quot; --review-name &quot;&lt;review-contact-name&gt;&quot; --review-email &quot;&lt;review-contact-email&gt;&quot; --review-phone &quot;&lt;review-contact-phone&gt;&quot; &amp;&amp; npm run public-release:store:node -- --self-test &amp;&amp; npm run public-inputs:store &amp;&amp; npm run check:store-env &amp;&amp; npm run check:release-runtime:node -- --strict</code>
+    </section>
+    <section class="cards" aria-label="Blocker categories">
+      <section class="card">
+        <div class="card-top">
+          <span class="kicker">public-inputs</span>
+          <span class="pill blocked">blocked</span>
+        </div>
+        <h2>Public Site And Contact Inputs</h2>
+        <p>6 blockers</p>
+        <ul>
+          <li>CODY_SITE_URL is a real HTTPS URL<br><span>Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.</span></li><li>CODY_SUPPORT_EMAIL is real<br><span>Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.</span></li><li>App Review contact name is real<br><span>Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.</span></li><li>App Review contact email is real<br><span>Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.</span></li><li>App Review contact phone is real<br><span>Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.</span></li><li>Generated App Store fields have HTTPS support/privacy URLs<br><span>Run npm run packet:store after real CODY_SITE_URL is available.</span></li>
+        </ul>
+      </section>
+<section class="card">
+        <div class="card-top">
+          <span class="kicker">generated-site</span>
+          <span class="pill blocked">blocked</span>
+        </div>
+        <h2>Generated Public Site</h2>
+        <p>3 blockers</p>
+        <ul>
+          <li>Generated public site has no raw placeholder tokens<br><span>Set real CODY_* values, then run npm run site:store.</span></li><li>Generated public site has publish-ready contact and origin<br><span>Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.</span></li><li>Public site archive has no publish placeholders<br><span>Run npm run site:archive after generating the site with real public values.</span></li>
+        </ul>
+      </section>
+<section class="card">
+        <div class="card-top">
+          <span class="kicker">signing-package</span>
+          <span class="pill blocked">blocked</span>
+        </div>
+        <h2>Signing And MAS Package</h2>
+        <p>2 blockers</p>
+        <ul>
+          <li>MAS signing assets are installed<br><span>Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict.</span></li><li>Signed MAS package boundary passes<br><span>Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements.</span></li>
+        </ul>
+      </section>
+<section class="card">
+        <div class="card-top">
+          <span class="kicker">submission</span>
+          <span class="pill blocked">blocked</span>
+        </div>
+        <h2>Submission Gates</h2>
+        <p>6 blockers</p>
+        <ul>
+          <li>Generated public release values are synced<br><span>Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.</span></li><li>App Store upload tooling and MAS package are available<br><span>Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict.</span></li><li>App Store Connect upload credentials are configured<br><span>Run npm run install:asc-key -- --key-id &lt;asc-key-id&gt; --issuer-id &lt;asc-issuer-id&gt; --file /path/to/AuthKey_&lt;key-id&gt;.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict.</span></li><li>Public URL reachability gate is ready to run<br><span>After publishing the public site, run npm run check:store-urls -- --strict.</span></li><li>Published public-site pages match the generated source<br><span>After publishing the public site, run npm run check:published-site -- --strict.</span></li><li>Generated App Store Connect copy has no placeholder contact data<br><span>Run npm run packet:store after real public support and App Review contact values are set.</span></li>
+        </ul>
+      </section>
+    </section>
+    <table>
+      <thead><tr><th>Artifact</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody><tr><td>PUBLIC_RELEASE_INPUTS.md</td><td>blocked</td><td>0/5 public inputs ready</td></tr>
+<tr><td>PUBLIC_SITE_PUBLISH_PACKET.md</td><td>blocked</td><td>0/5 public pages ready</td></tr>
+<tr><td>FINAL_SUBMISSION_CHECKLIST.md</td><td>blocked</td><td>18 final checklist blocker(s)</td></tr>
+<tr><td>UPLOAD_COMMAND_PACKET.md</td><td>blocked</td><td>0 signed package(s), 2/3 upload tools</td></tr>
+<tr><td>RELEASE_MACHINE_REPORT.md</td><td>blocked</td><td>2 blocked gate(s), 9 warning gate(s)</td></tr>
+<tr><td>RELEASE_EVIDENCE.md</td><td>present</td><td>42 command summaries, 69 artifact hashes</td></tr>
+<tr><td>MAS submission posture</td><td>blocked</td><td>local-rehearsal-only · signed current-version packages 0/0</td></tr></tbody>
+    </table>
+  </main>
+</body>
+</html>

@@ -1,0 +1,271 @@
+{
+  "generatedAt": "2026-06-20T20:32:26.544Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "environment": {
+    "node": "v18.20.8",
+    "platform": "darwin",
+    "arch": "arm64",
+    "loadedReleaseEnvFiles": [
+      "app-store-assets/site.env"
+    ]
+  },
+  "summary": {
+    "status": "blocked",
+    "gateCount": 13,
+    "blockedGateCount": 2,
+    "warningGateCount": 9,
+    "releaseBlockers": 17,
+    "readyForStrictPreflight": false
+  },
+  "nextAction": {
+    "phaseId": "prepare-public-inputs",
+    "phaseTitle": "Prepare public URL and contact inputs",
+    "command": "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\"",
+    "stopWhen": "npm run check:store-env exits with 0."
+  },
+  "strictEquivalentCommand": "npm run check:release-machine -- --strict",
+  "gates": [
+    {
+      "id": "public-release-self-test",
+      "label": "Public release refresh self-test",
+      "status": "pass",
+      "command": "node scripts/refresh-public-release.cjs --self-test",
+      "strictCommand": "node scripts/refresh-public-release.cjs --self-test",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 0,
+      "summary": "Public release refresh self-test: redaction and command order passed.",
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "id": "env",
+      "label": "Public URL/contact env",
+      "status": "blocked",
+      "command": "node scripts/check-store-env.cjs",
+      "strictCommand": "node scripts/check-store-env.cjs",
+      "exitCode": 1,
+      "failureCount": 5,
+      "warningCount": 0,
+      "summary": "Store env preflight: 1 passed, 5 failures",
+      "failures": [
+        "Public site URL origin is missing, placeholder, or invalid (CODY_SITE_URL).",
+        "Support email is missing, placeholder, or invalid (CODY_SUPPORT_EMAIL).",
+        "App Review contact name is missing, placeholder, or invalid (CODY_REVIEW_CONTACT_NAME).",
+        "App Review contact email is missing, placeholder, or invalid (CODY_REVIEW_CONTACT_EMAIL).",
+        "App Review contact phone is missing, placeholder, or invalid (CODY_REVIEW_CONTACT_PHONE)."
+      ],
+      "warnings": []
+    },
+    {
+      "id": "public-release-sync",
+      "label": "Public release generated-field sync",
+      "status": "warning",
+      "command": "node scripts/check-public-release-sync.cjs",
+      "strictCommand": "node scripts/check-public-release-sync.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 6,
+      "summary": "Public release sync checks: 1 passed, 6 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "CODY_SITE_URL is missing, placeholder, or invalid.",
+        "CODY_SUPPORT_EMAIL is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_NAME is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_EMAIL is missing, placeholder, or invalid.",
+        "CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.",
+        "Public release sync skipped until all CODY_* release values are configured."
+      ]
+    },
+    {
+      "id": "runtime",
+      "label": "Release Node runtime",
+      "status": "warning",
+      "command": "node scripts/check-release-runtime.cjs",
+      "strictCommand": "node scripts/check-release-runtime.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 1,
+      "summary": "Release runtime checks: 4 passed, 1 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "Current Node v18.20.8 is outside the release runtime range >=20 <25. Use Node 22 on the signed release machine. Local advisory checks can continue."
+      ]
+    },
+    {
+      "id": "source-version",
+      "label": "Source App Store version",
+      "status": "pass",
+      "command": "node scripts/check-store-version.cjs --source-only",
+      "strictCommand": "node scripts/check-store-version.cjs --source-only",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 0,
+      "summary": "Store version checks (source-only): 7 passed, 0 failures",
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "id": "packaging-toolchain",
+      "label": "Packaging toolchain",
+      "status": "warning",
+      "command": "node scripts/check-packaging-toolchain.cjs",
+      "strictCommand": "node scripts/check-packaging-toolchain.cjs",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 1,
+      "summary": "Packaging toolchain checks: 5 passed, 1 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "Node v18.20.8 can run the local gates, but the release machine should use Node >=20 <25, preferably the Node 22 version selected by .nvmrc."
+      ]
+    },
+    {
+      "id": "public-urls",
+      "label": "Published support/privacy URLs",
+      "status": "warning",
+      "command": "node scripts/check-store-urls.cjs",
+      "strictCommand": "node scripts/check-store-urls.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 2,
+      "summary": "Store public URL checks: 2 passed, 2 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "Support URL is missing, placeholder, or not a complete https URL.",
+        "Privacy Policy URL is missing, placeholder, or not a complete https URL."
+      ]
+    },
+    {
+      "id": "published-site",
+      "label": "Published public site pages",
+      "status": "warning",
+      "command": "node scripts/check-public-site-published.cjs",
+      "strictCommand": "node scripts/check-public-site-published.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 8,
+      "summary": "Published public site checks: 2 passed, 8 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "Public site publish packet is blocked before live verification",
+        "index.html expected URL is missing, placeholder, or not HTTPS",
+        "support.html expected URL is missing, placeholder, or not HTTPS",
+        "privacy.html expected URL is missing, placeholder, or not HTTPS",
+        "accessibility.html expected URL is missing, placeholder, or not HTTPS",
+        "third-party-notices.html expected URL is missing, placeholder, or not HTTPS",
+        "robots.txt expected URL is missing, placeholder, or not HTTPS",
+        "sitemap.xml expected URL is missing, placeholder, or not HTTPS"
+      ]
+    },
+    {
+      "id": "mas-signing",
+      "label": "MAS signing assets",
+      "status": "warning",
+      "command": "node scripts/check-mas-signing.cjs",
+      "strictCommand": "node scripts/check-mas-signing.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 4,
+      "summary": "MAS signing preflight: 1 passed, 4 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "No valid code-signing identities found in the keychain",
+        "Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity",
+        "Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export",
+        "No installed provisioning profiles found"
+      ]
+    },
+    {
+      "id": "mas-package",
+      "label": "MAS package boundary",
+      "status": "warning",
+      "command": "node scripts/check-mas-package.cjs",
+      "strictCommand": "node scripts/check-mas-package.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 3,
+      "summary": "MAS package boundary checks: 61 passed, 3 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "Packaged MAS app does not contain Contents/embedded.provisionprofile",
+        "No MAS upload .pkg artifact found in dist; Transporter upload expects a signed current-version installer package",
+        "Packaged MAS app code signature does not verify"
+      ]
+    },
+    {
+      "id": "upload-tooling",
+      "label": "App Store upload tooling",
+      "status": "warning",
+      "command": "node scripts/check-upload-tooling.cjs",
+      "strictCommand": "node scripts/check-upload-tooling.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 2,
+      "summary": "App Store upload tooling checks: 4 passed, 2 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "Transporter app is not installed in /Applications",
+        "No MAS .pkg upload artifact found in dist; run npm run dist:mas on the release machine before upload"
+      ]
+    },
+    {
+      "id": "upload-credentials",
+      "label": "App Store upload credentials",
+      "status": "warning",
+      "command": "node scripts/check-upload-credentials.cjs",
+      "strictCommand": "node scripts/check-upload-credentials.cjs --strict",
+      "exitCode": 0,
+      "failureCount": 0,
+      "warningCount": 3,
+      "summary": "App Store upload credential checks: 0 passed, 3 warnings, 0 failures",
+      "failures": [],
+      "warnings": [
+        "App Store Connect API key id env is missing; set ASC_KEY_ID or APP_STORE_CONNECT_KEY_ID",
+        "App Store Connect issuer id env is missing; set ASC_ISSUER_ID or APP_STORE_CONNECT_ISSUER_ID",
+        "App Store Connect private key path is missing; set ASC_PRIVATE_KEY_PATH or APP_STORE_CONNECT_PRIVATE_KEY_PATH"
+      ]
+    },
+    {
+      "id": "release-blockers",
+      "label": "Release blocker report",
+      "status": "blocked",
+      "command": "node scripts/build-release-blocker-report.cjs",
+      "strictCommand": "npm run report:store-blockers && npm run verify:store:strict",
+      "exitCode": 0,
+      "failureCount": 17,
+      "warningCount": 0,
+      "summary": "Release blocker report records 17 blocker(s).",
+      "failures": [
+        "Public Site And Contact Inputs: 6 blocker(s)",
+        "Generated Public Site: 3 blocker(s)",
+        "Signing And MAS Package: 2 blocker(s)",
+        "Submission Gates: 6 blocker(s)"
+      ],
+      "warnings": []
+    }
+  ],
+  "sourceArtifacts": [
+    "app-store-assets/RELEASE_BLOCKERS.json",
+    "app-store-assets/RELEASE_RESOLUTION_PLAN.json",
+    "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.json",
+    "app-store-assets/PUBLIC_HOST_RUNBOOK.json",
+    "app-store-assets/UPLOAD_COMMAND_PACKET.json",
+    "app-store-assets/SIGNING_ASSET_REPORT.json",
+    "app-store-assets/APPLE_RELEASE_ASSETS.json",
+    "app-store-assets/FINAL_SUBMISSION_CHECKLIST.json",
+    "scripts/refresh-public-release.cjs",
+    "scripts/install-asc-key.cjs",
+    "scripts/check-upload-credentials.cjs"
+  ],
+  "redaction": {
+    "storesRawContactValues": false,
+    "storesSigningSecrets": false,
+    "privateEnvFileIncluded": false
+  }
+}

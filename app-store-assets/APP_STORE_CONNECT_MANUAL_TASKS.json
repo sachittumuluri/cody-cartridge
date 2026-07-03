@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-06-20T20:32:22.501Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "sku": "cody-cartridge-mac",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0",
+    "category": "public.app-category.music"
+  },
+  "summary": {
+    "status": "blocked",
+    "sectionCount": 4,
+    "taskCount": 17,
+    "manualCount": 12,
+    "blockedCount": 5,
+    "complianceManualCount": 5,
+    "contactValuesRedacted": true
+  },
+  "sourceArtifacts": [
+    "app-store-assets/APP_STORE_CONNECT_FIELDS.json",
+    "app-store-assets/APP_STORE_COMPLIANCE.json",
+    "app-store-assets/screenshots/STORE_SCREENSHOTS.json",
+    "APP_STORE_READINESS.md"
+  ],
+  "sections": [
+    {
+      "id": "app-record",
+      "title": "App Record",
+      "taskCount": 1,
+      "manualCount": 1,
+      "blockedCount": 0,
+      "tasks": [
+        {
+          "id": "app-record-create",
+          "section": "App Record",
+          "label": "Create or verify the App Store Connect app record",
+          "status": "manual",
+          "location": "My Apps > New App / App Information",
+          "evidence": "name=Cody Cartridge bundleId=com.sachittumuluri.codycartridge sku=cody-cartridge-mac",
+          "action": "Create the macOS app record or confirm the existing record uses this bundle id, SKU, category, and copyright.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        }
+      ]
+    },
+    {
+      "id": "product-page",
+      "title": "Product Page",
+      "taskCount": 4,
+      "manualCount": 2,
+      "blockedCount": 2,
+      "tasks": [
+        {
+          "id": "product-page-copy",
+          "section": "Product Page",
+          "label": "Enter product page copy",
+          "status": "manual",
+          "location": "Product Page > App Information / Version Information",
+          "evidence": "name=14/30 subtitle=27/30 keywords=70/100 description=593/4000",
+          "action": "Paste name, subtitle, promotional text, description, keywords, category, and copyright from the generated packet.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        },
+        {
+          "id": "product-page-screenshots",
+          "section": "Product Page",
+          "label": "Upload Mac screenshots",
+          "status": "manual",
+          "location": "Product Page > Media Manager",
+          "evidence": "3 screenshot(s) in store screenshot manifest",
+          "action": "Upload the generated Mac screenshots in order and re-check the App Store screenshot inventory.",
+          "sourceArtifact": "app-store-assets/screenshots/STORE_SCREENSHOTS.json"
+        },
+        {
+          "id": "support-url",
+          "section": "Product Page",
+          "label": "Enter Support URL",
+          "status": "blocked",
+          "location": "Product Page > Support URL",
+          "evidence": "supportUrl=placeholder",
+          "action": "Publish the support page, then enter the public HTTPS support URL.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        },
+        {
+          "id": "privacy-policy-url",
+          "section": "Product Page",
+          "label": "Enter Privacy Policy URL",
+          "status": "blocked",
+          "location": "Product Page > Privacy Policy URL",
+          "evidence": "privacyPolicyUrl=placeholder",
+          "action": "Publish the privacy page, then enter the public HTTPS privacy policy URL.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        }
+      ]
+    },
+    {
+      "id": "privacy-compliance",
+      "title": "Privacy And Compliance",
+      "taskCount": 7,
+      "manualCount": 7,
+      "blockedCount": 0,
+      "tasks": [
+        {
+          "id": "app-privacy",
+          "section": "Privacy And Compliance",
+          "label": "Complete App Privacy answers",
+          "status": "manual",
+          "location": "App Privacy",
+          "evidence": "No, this app does not collect data from the app.",
+          "action": "Answer App Privacy as no data collected and confirm no tracking, analytics, ads, or developer off-device data collection were added.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        },
+        {
+          "id": "age-rating",
+          "section": "Privacy And Compliance",
+          "label": "Complete age rating questionnaire",
+          "status": "manual",
+          "location": "General > App Information > Age Ratings",
+          "evidence": "4+ candidate; App Store Connect generates the final rating from Apple's questionnaire.; 6 questionnaire note(s)",
+          "action": "Answer Apple's questionnaire against the final shipped app behavior.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        },
+        {
+          "id": "pricing",
+          "section": "Privacy And Compliance",
+          "label": "Set price",
+          "status": "manual",
+          "location": "Monetization > Pricing and Availability",
+          "evidence": "Free candidate for first release.",
+          "action": "Set the final launch price in App Store Connect.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        },
+        {
+          "id": "availability",
+          "section": "Privacy And Compliance",
+          "label": "Set availability",
+          "status": "manual",
+          "location": "Monetization > Pricing and Availability",
+          "evidence": "All countries and regions candidate unless you choose a narrower launch region in App Store Connect.",
+          "action": "Confirm launch countries and regions, especially EU availability if DSA status is incomplete.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        },
+        {
+          "id": "release-option",
+          "section": "Privacy And Compliance",
+          "label": "Select release option",
+          "status": "manual",
+          "location": "App Store version > Version Release",
+          "evidence": "Manual release after approval is recommended for the first submission so the signed MAS build can be smoke-tested before launch.",
+          "action": "Use manual release for the first submission so the approved build can be checked before launch.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        },
+        {
+          "id": "tax-category",
+          "section": "Privacy And Compliance",
+          "label": "Confirm tax category",
+          "status": "manual",
+          "location": "Monetization > Pricing and Availability",
+          "evidence": "General app/software candidate; confirm in App Store Connect before submission.",
+          "action": "Confirm the final tax category in App Store Connect.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        },
+        {
+          "id": "rights-export-dsa",
+          "section": "Privacy And Compliance",
+          "label": "Complete rights, export compliance, and EU DSA entries",
+          "status": "manual",
+          "location": "App Information / Business / Compliance",
+          "evidence": "contentRights=prepared export=prepared dsa=manual",
+          "action": "Copy content-rights/export-compliance answers and complete trader/non-trader status before EU distribution.",
+          "sourceArtifact": "app-store-assets/APP_STORE_COMPLIANCE.json"
+        }
+      ]
+    },
+    {
+      "id": "testflight-review",
+      "title": "TestFlight And Review",
+      "taskCount": 5,
+      "manualCount": 2,
+      "blockedCount": 3,
+      "tasks": [
+        {
+          "id": "testflight-internal-group",
+          "section": "TestFlight And Review",
+          "label": "Create internal TestFlight group",
+          "status": "manual",
+          "location": "TestFlight > Internal Testing",
+          "evidence": "2 recommended group(s)",
+          "action": "Create the internal smoke group, add the processed build, and paste What To Test.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        },
+        {
+          "id": "testflight-feedback-email",
+          "section": "TestFlight And Review",
+          "label": "Set TestFlight feedback email",
+          "status": "blocked",
+          "location": "TestFlight > Test Information",
+          "evidence": "feedbackEmail=placeholder",
+          "action": "Set the public support inbox as the TestFlight feedback email.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        },
+        {
+          "id": "app-review-contact",
+          "section": "TestFlight And Review",
+          "label": "Set App Review contact",
+          "status": "blocked",
+          "location": "App Review Information",
+          "evidence": "reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder",
+          "action": "Enter private App Review contact details in App Store Connect.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        },
+        {
+          "id": "app-review-notes",
+          "section": "TestFlight And Review",
+          "label": "Paste App Review notes",
+          "status": "manual",
+          "location": "App Review Information > Notes",
+          "evidence": "713/4000 bytes",
+          "action": "Paste the generated review notes and keep the no-download/no-scraping disclosure intact.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        },
+        {
+          "id": "processed-build-selection",
+          "section": "TestFlight And Review",
+          "label": "Select the processed signed build",
+          "status": "blocked",
+          "location": "App Store version > Build",
+          "evidence": "requires uploaded, processed, current-version signed MAS build",
+          "action": "Upload the signed MAS package, wait for processing, then select the matching build before Add for Review.",
+          "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+        }
+      ]
+    }
+  ],
+  "finalNotes": [
+    "Manual tasks are account/App Store Connect actions; they are not proven complete by local source code.",
+    "Private contact values are redacted in this artifact. Enter them directly in App Store Connect from the private release env.",
+    "Re-run npm run app-compliance:store after changing App Store fields, public URL/contact inputs, screenshots, or compliance guidance."
+  ]
+}

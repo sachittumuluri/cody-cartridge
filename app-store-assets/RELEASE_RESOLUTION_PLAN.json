@@ -1,0 +1,399 @@
+{
+  "generatedAt": "2026-06-20T20:32:25.330Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "blockerSnapshot": {
+    "blockerCount": 17,
+    "readyForStrictPreflight": false,
+    "blockedChecks": {
+      "public-inputs": [
+        {
+          "id": "public-site-url",
+          "label": "CODY_SITE_URL is a real HTTPS URL",
+          "evidence": "value is placeholder",
+          "action": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest."
+        },
+        {
+          "id": "support-email",
+          "label": "CODY_SUPPORT_EMAIL is real",
+          "evidence": "value is placeholder",
+          "action": "Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages."
+        },
+        {
+          "id": "review-contact-name",
+          "label": "App Review contact name is real",
+          "evidence": "value is placeholder",
+          "action": "Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information."
+        },
+        {
+          "id": "review-contact-email",
+          "label": "App Review contact email is real",
+          "evidence": "value is placeholder",
+          "action": "Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information."
+        },
+        {
+          "id": "review-contact-phone",
+          "label": "App Review contact phone is real",
+          "evidence": "value is placeholder",
+          "action": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information."
+        },
+        {
+          "id": "generated-fields-public-urls",
+          "label": "Generated App Store fields have HTTPS support/privacy URLs",
+          "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder",
+          "action": "Run npm run packet:store after real CODY_SITE_URL is available."
+        }
+      ],
+      "generated-site": [
+        {
+          "id": "site-no-placeholders",
+          "label": "Generated public site has no raw placeholder tokens",
+          "evidence": "raw placeholder token remains in generated public site",
+          "action": "Set real CODY_* values, then run npm run site:store."
+        },
+        {
+          "id": "site-publish-values-ready",
+          "label": "Generated public site has publish-ready contact and origin",
+          "evidence": "siteUrl=placeholder supportEmail=placeholder",
+          "action": "Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store."
+        },
+        {
+          "id": "archive-no-placeholders",
+          "label": "Public site archive has no publish placeholders",
+          "evidence": "placeholder files: robots.txt, sitemap.xml",
+          "action": "Run npm run site:archive after generating the site with real public values."
+        }
+      ],
+      "signing-package": [
+        {
+          "id": "mas-signing-strict",
+          "label": "MAS signing assets are installed",
+          "evidence": "strict check failed · 4 failure(s) · 0 warning(s)",
+          "action": "Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict."
+        },
+        {
+          "id": "mas-package-strict",
+          "label": "Signed MAS package boundary passes",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
+          "action": "Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements."
+        }
+      ],
+      "submission": [
+        {
+          "id": "public-release-sync-strict",
+          "label": "Generated public release values are synced",
+          "evidence": "strict check failed · 6 failure(s) · 0 warning(s)",
+          "action": "Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict."
+        },
+        {
+          "id": "upload-tooling-strict",
+          "label": "App Store upload tooling and MAS package are available",
+          "evidence": "strict check failed · 1 failure(s) · 1 warning(s)",
+          "action": "Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict."
+        },
+        {
+          "id": "upload-credentials-strict",
+          "label": "App Store Connect upload credentials are configured",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
+          "action": "Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict."
+        },
+        {
+          "id": "support-url-reachable-gate",
+          "label": "Public URL reachability gate is ready to run",
+          "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder",
+          "action": "After publishing the public site, run npm run check:store-urls -- --strict."
+        },
+        {
+          "id": "published-site-strict",
+          "label": "Published public-site pages match the generated source",
+          "evidence": "strict check failed · 8 failure(s) · 0 warning(s)",
+          "action": "After publishing the public site, run npm run check:published-site -- --strict."
+        },
+        {
+          "id": "app-store-connect-copy-ready",
+          "label": "Generated App Store Connect copy has no placeholder contact data",
+          "evidence": "supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder",
+          "action": "Run npm run packet:store after real public support and App Review contact values are set."
+        }
+      ]
+    }
+  },
+  "releaseMachineCommands": [
+    "npm run check:store-env",
+    "npm run check:release-runtime -- --strict",
+    "npm run check:store-version:source",
+    "npm run public-release:store -- --self-test",
+    "npm run public-release:store:node -- --self-test",
+    "npm run public-release:store -- --published",
+    "npm run public-release:store:published:node",
+    "npm run site:store && npm run check:site -- --strict",
+    "npm run archive:site && npm run check:site-archive -- --strict",
+    "npm run publish-packet:store",
+    "npm run public-host:store",
+    "npm run packet:store && npm run app-compliance:store && npm run review-brief:store && npm run copy-map:store",
+    "npm run check:review-brief -- --strict && npm run check:copy-map -- --strict && npm run check:app-compliance && npm run check:store-copy",
+    "npm run check:public-release-sync -- --strict",
+    "npm run check:app-privacy && npm run check:artifact-privacy",
+    "npm run check:store-urls -- --strict",
+    "npm run check:published-site -- --strict",
+    "npm run signing-assets:store",
+    "npm run install:mas-profile -- --file /path/to/profile.provisionprofile --dry-run",
+    "npm run check:mas-signing -- --strict",
+    "npm run dist:mas",
+    "npm run check:mas-package -- --strict",
+    "npm run check:upload-tooling -- --strict",
+    "npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run",
+    "npm run check:upload-credentials -- --strict",
+    "npm run upload-packet:store",
+    "npm run apple-assets:store",
+    "npm run upload-evidence:store -- --log /path/to/transporter.log --tool transporter --status selected --processed-bundle-id com.sachittumuluri.codycartridge --processed-version 0.1.0 --processed-build 0.1.0",
+    "npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store && npm run signing-assets:store && npm run upload-packet:store && npm run copy-map:store && npm run apple-assets:store && npm run signing-runbook:store && npm run resolution-plan:store && npm run submission-checklist:store && npm run machine-report:store && npm run evidence:store && npm run check:evidence && npm run dashboard:store && npm run operator:store && npm run manifest:store && npm run check:manifest && npm run handoff:store",
+    "npm run check:release-machine -- --strict",
+    "npm run verify:store:strict"
+  ],
+  "nodeWrappedShortcuts": [
+    {
+      "id": "local-dry-run",
+      "command": "npm run release:store:local:node",
+      "purpose": "Run the full local non-credentialed release gate through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "public-release-refresh",
+      "command": "npm run public-release:store:node",
+      "purpose": "Run the public URL/contact artifact refresh through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "published-public-release-refresh",
+      "command": "npm run public-release:store:published:node",
+      "purpose": "Run the public URL/contact artifact refresh plus live published-site checks through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "strict-preflight",
+      "command": "npm run release:store:preflight:node",
+      "purpose": "Run the full release-machine preflight through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "strict-release-machine-doctor",
+      "command": "npm run check:release-machine:node -- --strict",
+      "purpose": "Run the aggregate release-machine doctor through the Node version selected by .nvmrc."
+    },
+    {
+      "id": "strict-verifier",
+      "command": "npm run verify:store:strict:node",
+      "purpose": "Run the final strict verifier through the Node version selected by .nvmrc."
+    }
+  ],
+  "phases": [
+    {
+      "id": "prepare-public-inputs",
+      "title": "Prepare public URL and contact inputs",
+      "purpose": "Create the ignored release-machine env file and fill only public App Store values.",
+      "blockerCategoryIds": [
+        "public-inputs"
+      ],
+      "commands": [
+        "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\"",
+        "npm run configure:store-env -- --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\"",
+        "npm run init:store-env",
+        "npm run public-release:store -- --self-test",
+        "npm run public-release:store:node -- --self-test",
+        "npm run public-release:store -- --dry-run",
+        "npm run public-release:store:node -- --dry-run",
+        "npm run public-inputs:store",
+        "npm run publish-packet:store",
+        "npm run public-host:store",
+        "npm run check:store-env",
+        "npm run check:release-runtime -- --strict",
+        "npm run check:release-runtime:node -- --strict"
+      ],
+      "evidence": [
+        "PUBLIC_RELEASE_INPUTS.md records every required CODY_* value without raw contact values.",
+        "PUBLIC_SITE_PUBLISH_PACKET.md lists the static files, archive, and expected public URLs to publish.",
+        "app-store-assets/site.env exists on the release machine and remains excluded from handoff archives.",
+        "CODY_SITE_URL is a final HTTPS origin.",
+        "CODY_SUPPORT_EMAIL and App Review contact values are real non-placeholder values.",
+        "Node 22 is selected through .nvmrc or .node-version on the release machine."
+      ],
+      "exitCriteria": [
+        "npm run check:store-env exits with 0.",
+        "npm run check:release-runtime -- --strict exits with 0.",
+        "npm run check:release-runtime:node -- --strict exits with 0 when the release shell is not already on .nvmrc Node.",
+        "npm run check:public-inputs exits with 0 and records zero blocked fields.",
+        "Release blocker report has no public-inputs blockers."
+      ]
+    },
+    {
+      "id": "publish-public-site",
+      "title": "Regenerate and publish the public support site",
+      "purpose": "Rebuild the generated support/privacy/accessibility/notices pages with real values and publish the archive or site directory.",
+      "blockerCategoryIds": [
+        "public-inputs",
+        "generated-site",
+        "submission"
+      ],
+      "commands": [
+        "npm run public-release:store -- --self-test",
+        "npm run public-release:store:node -- --self-test",
+        "npm run public-release:store -- --published",
+        "npm run public-release:store:published:node",
+        "npm run site:store",
+        "npm run check:site -- --strict",
+        "npm run archive:site",
+        "npm run check:site-archive -- --strict",
+        "npm run publish-packet:store",
+        "npm run public-host:store",
+        "npm run export-compliance:store",
+        "npm run packet:store",
+        "npm run app-compliance:store",
+        "npm run review-brief:store",
+        "npm run copy-map:store",
+        "npm run check:review-brief -- --strict",
+        "npm run check:copy-map -- --strict",
+        "npm run check:public-release-sync -- --strict",
+        "npm run check:export-compliance",
+        "npm run check:app-compliance",
+        "npm run check:store-copy",
+        "npm run check:artifact-privacy",
+        "npm run check:store-urls -- --strict",
+        "npm run check:published-site -- --strict"
+      ],
+      "evidence": [
+        "Generated site files contain no raw public-site placeholder tokens or placeholder contact values.",
+        "PUBLIC_SITE_ARCHIVE.json reports no placeholder files.",
+        "PUBLIC_SITE_PUBLISH_PACKET.md reports each public page matches the deterministic archive.",
+        "APP_STORE_CONNECT_FIELDS.json, PUBLIC_SITE_ARCHIVE.json, and generated site HTML match the real CODY_* release env values.",
+        "The public-release refresh wrapper completes and refreshes release evidence, manifest, and handoff artifacts.",
+        "App Store support/privacy URLs are public HTTPS URLs and pass content checks.",
+        "Every page listed in PUBLIC_SITE_PUBLISH_PACKET.json is reachable, served as HTML, and matches the generated source."
+      ],
+      "exitCriteria": [
+        "Strict site, site archive, public release sync, export compliance, compliance packet, copy map, review brief, store copy, artifact privacy, URL, and published-site checks exit with 0.",
+        "Release blocker report has no generated-site blockers and no public URL submission blockers."
+      ]
+    },
+    {
+      "id": "sign-and-package",
+      "title": "Sign and package the MAS build",
+      "purpose": "Use Apple distribution signing assets to build the sandboxed Mac App Store app and installer package.",
+      "blockerCategoryIds": [
+        "signing-package"
+      ],
+      "commands": [
+        "npm run signing-assets:store",
+        "npm run apple-assets:store",
+        "npm run install:mas-profile -- --file /path/to/profile.provisionprofile --dry-run",
+        "npm run check:mas-signing -- --strict",
+        "npm run dist:mas",
+        "npm run check:mas-package -- --strict"
+      ],
+      "evidence": [
+        "SIGNING_ASSET_REPORT.md records redacted identity/profile readiness counts without certificate names, profile UUIDs, or local paths.",
+        "APPLE_RELEASE_ASSETS.md records the Apple Developer/App Store Connect assets that must be created or downloaded before signing and upload.",
+        "Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity is installed.",
+        "Mac Installer Distribution or 3rd Party Mac Developer Installer identity is installed.",
+        "The downloaded MAS provisioning profile is validated before installation.",
+        "A matching macOS/Mac App Store distribution provisioning profile is embedded in the app bundle.",
+        "dist/mas-arm64/Cody Cartridge.app and a signed current-version dist/**/*.pkg upload artifact exist.",
+        "The signed MAS app bundle, signed current-version installer package, signature, provisioning profile, and entitlements pass strict package-boundary inspection."
+      ],
+      "exitCriteria": [
+        "Strict signing and package-boundary checks exit with 0.",
+        "Release blocker report has no signing-package blockers."
+      ]
+    },
+    {
+      "id": "upload-and-select-build",
+      "title": "Upload and select the processed build",
+      "purpose": "Deliver the signed MAS package to App Store Connect, wait for processing, then select the processed build on the macOS app version.",
+      "blockerCategoryIds": [
+        "submission"
+      ],
+      "commands": [
+        "npm run check:upload-tooling -- --strict",
+        "npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run",
+        "npm run check:upload-credentials -- --strict",
+        "npm run upload-packet:store",
+        "npm run apple-assets:store",
+        "open -a Transporter",
+        "npm run upload-evidence:store -- --log /path/to/transporter.log --tool transporter --status selected --processed-bundle-id com.sachittumuluri.codycartridge --processed-version 0.1.0 --processed-build 0.1.0",
+        "npm run report:store-blockers"
+      ],
+      "evidence": [
+        "Transporter, altool, or iTMSTransporter is available on the release machine.",
+        "The downloaded App Store Connect API .p8 key validates before installation and is installed outside the project only after dry-run passes.",
+        "App Store Connect API key identifiers and private-key file posture pass the strict credential preflight without writing secrets into artifacts.",
+        "UPLOAD_COMMAND_PACKET.md records the selected signed package hash and available upload path without Apple credentials.",
+        "APPLE_RELEASE_ASSETS.md confirms the signed package and API key request state before upload evidence is captured.",
+        "Transporter/altool delivery logs are summarized in UPLOAD_EVIDENCE.md without raw credentials or local paths.",
+        "App Store Connect processed build bundle id, version, and build version match package.json."
+      ],
+      "exitCriteria": [
+        "Upload tooling check exits with 0.",
+        "App Store Connect API key install dry-run exits with 0.",
+        "Upload credential check exits with 0.",
+        "npm run check:upload-evidence exits with 0 after logs and processed build values are attached.",
+        "The processed build is selectable in App Store Connect.",
+        "No upload processing warnings remain unresolved."
+      ]
+    },
+    {
+      "id": "freeze-evidence-and-handoff",
+      "title": "Freeze evidence and final handoff",
+      "purpose": "Regenerate every release artifact after public inputs, signing, packaging, and upload state are current.",
+      "blockerCategoryIds": [
+        "public-inputs",
+        "generated-site",
+        "signing-package",
+        "submission"
+      ],
+      "commands": [
+        "npm run report:store-blockers",
+        "npm run public-inputs:store",
+        "npm run publish-packet:store",
+        "npm run public-host:store",
+        "npm run signing-assets:store",
+        "npm run upload-packet:store",
+        "npm run copy-map:store",
+        "npm run apple-assets:store",
+        "npm run signing-runbook:store",
+        "npm run resolution-plan:store",
+        "npm run submission-checklist:store",
+        "npm run machine-report:store",
+        "npm run evidence:store",
+        "npm run check:evidence",
+        "npm run dashboard:store",
+        "npm run operator:store",
+        "npm run manifest:store",
+        "npm run check:manifest",
+        "npm run handoff:store",
+        "npm run check:release-machine -- --strict",
+        "npm run verify:store:strict"
+      ],
+      "evidence": [
+        "RELEASE_BLOCKERS.json summary shows zero blockers.",
+        "RELEASE_OPERATOR_QUEUE.md, RELEASE_DASHBOARD.html, RELEASE_MACHINE_REPORT.md, UPLOAD_EVIDENCE.md, RELEASE_EVIDENCE.md, RELEASE_MANIFEST.md, RELEASE_RESOLUTION_PLAN.md, PUBLIC_RELEASE_INPUTS.md, PUBLIC_SITE_PUBLISH_PACKET.md, PUBLIC_HOST_RUNBOOK.md, FINAL_SUBMISSION_CHECKLIST.md, SIGNING_ASSET_REPORT.md, and SIGNING_UPLOAD_RUNBOOK.md describe the same candidate.",
+        "The handoff ZIP excludes site.env, dist, node_modules, local music, and Takeout exports."
+      ],
+      "exitCriteria": [
+        "npm run check:release-machine -- --strict exits with 0.",
+        "npm run verify:store:strict exits with 0.",
+        "The handoff archive records zero blockers and no placeholder public contact values."
+      ]
+    }
+  ],
+  "finalProof": [
+    "app-store-assets/RELEASE_BLOCKERS.json summary.blockerCount is 0.",
+    "npm run check:release-machine -- --strict exits with 0 on the release machine.",
+    "npm run check:release-machine:node -- --strict exits with 0 when the release shell is not already on .nvmrc Node.",
+    "npm run verify:store:strict exits with 0 on the release machine.",
+    "npm run verify:store:strict:node exits with 0 when the release shell is not already on .nvmrc Node.",
+    "npm run check:public-release-sync -- --strict exits with 0 on the release machine.",
+    "npm run check:upload-evidence exits with 0 after App Store Connect upload logs are attached.",
+    "Transporter/altool delivery logs are saved with RELEASE_EVIDENCE.md.",
+    "App Store Connect selected build matches bundle id, version, and build version from this plan."
+  ]
+}

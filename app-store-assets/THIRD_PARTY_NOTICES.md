@@ -1,0 +1,515 @@
+# Cody Cartridge Third-Party Notices
+
+Last generated: 2026-06-20T20:01:09.526Z
+
+Cody Cartridge uses open-source packages for its local macOS player, build tooling, and release pipeline. This inventory is generated from `package-lock.json` and should be regenerated before App Store upload.
+
+## App
+
+- Name: Cody Cartridge
+- Bundle ID: com.sachittumuluri.codycartridge
+- Version: 0.1.0
+
+## Summary
+
+- Total packages in lockfile: 461
+- Packages with unknown license metadata: 0
+
+## License Counts
+
+- (MIT OR CC0-1.0): 1
+- (WTFPL OR MIT): 1
+- 0BSD: 1
+- Apache-2.0: 9
+- BlueOak-1.0.0: 8
+- BSD-2-Clause: 6
+- BSD-3-Clause: 17
+- CC-BY-4.0: 1
+- ISC: 45
+- MIT: 369
+- Python-2.0: 1
+- WTFPL: 1
+- WTFPL OR ISC: 1
+
+## Direct Runtime Dependencies
+
+- lucide-react 0.468.0 - ISC
+- music-metadata 11.13.0 - MIT
+- react 18.3.1 - MIT
+- react-dom 18.3.1 - MIT
+
+## Direct Development And Build Dependencies
+
+- @types/react 18.3.12 - MIT
+- @types/react-dom 18.3.1 - MIT
+- @vitejs/plugin-react 4.7.0 - MIT
+- concurrently 9.1.0 - MIT
+- electron 41.7.1 - MIT
+- electron-builder 26.15.5 - MIT
+- typescript 5.6.3 - Apache-2.0
+- vite 6.4.3 - MIT
+- wait-on 8.0.1 - MIT
+
+## Full Package Inventory
+
+- @babel/code-frame 7.29.7 - MIT - transitive development/build
+- @babel/compat-data 7.29.7 - MIT - transitive development/build
+- @babel/core 7.29.7 - MIT - transitive development/build
+- @babel/generator 7.29.7 - MIT - transitive development/build
+- @babel/helper-compilation-targets 7.29.7 - MIT - transitive development/build
+- @babel/helper-globals 7.29.7 - MIT - transitive development/build
+- @babel/helper-module-imports 7.29.7 - MIT - transitive development/build
+- @babel/helper-module-transforms 7.29.7 - MIT - transitive development/build
+- @babel/helper-plugin-utils 7.29.7 - MIT - transitive development/build
+- @babel/helper-string-parser 7.29.7 - MIT - transitive development/build
+- @babel/helper-validator-identifier 7.29.7 - MIT - transitive development/build
+- @babel/helper-validator-option 7.29.7 - MIT - transitive development/build
+- @babel/helpers 7.29.7 - MIT - transitive development/build
+- @babel/parser 7.29.7 - MIT - transitive development/build
+- @babel/plugin-transform-react-jsx-self 7.29.7 - MIT - transitive development/build
+- @babel/plugin-transform-react-jsx-source 7.29.7 - MIT - transitive development/build
+- @babel/template 7.29.7 - MIT - transitive development/build
+- @babel/traverse 7.29.7 - MIT - transitive development/build
+- @babel/types 7.29.7 - MIT - transitive development/build
+- @borewit/text-codec 0.2.2 - MIT - transitive runtime
+- @electron/asar 3.4.1 - MIT - transitive development/build
+- @electron/fuses 1.8.0 - MIT - transitive development/build
+- @electron/get 2.0.3 - MIT - transitive development/build
+- @electron/get 3.1.0 - MIT - transitive development/build
+- @electron/notarize 2.5.0 - MIT - transitive development/build
+- @electron/osx-sign 1.3.3 - BSD-2-Clause - transitive development/build
+- @electron/rebuild 4.0.4 - MIT - transitive development/build
+- @electron/universal 2.0.3 - MIT - transitive development/build
+- @electron/windows-sign 1.2.2 - BSD-2-Clause - transitive development/build
+- @esbuild/aix-ppc64 0.25.12 - MIT - transitive development/build
+- @esbuild/android-arm 0.25.12 - MIT - transitive development/build
+- @esbuild/android-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/android-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/darwin-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/darwin-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/freebsd-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/freebsd-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-arm 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-ia32 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-loong64 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-mips64el 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-ppc64 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-riscv64 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-s390x 0.25.12 - MIT - transitive development/build
+- @esbuild/linux-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/netbsd-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/netbsd-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/openbsd-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/openbsd-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/openharmony-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/sunos-x64 0.25.12 - MIT - transitive development/build
+- @esbuild/win32-arm64 0.25.12 - MIT - transitive development/build
+- @esbuild/win32-ia32 0.25.12 - MIT - transitive development/build
+- @esbuild/win32-x64 0.25.12 - MIT - transitive development/build
+- @hapi/hoek 9.3.0 - BSD-3-Clause - transitive development/build
+- @hapi/topo 5.1.0 - BSD-3-Clause - transitive development/build
+- @isaacs/fs-minipass 4.0.1 - ISC - transitive development/build
+- @jridgewell/gen-mapping 0.3.13 - MIT - transitive development/build
+- @jridgewell/remapping 2.3.5 - MIT - transitive development/build
+- @jridgewell/resolve-uri 3.1.2 - MIT - transitive development/build
+- @jridgewell/sourcemap-codec 1.5.5 - MIT - transitive development/build
+- @jridgewell/trace-mapping 0.3.31 - MIT - transitive development/build
+- @malept/cross-spawn-promise 2.0.0 - Apache-2.0 - transitive development/build
+- @malept/flatpak-bundler 0.4.0 - MIT - transitive development/build
+- @noble/hashes 1.8.0 - MIT - transitive development/build
+- @noble/hashes 1.8.0 - MIT - transitive development/build
+- @peculiar/asn1-schema 2.8.0 - MIT - transitive development/build
+- @peculiar/json-schema 1.1.12 - MIT - transitive development/build
+- @peculiar/utils 2.0.3 - MIT - transitive development/build
+- @peculiar/webcrypto 1.7.1 - MIT - transitive development/build
+- @rolldown/pluginutils 1.0.0-beta.27 - MIT - transitive development/build
+- @rollup/rollup-android-arm-eabi 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-android-arm64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-darwin-arm64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-darwin-x64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-freebsd-arm64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-freebsd-x64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-arm-gnueabihf 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-arm-musleabihf 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-arm64-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-arm64-musl 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-loong64-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-loong64-musl 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-ppc64-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-ppc64-musl 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-riscv64-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-riscv64-musl 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-s390x-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-x64-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-linux-x64-musl 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-openbsd-x64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-openharmony-arm64 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-win32-arm64-msvc 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-win32-ia32-msvc 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-win32-x64-gnu 4.62.0 - MIT - transitive development/build
+- @rollup/rollup-win32-x64-msvc 4.62.0 - MIT - transitive development/build
+- @sideway/address 4.1.5 - BSD-3-Clause - transitive development/build
+- @sideway/formula 3.0.1 - BSD-3-Clause - transitive development/build
+- @sideway/pinpoint 2.0.0 - BSD-3-Clause - transitive development/build
+- @sindresorhus/is 4.6.0 - MIT - transitive development/build
+- @szmarczak/http-timer 4.0.6 - MIT - transitive development/build
+- @tokenizer/inflate 0.4.1 - MIT - transitive runtime
+- @tokenizer/token 0.3.0 - MIT - transitive runtime
+- @types/babel__core 7.20.5 - MIT - transitive development/build
+- @types/babel__generator 7.27.0 - MIT - transitive development/build
+- @types/babel__template 7.4.4 - MIT - transitive development/build
+- @types/babel__traverse 7.28.0 - MIT - transitive development/build
+- @types/cacheable-request 6.0.3 - MIT - transitive development/build
+- @types/debug 4.1.13 - MIT - transitive development/build
+- @types/estree 1.0.9 - MIT - transitive development/build
+- @types/fs-extra 9.0.13 - MIT - transitive development/build
+- @types/http-cache-semantics 4.2.0 - MIT - transitive development/build
+- @types/keyv 3.1.4 - MIT - transitive development/build
+- @types/ms 2.1.0 - MIT - transitive development/build
+- @types/node 24.13.2 - MIT - transitive development/build
+- @types/prop-types 15.7.15 - MIT - transitive development/build
+- @types/react 18.3.12 - MIT - direct development/build
+- @types/react-dom 18.3.1 - MIT - direct development/build
+- @types/responselike 1.0.3 - MIT - transitive development/build
+- @types/yauzl 2.10.3 - MIT - transitive development/build
+- @vitejs/plugin-react 4.7.0 - MIT - direct development/build
+- @xmldom/xmldom 0.8.13 - MIT - transitive development/build
+- abbrev 4.0.0 - ISC - transitive development/build
+- agent-base 7.1.4 - MIT - transitive development/build
+- agent-base 6.0.2 - MIT - transitive development/build
+- ajv 8.20.0 - MIT - transitive development/build
+- ansi-regex 5.0.1 - MIT - transitive development/build
+- ansi-styles 4.3.0 - MIT - transitive development/build
+- app-builder-lib 26.15.5 - MIT - transitive development/build
+- argparse 2.0.1 - Python-2.0 - transitive development/build
+- asn1js 3.0.10 - BSD-3-Clause - transitive development/build
+- async 3.2.6 - MIT - transitive development/build
+- async-exit-hook 2.0.1 - MIT - transitive development/build
+- asynckit 0.4.0 - MIT - transitive development/build
+- at-least-node 1.0.0 - ISC - transitive development/build
+- aws4 1.13.2 - MIT - transitive development/build
+- axios 1.18.0 - MIT - transitive development/build
+- balanced-match 1.0.2 - MIT - transitive development/build
+- balanced-match 1.0.2 - MIT - transitive development/build
+- balanced-match 4.0.4 - MIT - transitive development/build
+- balanced-match 1.0.2 - MIT - transitive development/build
+- balanced-match 1.0.2 - MIT - transitive development/build
+- balanced-match 1.0.2 - MIT - transitive development/build
+- base64-js 1.5.1 - MIT - transitive development/build
+- baseline-browser-mapping 2.10.38 - Apache-2.0 - transitive development/build
+- bluebird 3.7.2 - MIT - transitive development/build
+- boolean 3.2.0 - MIT - transitive development/build
+- brace-expansion 1.1.15 - MIT - transitive development/build
+- brace-expansion 2.1.1 - MIT - transitive development/build
+- brace-expansion 5.0.6 - MIT - transitive development/build
+- brace-expansion 1.1.15 - MIT - transitive development/build
+- brace-expansion 2.1.1 - MIT - transitive development/build
+- brace-expansion 1.1.15 - MIT - transitive development/build
+- browserslist 4.28.2 - MIT - transitive development/build
+- buffer-crc32 0.2.13 - MIT - transitive development/build
+- buffer-from 1.1.2 - MIT - transitive development/build
+- builder-util 26.15.3 - MIT - transitive development/build
+- builder-util-runtime 9.7.0 - MIT - transitive development/build
+- bytestreamjs 2.0.1 - BSD-3-Clause - transitive development/build
+- cacheable-lookup 5.0.4 - MIT - transitive development/build
+- cacheable-request 7.0.4 - MIT - transitive development/build
+- call-bind-apply-helpers 1.0.2 - MIT - transitive development/build
+- caniuse-lite 1.0.30001799 - CC-BY-4.0 - transitive development/build
+- chalk 4.1.2 - MIT - transitive development/build
+- chownr 3.0.0 - BlueOak-1.0.0 - transitive development/build
+- chromium-pickle-js 0.2.0 - MIT - transitive development/build
+- ci-info 4.3.1 - MIT - transitive development/build
+- ci-info 4.4.0 - MIT - transitive development/build
+- cliui 8.0.1 - ISC - transitive development/build
+- clone-response 1.0.3 - MIT - transitive development/build
+- color-convert 2.0.1 - MIT - transitive development/build
+- color-name 1.1.4 - MIT - transitive development/build
+- combined-stream 1.0.8 - MIT - transitive development/build
+- commander 5.1.0 - MIT - transitive development/build
+- commander 9.5.0 - MIT - transitive development/build
+- compare-version 0.1.2 - MIT - transitive development/build
+- concat-map 0.0.1 - MIT - transitive development/build
+- concurrently 9.1.0 - MIT - direct development/build
+- content-type 2.0.0 - MIT - transitive runtime
+- convert-source-map 2.0.0 - MIT - transitive development/build
+- core-util-is 1.0.3 - MIT - transitive development/build
+- cross-dirname 0.1.0 - MIT - transitive development/build
+- cross-spawn 7.0.6 - MIT - transitive development/build
+- csstype 3.2.3 - MIT - transitive development/build
+- debug 4.4.3 - MIT - transitive runtime
+- decompress-response 6.0.0 - MIT - transitive development/build
+- defer-to-connect 2.0.1 - MIT - transitive development/build
+- define-data-property 1.1.4 - MIT - transitive development/build
+- define-properties 1.2.1 - MIT - transitive development/build
+- delayed-stream 1.0.0 - MIT - transitive development/build
+- detect-node 2.1.0 - MIT - transitive development/build
+- dir-compare 4.2.0 - MIT - transitive development/build
+- dmg-builder 26.15.5 - MIT - transitive development/build
+- dotenv 16.6.1 - BSD-2-Clause - transitive development/build
+- dotenv-expand 11.0.7 - BSD-2-Clause - transitive development/build
+- dunder-proto 1.0.1 - MIT - transitive development/build
+- duplexer2 0.1.4 - BSD-3-Clause - transitive development/build
+- ejs 3.1.10 - Apache-2.0 - transitive development/build
+- electron 41.7.1 - MIT - direct development/build
+- electron-builder 26.15.5 - MIT - direct development/build
+- electron-builder-squirrel-windows 26.15.5 - MIT - transitive development/build
+- electron-publish 26.15.3 - MIT - transitive development/build
+- electron-to-chromium 1.5.376 - ISC - transitive development/build
+- electron-winstaller 5.4.0 - MIT - transitive development/build
+- emoji-regex 8.0.0 - MIT - transitive development/build
+- end-of-stream 1.4.5 - MIT - transitive development/build
+- env-paths 2.2.1 - MIT - transitive development/build
+- err-code 2.0.3 - MIT - transitive development/build
+- es-define-property 1.0.1 - MIT - transitive development/build
+- es-errors 1.3.0 - MIT - transitive development/build
+- es-object-atoms 1.1.2 - MIT - transitive development/build
+- es-set-tostringtag 2.1.0 - MIT - transitive development/build
+- es6-error 4.1.1 - MIT - transitive development/build
+- esbuild 0.25.12 - MIT - transitive development/build
+- escalade 3.2.0 - MIT - transitive development/build
+- escape-string-regexp 4.0.0 - MIT - transitive development/build
+- exponential-backoff 3.1.3 - Apache-2.0 - transitive development/build
+- extract-zip 2.0.1 - BSD-2-Clause - transitive development/build
+- fast-deep-equal 3.1.3 - MIT - transitive development/build
+- fast-uri 3.1.2 - BSD-3-Clause - transitive development/build
+- fd-slicer 1.1.0 - MIT - transitive development/build
+- fdir 6.5.0 - MIT - transitive development/build
+- file-type 21.3.4 - MIT - transitive runtime
+- filelist 1.0.6 - Apache-2.0 - transitive development/build
+- follow-redirects 1.16.0 - MIT - transitive development/build
+- form-data 4.0.6 - MIT - transitive development/build
+- fs-extra 9.1.0 - MIT - transitive development/build
+- fs-extra 9.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 11.3.5 - MIT - transitive development/build
+- fs-extra 11.3.5 - MIT - transitive development/build
+- fs-extra 9.1.0 - MIT - transitive development/build
+- fs-extra 8.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 7.0.1 - MIT - transitive development/build
+- fs-extra 8.1.0 - MIT - transitive development/build
+- fs-extra 10.1.0 - MIT - transitive development/build
+- fs-extra 11.3.5 - MIT - transitive development/build
+- fs.realpath 1.0.0 - ISC - transitive development/build
+- fsevents 2.3.3 - MIT - transitive development/build
+- function-bind 1.1.2 - MIT - transitive development/build
+- gensync 1.0.0-beta.2 - MIT - transitive development/build
+- get-caller-file 2.0.5 - ISC - transitive development/build
+- get-intrinsic 1.3.0 - MIT - transitive development/build
+- get-proto 1.0.1 - MIT - transitive development/build
+- get-stream 5.2.0 - MIT - transitive development/build
+- glob 7.2.3 - ISC - transitive development/build
+- global-agent 3.0.0 - BSD-3-Clause - transitive development/build
+- globalthis 1.0.4 - MIT - transitive development/build
+- gopd 1.2.0 - MIT - transitive development/build
+- got 11.8.6 - MIT - transitive development/build
+- graceful-fs 4.2.11 - ISC - transitive development/build
+- has-flag 4.0.0 - MIT - transitive development/build
+- has-property-descriptors 1.0.2 - MIT - transitive development/build
+- has-symbols 1.1.0 - MIT - transitive development/build
+- has-tostringtag 1.0.2 - MIT - transitive development/build
+- hasown 2.0.4 - MIT - transitive development/build
+- hosted-git-info 4.1.0 - ISC - transitive development/build
+- http-cache-semantics 4.2.0 - BSD-2-Clause - transitive development/build
+- http-proxy-agent 7.0.2 - MIT - transitive development/build
+- http2-wrapper 1.0.3 - MIT - transitive development/build
+- https-proxy-agent 5.0.1 - MIT - transitive development/build
+- https-proxy-agent 7.0.6 - MIT - transitive development/build
+- ieee754 1.2.1 - BSD-3-Clause - transitive runtime
+- inflight 1.0.6 - ISC - transitive development/build
+- inherits 2.0.4 - ISC - transitive development/build
+- is-fullwidth-code-point 3.0.0 - MIT - transitive development/build
+- isarray 1.0.0 - MIT - transitive development/build
+- isbinaryfile 4.0.10 - MIT - transitive development/build
+- isbinaryfile 5.0.7 - MIT - transitive development/build
+- isexe 2.0.0 - ISC - transitive development/build
+- isexe 3.1.5 - BlueOak-1.0.0 - transitive development/build
+- isexe 4.0.0 - BlueOak-1.0.0 - transitive development/build
+- jake 10.9.4 - Apache-2.0 - transitive development/build
+- jiti 2.7.0 - MIT - transitive development/build
+- joi 17.13.4 - BSD-3-Clause - transitive development/build
+- js-tokens 4.0.0 - MIT - transitive runtime
+- js-yaml 4.2.0 - MIT - transitive development/build
+- jsesc 3.1.0 - MIT - transitive development/build
+- json-buffer 3.0.1 - MIT - transitive development/build
+- json-schema-traverse 1.0.0 - MIT - transitive development/build
+- json-stringify-safe 5.0.1 - ISC - transitive development/build
+- json5 2.2.3 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 4.0.0 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- jsonfile 6.2.1 - MIT - transitive development/build
+- keyv 4.5.4 - MIT - transitive development/build
+- lazy-val 1.0.5 - MIT - transitive development/build
+- lodash 4.18.1 - MIT - transitive development/build
+- loose-envify 1.4.0 - MIT - transitive runtime
+- lowercase-keys 2.0.0 - MIT - transitive development/build
+- lru-cache 6.0.0 - ISC - transitive development/build
+- lru-cache 5.1.1 - ISC - transitive development/build
+- lucide-react 0.468.0 - ISC - direct runtime
+- matcher 3.0.0 - MIT - transitive development/build
+- math-intrinsics 1.1.0 - MIT - transitive development/build
+- media-typer 2.0.0 - MIT - transitive runtime
+- mime 2.6.0 - MIT - transitive development/build
+- mime-db 1.52.0 - MIT - transitive development/build
+- mime-types 2.1.35 - MIT - transitive development/build
+- mimic-response 3.1.0 - MIT - transitive development/build
+- mimic-response 1.0.1 - MIT - transitive development/build
+- minimatch 3.1.5 - ISC - transitive development/build
+- minimatch 9.0.9 - ISC - transitive development/build
+- minimatch 3.1.5 - ISC - transitive development/build
+- minimatch 5.1.9 - ISC - transitive development/build
+- minimatch 3.1.5 - ISC - transitive development/build
+- minimatch 10.2.5 - BlueOak-1.0.0 - transitive development/build
+- minimist 1.2.8 - MIT - transitive development/build
+- minipass 7.1.3 - BlueOak-1.0.0 - transitive development/build
+- minizlib 3.1.0 - MIT - transitive development/build
+- mkdirp 0.5.6 - MIT - transitive development/build
+- ms 2.1.3 - MIT - transitive runtime
+- music-metadata 11.13.0 - MIT - direct runtime
+- nanoid 3.3.13 - MIT - transitive development/build
+- node-abi 4.31.0 - MIT - transitive development/build
+- node-api-version 0.2.1 - MIT - transitive development/build
+- node-gyp 12.4.0 - MIT - transitive development/build
+- node-int64 0.4.0 - MIT - transitive development/build
+- node-releases 2.0.48 - MIT - transitive development/build
+- nopt 9.0.0 - ISC - transitive development/build
+- normalize-url 6.1.0 - MIT - transitive development/build
+- object-keys 1.1.1 - MIT - transitive development/build
+- once 1.4.0 - ISC - transitive development/build
+- p-cancelable 2.1.1 - MIT - transitive development/build
+- p-limit 3.1.0 - MIT - transitive development/build
+- path-is-absolute 1.0.1 - MIT - transitive development/build
+- path-key 3.1.1 - MIT - transitive development/build
+- pe-library 0.4.1 - MIT - transitive development/build
+- pend 1.2.0 - MIT - transitive development/build
+- picocolors 1.1.1 - ISC - transitive development/build
+- picomatch 4.0.4 - MIT - transitive development/build
+- pkijs 3.4.0 - BSD-3-Clause - transitive development/build
+- plist 3.1.0 - MIT - transitive development/build
+- postcss 8.5.15 - MIT - transitive development/build
+- postject 1.0.0-alpha.6 - MIT - transitive development/build
+- proc-log 6.1.0 - ISC - transitive development/build
+- process-nextick-args 2.0.1 - MIT - transitive development/build
+- progress 2.0.3 - MIT - transitive development/build
+- promise-retry 2.0.1 - MIT - transitive development/build
+- proper-lockfile 4.1.2 - MIT - transitive development/build
+- proxy-from-env 2.1.0 - MIT - transitive development/build
+- pump 3.0.4 - MIT - transitive development/build
+- pvtsutils 1.3.6 - MIT - transitive development/build
+- pvutils 1.1.5 - MIT - transitive development/build
+- quick-lru 5.1.1 - MIT - transitive development/build
+- react 18.3.1 - MIT - direct runtime
+- react-dom 18.3.1 - MIT - direct runtime
+- react-refresh 0.17.0 - MIT - transitive development/build
+- read-binary-file-arch 1.0.6 - MIT - transitive development/build
+- readable-stream 2.3.8 - MIT - transitive development/build
+- require-directory 2.1.1 - MIT - transitive development/build
+- require-from-string 2.0.2 - MIT - transitive development/build
+- resedit 1.7.2 - MIT - transitive development/build
+- resolve-alpn 1.2.1 - MIT - transitive development/build
+- responselike 2.0.1 - MIT - transitive development/build
+- retry 0.12.0 - MIT - transitive development/build
+- rimraf 2.6.3 - ISC - transitive development/build
+- roarr 2.15.4 - BSD-3-Clause - transitive development/build
+- rollup 4.62.0 - MIT - transitive development/build
+- rxjs 7.8.2 - Apache-2.0 - transitive development/build
+- safe-buffer 5.1.2 - MIT - transitive development/build
+- sanitize-filename 1.6.4 - WTFPL OR ISC - transitive development/build
+- sax 1.6.0 - BlueOak-1.0.0 - transitive development/build
+- scheduler 0.23.2 - MIT - transitive runtime
+- semver 6.3.1 - ISC - transitive development/build
+- semver 7.7.4 - ISC - transitive development/build
+- semver 7.8.4 - ISC - transitive development/build
+- semver 7.8.4 - ISC - transitive development/build
+- semver 7.8.4 - ISC - transitive development/build
+- semver 7.8.4 - ISC - transitive development/build
+- semver 6.3.1 - ISC - transitive development/build
+- semver 7.8.4 - ISC - transitive development/build
+- semver 5.7.2 - ISC - transitive development/build
+- semver-compare 1.0.0 - MIT - transitive development/build
+- serialize-error 7.0.1 - MIT - transitive development/build
+- shebang-command 2.0.0 - MIT - transitive development/build
+- shebang-regex 3.0.0 - MIT - transitive development/build
+- shell-quote 1.8.4 - MIT - transitive development/build
+- signal-exit 3.0.7 - ISC - transitive development/build
+- simple-update-notifier 2.0.0 - MIT - transitive development/build
+- source-map 0.6.1 - BSD-3-Clause - transitive development/build
+- source-map-js 1.2.1 - BSD-3-Clause - transitive development/build
+- source-map-support 0.5.21 - MIT - transitive development/build
+- sprintf-js 1.1.3 - BSD-3-Clause - transitive development/build
+- stat-mode 1.0.0 - MIT - transitive development/build
+- string_decoder 1.1.1 - MIT - transitive development/build
+- string-width 4.2.3 - MIT - transitive development/build
+- strip-ansi 6.0.1 - MIT - transitive development/build
+- strtok3 10.3.5 - MIT - transitive runtime
+- sumchecker 3.0.1 - Apache-2.0 - transitive development/build
+- supports-color 7.2.0 - MIT - transitive development/build
+- supports-color 8.1.1 - MIT - transitive development/build
+- tar 7.5.16 - BlueOak-1.0.0 - transitive development/build
+- temp 0.9.4 - MIT - transitive development/build
+- temp-file 3.4.0 - MIT - transitive development/build
+- tiny-async-pool 1.3.0 - MIT - transitive development/build
+- tinyglobby 0.2.17 - MIT - transitive development/build
+- tmp 0.2.7 - MIT - transitive development/build
+- tmp-promise 3.0.3 - MIT - transitive development/build
+- token-types 6.1.2 - MIT - transitive runtime
+- tree-kill 1.2.2 - MIT - transitive development/build
+- truncate-utf8-bytes 1.0.2 - WTFPL - transitive development/build
+- tslib 2.8.1 - 0BSD - transitive development/build
+- type-fest 0.13.1 - (MIT OR CC0-1.0) - transitive development/build
+- typescript 5.6.3 - Apache-2.0 - direct development/build
+- uint8array-extras 1.5.0 - MIT - transitive runtime
+- undici 6.27.0 - MIT - transitive development/build
+- undici-types 7.18.2 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- universalify 0.1.2 - MIT - transitive development/build
+- universalify 2.0.1 - MIT - transitive development/build
+- unzipper 0.12.3 - MIT - transitive development/build
+- update-browserslist-db 1.2.3 - MIT - transitive development/build
+- utf8-byte-length 1.0.5 - (WTFPL OR MIT) - transitive development/build
+- util-deprecate 1.0.2 - MIT - transitive development/build
+- vite 6.4.3 - MIT - direct development/build
+- wait-on 8.0.1 - MIT - direct development/build
+- webcrypto-core 1.9.2 - MIT - transitive development/build
+- which 2.0.2 - ISC - transitive development/build
+- which 6.0.1 - ISC - transitive development/build
+- which 5.0.0 - ISC - transitive development/build
+- win-guid 0.2.1 - MIT - transitive runtime
+- wrap-ansi 7.0.0 - MIT - transitive development/build
+- wrappy 1.0.2 - ISC - transitive development/build
+- xmlbuilder 15.1.1 - MIT - transitive development/build
+- y18n 5.0.8 - ISC - transitive development/build
+- yallist 4.0.0 - ISC - transitive development/build
+- yallist 5.0.0 - BlueOak-1.0.0 - transitive development/build
+- yallist 3.1.1 - ISC - transitive development/build
+- yargs 17.7.3 - MIT - transitive development/build
+- yargs-parser 21.1.1 - ISC - transitive development/build
+- yauzl 2.10.0 - MIT - transitive development/build
+- yocto-queue 0.1.0 - MIT - transitive development/build

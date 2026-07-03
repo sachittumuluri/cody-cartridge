@@ -1,0 +1,158 @@
+{
+  "generatedAt": "2026-06-20T20:32:23.640Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "releaseEnv": {
+    "loadedFiles": [
+      "app-store-assets/site.env"
+    ],
+    "privateFilesExcludedFromHandoff": [
+      "app-store-assets/site.env",
+      "app-store-assets/site.env.local"
+    ],
+    "precedence": [
+      "shell env",
+      "app-store-assets/site.env.local",
+      "app-store-assets/site.env"
+    ]
+  },
+  "summary": {
+    "requiredCount": 5,
+    "readyCount": 0,
+    "blockerCount": 5,
+    "readyForPublicInputs": false
+  },
+  "fields": [
+    {
+      "id": "public-site-url",
+      "key": "CODY_SITE_URL",
+      "label": "Public site origin",
+      "appStoreUse": "Support URL, Privacy Policy URL, Marketing URL, Accessibility URL",
+      "validation": "HTTPS URL origin with no placeholder value",
+      "example": "public HTTPS site origin",
+      "nextAction": "Publish the generated support/privacy site and set CODY_SITE_URL to that HTTPS origin.",
+      "status": "blocked",
+      "valueState": "placeholder",
+      "source": "store-env-file-or-shell",
+      "redactedValue": "placeholder"
+    },
+    {
+      "id": "support-email",
+      "key": "CODY_SUPPORT_EMAIL",
+      "label": "Public support email",
+      "appStoreUse": "Support page, privacy policy, TestFlight feedback email",
+      "validation": "Deliverable public support email address",
+      "example": "public support email address",
+      "nextAction": "Set the support inbox that should appear publicly on support/privacy pages.",
+      "status": "blocked",
+      "valueState": "placeholder",
+      "source": "store-env-file-or-shell",
+      "redactedValue": "placeholder"
+    },
+    {
+      "id": "review-contact-name",
+      "key": "CODY_REVIEW_CONTACT_NAME",
+      "label": "App Review contact name",
+      "appStoreUse": "App Store Connect App Review Information",
+      "validation": "Real non-placeholder contact name",
+      "example": "Release Contact",
+      "nextAction": "Set the person Apple should contact if review needs clarification.",
+      "status": "blocked",
+      "valueState": "placeholder",
+      "source": "store-env-file-or-shell",
+      "redactedValue": "placeholder"
+    },
+    {
+      "id": "review-contact-email",
+      "key": "CODY_REVIEW_CONTACT_EMAIL",
+      "label": "App Review contact email",
+      "appStoreUse": "App Store Connect App Review Information",
+      "validation": "Deliverable review contact email address",
+      "example": "private App Review contact email address",
+      "nextAction": "Set the private App Review contact email; it will be redacted in generated release artifacts.",
+      "status": "blocked",
+      "valueState": "placeholder",
+      "source": "store-env-file-or-shell",
+      "redactedValue": "placeholder"
+    },
+    {
+      "id": "review-contact-phone",
+      "key": "CODY_REVIEW_CONTACT_PHONE",
+      "label": "App Review contact phone",
+      "appStoreUse": "App Store Connect App Review Information",
+      "validation": "Phone number Apple can call during review",
+      "example": "review contact phone number",
+      "nextAction": "Set the private App Review phone number; it will be redacted in generated release artifacts.",
+      "status": "blocked",
+      "valueState": "placeholder",
+      "source": "store-env-file-or-shell",
+      "redactedValue": "placeholder"
+    }
+  ],
+  "relatedBlockers": [
+    {
+      "id": "public-site-url",
+      "label": "CODY_SITE_URL is a real HTTPS URL",
+      "action": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "id": "support-email",
+      "label": "CODY_SUPPORT_EMAIL is real",
+      "action": "Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "id": "review-contact-name",
+      "label": "App Review contact name is real",
+      "action": "Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "id": "review-contact-email",
+      "label": "App Review contact email is real",
+      "action": "Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "id": "review-contact-phone",
+      "label": "App Review contact phone is real",
+      "action": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
+      "evidence": "value is placeholder"
+    },
+    {
+      "id": "generated-fields-public-urls",
+      "label": "Generated App Store fields have HTTPS support/privacy URLs",
+      "action": "Run npm run packet:store after real CODY_SITE_URL is available.",
+      "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder"
+    }
+  ],
+  "commands": [
+    "npm run init:store-env",
+    "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\"",
+    "npm run public-release:store -- --self-test",
+    "npm run public-release:store:node -- --self-test",
+    "npm run public-release:store -- --dry-run",
+    "npm run public-release:store:node -- --dry-run",
+    "npm run public-release:store:published:node",
+    "npm run public-inputs:store",
+    "npm run publish-packet:store",
+    "npm run public-host:store",
+    "npm run check:published-site -- --strict",
+    "npm run check:store-env",
+    "npm run site:store && npm run site:archive",
+    "npm run packet:store && npm run review-brief:store && npm run copy-map:store",
+    "npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store"
+  ],
+  "sourceArtifacts": [
+    "app-store-assets/site.env.example",
+    "app-store-assets/RELEASE_BLOCKERS.json",
+    "scripts/refresh-public-release.cjs",
+    "scripts/build-public-host-runbook.cjs",
+    "scripts/check-store-env.cjs"
+  ]
+}

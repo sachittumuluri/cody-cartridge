@@ -1,0 +1,125 @@
+{
+  "generatedAt": "2026-06-20T20:02:07.933Z",
+  "artifactPath": "app-store-assets/EXPORT_COMPLIANCE.json",
+  "markdownPath": "app-store-assets/EXPORT_COMPLIANCE.md",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "status": "ready-for-app-store-connect-questionnaire",
+    "factCount": 9,
+    "reviewCount": 0,
+    "appStoreConnectDraftAnswer": "Current draft: Cody Cartridge intentionally implements no custom or proprietary encryption and ships no network service. If App Store Connect treats platform security as encryption, classify it as encryption limited to that within the Apple operating system; Apple documents that no App Store Connect documentation is required for that case.",
+    "finalBinaryRequirement": "Answer App Store Connect export-compliance questions against the exact signed MAS binary uploaded to App Store Connect. If the binary gains custom cryptography, network features, account login, DRM, or encrypted media transfer before release, regenerate this artifact and re-answer the questionnaire."
+  },
+  "appStoreConnect": {
+    "location": "App Store Connect > App Information > App Encryption Documentation; also resolve any Missing Compliance prompt on the processed build.",
+    "draftQuestionnairePosition": "No app-provided custom/proprietary encryption is intentionally implemented. No custom encryption documentation is expected for the current local-first player build.",
+    "documentationExpectation": "No documentation expected when encryption is limited to that within the Apple operating system, based on Apple App Store Connect export-compliance documentation. Final determination belongs in App Store Connect for the uploaded binary.",
+    "infoPlistKey": "ITSAppUsesNonExemptEncryption=false is stamped into Info.plist so App Store Connect receives the same non-exempt-encryption posture as the questionnaire draft.",
+    "sourceUrls": [
+      "https://developer.apple.com/help/app-store-connect/manage-app-information/overview-of-export-compliance/",
+      "https://developer.apple.com/help/app-store-connect/reference/app-information/export-compliance-documentation-for-encryption/"
+    ]
+  },
+  "binaryFacts": [
+    {
+      "id": "no-custom-crypto-direct-dependencies",
+      "label": "No direct custom cryptography dependencies",
+      "status": "pass",
+      "evidence": "Direct dependencies do not include known custom cryptography libraries."
+    },
+    {
+      "id": "no-network-client-entitlement",
+      "label": "No MAS network client entitlement",
+      "status": "pass",
+      "evidence": "build/entitlements.mas.plist does not include com.apple.security.network.client."
+    },
+    {
+      "id": "local-media-protocols",
+      "label": "Playback/artwork use app-local protocols",
+      "status": "pass",
+      "evidence": "Runtime source uses cody-media:// for local audio and cody-art:// for embedded artwork."
+    },
+    {
+      "id": "no-external-url-open",
+      "label": "No external URL launch path",
+      "status": "pass",
+      "evidence": "Runtime source does not call shell.openExternal/openExternal."
+    },
+    {
+      "id": "no-telemetry-network-hooks",
+      "label": "No telemetry transport hooks",
+      "status": "pass",
+      "evidence": "Runtime source does not use beacon/XMLHttpRequest telemetry APIs."
+    },
+    {
+      "id": "remote-urls-metadata-only",
+      "label": "Remote URL literals are metadata-only",
+      "status": "pass",
+      "evidence": "Only YouTube Music watch URLs appear as metadata references; the app does not open or fetch them."
+    },
+    {
+      "id": "privacy-manifest-no-collection",
+      "label": "Privacy manifest declares no tracking or collected data",
+      "status": "pass",
+      "evidence": "build/PrivacyInfo.xcprivacy is present and declares no tracking/collected data categories."
+    },
+    {
+      "id": "info-plist-non-exempt-encryption",
+      "label": "Info.plist declares no non-exempt encryption",
+      "status": "pass",
+      "evidence": "package.json build.mac.extendInfo sets ITSAppUsesNonExemptEncryption=false."
+    },
+    {
+      "id": "sandbox-read-only-files",
+      "label": "MAS sandbox file access is user-selected and read-only",
+      "status": "pass",
+      "evidence": "MAS entitlements use read-only user-selected files, app-scope bookmarks, and inherited child sandboxing."
+    }
+  ],
+  "evidence": {
+    "directDependencies": [
+      "@types/react",
+      "@types/react-dom",
+      "@vitejs/plugin-react",
+      "concurrently",
+      "electron",
+      "electron-builder",
+      "lucide-react",
+      "music-metadata",
+      "react",
+      "react-dom",
+      "typescript",
+      "vite",
+      "wait-on"
+    ],
+    "customCryptoDependencies": [],
+    "networkClientEntitlement": false,
+    "infoPlistExportKey": false,
+    "remoteUrlLiterals": [
+      "https://music.youtube.com/watch?v=${takeoutSong.videoId}",
+      "https://music.youtube.com/watch?v=demo${index"
+    ],
+    "unexpectedRemoteUrls": [],
+    "entitlementSources": [
+      "build/entitlements.mas.plist",
+      "build/entitlements.mas.inherit.plist"
+    ],
+    "runtimeSources": [
+      "src/App.tsx",
+      "electron/main.cjs",
+      "electron/preload.cjs"
+    ],
+    "privacyManifest": "build/PrivacyInfo.xcprivacy"
+  },
+  "releaseActions": [
+    "Run npm run export-compliance:store before regenerating the submission packet.",
+    "Run npm run check:export-compliance after npm run packet:store so generated App Store Connect fields stay aligned.",
+    "During App Store Connect processing, resolve any Missing Compliance prompt against the final signed MAS upload.",
+    "Save the App Store Connect export-compliance answer state with RELEASE_EVIDENCE.md and delivery logs."
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "generatedAt": "2026-06-20T20:32:23.997Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "releaseEnv": {
+    "loadedFiles": [
+      "app-store-assets/site.env"
+    ],
+    "privateFilesExcludedFromHandoff": [
+      "app-store-assets/site.env",
+      "app-store-assets/site.env.local"
+    ]
+  },
+  "summary": {
+    "sourceFilesMatchArchive": true,
+    "publicValuesReady": false,
+    "readyForLiveVerification": false,
+    "providerRecipeCount": 4,
+    "hostedFileCount": 9
+  },
+  "site": {
+    "sourceDirectory": "app-store-assets/site/",
+    "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
+    "archiveExists": true,
+    "publishPacketPath": "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.json"
+  },
+  "requiredValues": [
+    {
+      "key": "CODY_SITE_URL",
+      "label": "Public site origin",
+      "status": "placeholder",
+      "releaseUse": "Support URL, Privacy Policy URL, Marketing URL, Accessibility URL"
+    },
+    {
+      "key": "CODY_SUPPORT_EMAIL",
+      "label": "Public support email",
+      "status": "placeholder",
+      "releaseUse": "Support page, privacy policy, TestFlight feedback email"
+    },
+    {
+      "key": "CODY_REVIEW_CONTACT_NAME",
+      "label": "App Review contact name",
+      "status": "placeholder",
+      "releaseUse": "App Store Connect App Review Information"
+    },
+    {
+      "key": "CODY_REVIEW_CONTACT_EMAIL",
+      "label": "App Review contact email",
+      "status": "placeholder",
+      "releaseUse": "App Store Connect App Review Information"
+    },
+    {
+      "key": "CODY_REVIEW_CONTACT_PHONE",
+      "label": "App Review contact phone",
+      "status": "placeholder",
+      "releaseUse": "App Store Connect App Review Information"
+    }
+  ],
+  "hostedFiles": [
+    {
+      "fileName": "index.html",
+      "sourcePath": "app-store-assets/site/index.html",
+      "publishPath": "/index.html",
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "support.html",
+      "sourcePath": "app-store-assets/site/support.html",
+      "publishPath": "/support.html",
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "privacy.html",
+      "sourcePath": "app-store-assets/site/privacy.html",
+      "publishPath": "/privacy.html",
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "accessibility.html",
+      "sourcePath": "app-store-assets/site/accessibility.html",
+      "publishPath": "/accessibility.html",
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "third-party-notices.html",
+      "sourcePath": "app-store-assets/site/third-party-notices.html",
+      "publishPath": "/third-party-notices.html",
+      "contentType": "text/html; charset=utf-8",
+      "cacheControl": "public, max-age=300",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "robots.txt",
+      "sourcePath": "app-store-assets/site/robots.txt",
+      "publishPath": "/robots.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "sitemap.xml",
+      "sourcePath": "app-store-assets/site/sitemap.xml",
+      "publishPath": "/sitemap.xml",
+      "contentType": "application/xml; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "sourceMatchesArchive": true,
+      "publishStatus": "blocked"
+    },
+    {
+      "fileName": "_headers",
+      "sourcePath": "app-store-assets/site/_headers",
+      "publishPath": "/_headers",
+      "contentType": "text/plain; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "sourceMatchesArchive": true,
+      "publishStatus": "ready"
+    },
+    {
+      "fileName": "vercel.json",
+      "sourcePath": "app-store-assets/site/vercel.json",
+      "publishPath": "/vercel.json",
+      "contentType": "application/json; charset=utf-8",
+      "cacheControl": "public, max-age=3600",
+      "sourceMatchesArchive": true,
+      "publishStatus": "ready"
+    }
+  ],
+  "providerRecipes": [
+    {
+      "id": "vercel",
+      "label": "Vercel static project",
+      "bestFor": "Fastest HTTPS host for this generated static directory.",
+      "prerequisites": [
+        "Vercel account",
+        "Vercel CLI session on the release machine"
+      ],
+      "deployCommands": [
+        "npx vercel deploy app-store-assets/site --prod --yes",
+        "npm run configure:store-env -- --site-url <public-site-origin> --support-email <support-email> --review-name <review-contact-name> --review-email <review-contact-email> --review-phone <review-contact-phone>",
+        "npm run public-release:store:published:node"
+      ],
+      "notes": [
+        "Use the production deployment URL as CODY_SITE_URL.",
+        "The generated app-store-assets/site/vercel.json file carries the expected static headers."
+      ]
+    },
+    {
+      "id": "netlify",
+      "label": "Netlify static site",
+      "bestFor": "Simple drag-and-drop or CLI hosting of the generated site directory.",
+      "prerequisites": [
+        "Netlify account",
+        "Netlify CLI session on the release machine"
+      ],
+      "deployCommands": [
+        "npx netlify deploy --dir app-store-assets/site --prod",
+        "npm run configure:store-env -- --site-url <public-site-origin> --support-email <support-email> --review-name <review-contact-name> --review-email <review-contact-email> --review-phone <review-contact-phone>",
+        "npm run public-release:store:published:node"
+      ],
+      "notes": [
+        "Use the production site origin, not a deploy-preview URL, as CODY_SITE_URL.",
+        "The generated app-store-assets/site/_headers file carries static host header guidance."
+      ]
+    },
+    {
+      "id": "cloudflare-pages",
+      "label": "Cloudflare Pages",
+      "bestFor": "Static hosting behind a durable custom domain.",
+      "prerequisites": [
+        "Cloudflare account",
+        "Wrangler CLI session on the release machine"
+      ],
+      "deployCommands": [
+        "npx wrangler pages deploy app-store-assets/site --project-name cody-cartridge",
+        "npm run configure:store-env -- --site-url <public-site-origin> --support-email <support-email> --review-name <review-contact-name> --review-email <review-contact-email> --review-phone <review-contact-phone>",
+        "npm run public-release:store:published:node"
+      ],
+      "notes": [
+        "Use the final Pages production origin or mapped custom domain as CODY_SITE_URL.",
+        "Confirm the generated support.html and privacy.html are reachable over HTTPS before App Store submission."
+      ]
+    },
+    {
+      "id": "generic-static-host",
+      "label": "Any static HTTPS host",
+      "bestFor": "Manual upload to an existing site, object store, or static file host.",
+      "prerequisites": [
+        "HTTPS-capable static host",
+        "Ability to publish files at the site root"
+      ],
+      "deployCommands": [
+        "Upload app-store-assets/site/ to the HTTPS site root, or unzip app-store-assets/public-site/cody-cartridge-public-site.zip at the site root.",
+        "npm run configure:store-env -- --site-url <public-site-origin> --support-email <support-email> --review-name <review-contact-name> --review-email <review-contact-email> --review-phone <review-contact-phone>",
+        "npm run public-release:store:published:node"
+      ],
+      "notes": [
+        "The final URL must serve /support.html and /privacy.html without authentication.",
+        "Do not upload app-store-assets/site.env, app-store-assets/site.env.local, signing files, local music, or Takeout exports."
+      ]
+    }
+  ],
+  "commands": [
+    "npm run public-release:store -- --self-test",
+    "npm run site:store && npm run site:archive",
+    "npm run publish-packet:store",
+    "Publish app-store-assets/site/ or app-store-assets/public-site/cody-cartridge-public-site.zip to an HTTPS static host.",
+    "npm run configure:store-env -- --site-url <public-site-origin> --support-email <support-email> --review-name <review-contact-name> --review-email <review-contact-email> --review-phone <review-contact-phone>",
+    "npm run public-release:store:published:node",
+    "npm run check:store-urls -- --strict",
+    "npm run check:published-site -- --strict",
+    "npm run report:store-blockers && npm run public-inputs:store && npm run publish-packet:store && npm run public-host:store"
+  ],
+  "sourceArtifacts": [
+    "app-store-assets/PUBLIC_RELEASE_INPUTS.json",
+    "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.json",
+    "app-store-assets/public-site/PUBLIC_SITE_ARCHIVE.json",
+    "app-store-assets/public-site/cody-cartridge-public-site.zip",
+    "scripts/build-public-host-runbook.cjs",
+    "scripts/check-public-host-runbook.cjs",
+    "scripts/refresh-public-release.cjs",
+    "scripts/configure-store-env.cjs",
+    "scripts/check-store-urls.cjs",
+    "scripts/check-public-site-published.cjs"
+  ],
+  "exclusions": [
+    "app-store-assets/site.env",
+    "app-store-assets/site.env.local",
+    "Apple signing certificates/private keys",
+    "App Store Connect API keys/credentials",
+    "local music import directory",
+    "YouTube Music Takeout export directory"
+  ],
+  "redaction": {
+    "storesRawPrivateContactValues": false,
+    "storesSigningSecrets": false,
+    "storesUploadCredentials": false,
+    "storesLocalMediaPaths": false
+  }
+}

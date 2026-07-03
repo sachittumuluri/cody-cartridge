@@ -1,0 +1,235 @@
+{
+  "generatedAt": "2026-06-20T20:32:30.991Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "status": "blocked",
+    "releaseBlockers": 17,
+    "readyForStrictPreflight": false,
+    "publicInputsReady": 0,
+    "publicInputsRequired": 5,
+    "publicInputsBlocked": 5,
+    "publishPacketStatus": "blocked",
+    "publishPacketReadyPages": 0,
+    "publishPacketRequiredPages": 5,
+    "uploadPacketStatus": "blocked",
+    "uploadPacketSignedPackages": 0,
+    "uploadPacketAvailableTools": 2,
+    "finalChecklistBlockers": 18,
+    "machineReportBlockedGates": 2,
+    "machineReportWarningGates": 9,
+    "evidenceCommands": 42,
+    "evidenceArtifacts": 69,
+    "masSubmissionReady": false
+  },
+  "masSubmission": {
+    "mode": "local-rehearsal-only",
+    "submissionReady": false,
+    "localRehearsalOnly": true,
+    "bundlePath": "dist/mas-arm64/Cody Cartridge.app",
+    "hasBundle": true,
+    "hasEmbeddedProvisioningProfile": false,
+    "codeSignatureVerified": false,
+    "uploadPackageCount": 0,
+    "signedUploadPackageCount": 0,
+    "currentVersionUploadPackageCount": 0,
+    "signedCurrentVersionUploadPackageCount": 0,
+    "hasSignedUploadPackage": false,
+    "hasCurrentVersionUploadPackage": false,
+    "hasSignedCurrentVersionUploadPackage": false
+  },
+  "nextAction": {
+    "categoryId": "public-inputs",
+    "checkId": "public-site-url",
+    "command": "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\" && npm run configure:store-env -- --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\" && npm run public-release:store:node -- --self-test && npm run public-inputs:store && npm run check:store-env && npm run check:release-runtime:node -- --strict",
+    "detail": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
+    "label": "Public Site And Contact Inputs",
+    "source": "app-store-assets/RELEASE_BLOCKERS.json nextActionQueue"
+  },
+  "categories": [
+    {
+      "id": "public-inputs",
+      "label": "Public Site And Contact Inputs",
+      "status": "blocked",
+      "blockerCount": 6,
+      "blockedChecks": [
+        {
+          "id": "public-site-url",
+          "label": "CODY_SITE_URL is a real HTTPS URL",
+          "action": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
+          "evidence": "value is placeholder"
+        },
+        {
+          "id": "support-email",
+          "label": "CODY_SUPPORT_EMAIL is real",
+          "action": "Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.",
+          "evidence": "value is placeholder"
+        },
+        {
+          "id": "review-contact-name",
+          "label": "App Review contact name is real",
+          "action": "Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.",
+          "evidence": "value is placeholder"
+        },
+        {
+          "id": "review-contact-email",
+          "label": "App Review contact email is real",
+          "action": "Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.",
+          "evidence": "value is placeholder"
+        },
+        {
+          "id": "review-contact-phone",
+          "label": "App Review contact phone is real",
+          "action": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
+          "evidence": "value is placeholder"
+        },
+        {
+          "id": "generated-fields-public-urls",
+          "label": "Generated App Store fields have HTTPS support/privacy URLs",
+          "action": "Run npm run packet:store after real CODY_SITE_URL is available.",
+          "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder"
+        }
+      ]
+    },
+    {
+      "id": "generated-site",
+      "label": "Generated Public Site",
+      "status": "blocked",
+      "blockerCount": 3,
+      "blockedChecks": [
+        {
+          "id": "site-no-placeholders",
+          "label": "Generated public site has no raw placeholder tokens",
+          "action": "Set real CODY_* values, then run npm run site:store.",
+          "evidence": "raw placeholder token remains in generated public site"
+        },
+        {
+          "id": "site-publish-values-ready",
+          "label": "Generated public site has publish-ready contact and origin",
+          "action": "Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.",
+          "evidence": "siteUrl=placeholder supportEmail=placeholder"
+        },
+        {
+          "id": "archive-no-placeholders",
+          "label": "Public site archive has no publish placeholders",
+          "action": "Run npm run site:archive after generating the site with real public values.",
+          "evidence": "placeholder files: robots.txt, sitemap.xml"
+        }
+      ]
+    },
+    {
+      "id": "signing-package",
+      "label": "Signing And MAS Package",
+      "status": "blocked",
+      "blockerCount": 2,
+      "blockedChecks": [
+        {
+          "id": "mas-signing-strict",
+          "label": "MAS signing assets are installed",
+          "action": "Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict.",
+          "evidence": "strict check failed · 4 failure(s) · 0 warning(s)"
+        },
+        {
+          "id": "mas-package-strict",
+          "label": "Signed MAS package boundary passes",
+          "action": "Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements.",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)"
+        }
+      ]
+    },
+    {
+      "id": "submission",
+      "label": "Submission Gates",
+      "status": "blocked",
+      "blockerCount": 6,
+      "blockedChecks": [
+        {
+          "id": "public-release-sync-strict",
+          "label": "Generated public release values are synced",
+          "action": "Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.",
+          "evidence": "strict check failed · 6 failure(s) · 0 warning(s)"
+        },
+        {
+          "id": "upload-tooling-strict",
+          "label": "App Store upload tooling and MAS package are available",
+          "action": "Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict.",
+          "evidence": "strict check failed · 1 failure(s) · 1 warning(s)"
+        },
+        {
+          "id": "upload-credentials-strict",
+          "label": "App Store Connect upload credentials are configured",
+          "action": "Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict.",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)"
+        },
+        {
+          "id": "support-url-reachable-gate",
+          "label": "Public URL reachability gate is ready to run",
+          "action": "After publishing the public site, run npm run check:store-urls -- --strict.",
+          "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder"
+        },
+        {
+          "id": "published-site-strict",
+          "label": "Published public-site pages match the generated source",
+          "action": "After publishing the public site, run npm run check:published-site -- --strict.",
+          "evidence": "strict check failed · 8 failure(s) · 0 warning(s)"
+        },
+        {
+          "id": "app-store-connect-copy-ready",
+          "label": "Generated App Store Connect copy has no placeholder contact data",
+          "action": "Run npm run packet:store after real public support and App Review contact values are set.",
+          "evidence": "supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "PUBLIC_RELEASE_INPUTS.md",
+      "status": "blocked",
+      "detail": "0/5 public inputs ready"
+    },
+    {
+      "name": "PUBLIC_SITE_PUBLISH_PACKET.md",
+      "status": "blocked",
+      "detail": "0/5 public pages ready"
+    },
+    {
+      "name": "FINAL_SUBMISSION_CHECKLIST.md",
+      "status": "blocked",
+      "detail": "18 final checklist blocker(s)"
+    },
+    {
+      "name": "UPLOAD_COMMAND_PACKET.md",
+      "status": "blocked",
+      "detail": "0 signed package(s), 2/3 upload tools"
+    },
+    {
+      "name": "RELEASE_MACHINE_REPORT.md",
+      "status": "blocked",
+      "detail": "2 blocked gate(s), 9 warning gate(s)"
+    },
+    {
+      "name": "RELEASE_EVIDENCE.md",
+      "status": "present",
+      "detail": "42 command summaries, 69 artifact hashes"
+    },
+    {
+      "name": "MAS submission posture",
+      "status": "blocked",
+      "detail": "local-rehearsal-only · signed current-version packages 0/0"
+    }
+  ],
+  "sourceArtifacts": [
+    "app-store-assets/RELEASE_BLOCKERS.json",
+    "app-store-assets/PUBLIC_RELEASE_INPUTS.json",
+    "app-store-assets/PUBLIC_SITE_PUBLISH_PACKET.json",
+    "app-store-assets/UPLOAD_COMMAND_PACKET.json",
+    "app-store-assets/FINAL_SUBMISSION_CHECKLIST.json",
+    "app-store-assets/RELEASE_MACHINE_REPORT.json",
+    "app-store-assets/RELEASE_EVIDENCE.json"
+  ]
+}

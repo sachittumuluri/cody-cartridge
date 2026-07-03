@@ -1,0 +1,24 @@
+node_modules/
+dist/
+release/
+out/
+.DS_Store
+
+# Local music library — never bundle/commit user media (App Store compliance)
+music/
+
+# Editor/agent tooling config
+.claude/
+.env
+.env.*
+*.log
+*.p12
+*.cer
+*.p8
+*.mobileprovision
+*.provisionprofile
+app-store-assets/site.env
+app-store-assets/site.env.local
+app-store-assets/upload-logs/raw/
+security-scoped-bookmarks.json
+build/icon.iconset/

@@ -1,0 +1,96 @@
+{
+  "appStoreConnectSpec": {
+    "acceptedFormats": [
+      "jpeg",
+      "jpg",
+      "png"
+    ],
+    "acceptedSizes": [
+      {
+        "height": 800,
+        "width": 1280
+      },
+      {
+        "height": 900,
+        "width": 1440
+      },
+      {
+        "height": 1600,
+        "width": 2560
+      },
+      {
+        "height": 1800,
+        "width": 2880
+      }
+    ],
+    "aspectRatio": "16:10",
+    "count": {
+      "max": 10,
+      "min": 1
+    },
+    "platform": "macOS",
+    "requiredFor": "Mac apps",
+    "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
+  },
+  "generatedAt": "2026-07-03T00:05:38.755Z",
+  "renderer": "dist/index.html",
+  "screenshotCount": 3,
+  "source": "store-demo",
+  "viewport": {
+    "height": 900,
+    "width": 1440
+  },
+  "screenshots": [
+    {
+      "bytes": 578554,
+      "filePath": "app-store-assets/screenshots/01-library-1440x900.png",
+      "height": 900,
+      "id": "library",
+      "label": "Local library shelf",
+      "appStoreConnectAccepted": true,
+      "format": "png",
+      "query": {
+        "store-demo": "1",
+        "store-shelf": "library"
+      },
+      "sha256": "b8344b91aa791030fd450f18a8007b13ead1ea537d5a2baf4474ef63261d61e2",
+      "source": "store-demo",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library",
+      "width": 1440
+    },
+    {
+      "bytes": 578898,
+      "filePath": "app-store-assets/screenshots/02-takeout-map-1440x900.png",
+      "height": 900,
+      "id": "takeout",
+      "label": "YouTube Music Takeout map",
+      "appStoreConnectAccepted": true,
+      "format": "png",
+      "query": {
+        "store-demo": "1",
+        "store-shelf": "takeout"
+      },
+      "sha256": "4ad477e3277897ef4f0fb53de5f193aa8320ff536d09444feddaecd83b1dd1b1",
+      "source": "store-demo",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=takeout",
+      "width": 1440
+    },
+    {
+      "bytes": 468322,
+      "filePath": "app-store-assets/screenshots/03-missing-files-1440x900.png",
+      "height": 900,
+      "id": "missing",
+      "label": "Missing local files",
+      "appStoreConnectAccepted": true,
+      "format": "png",
+      "query": {
+        "store-demo": "1",
+        "store-shelf": "missing"
+      },
+      "sha256": "41fce2ab304b98fc866413524cbf6e3481ebe77a0812b864fb18be8ef5287899",
+      "source": "store-demo",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=missing",
+      "width": 1440
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-06-20T20:32:24.418Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "status": "blocked",
+    "blockerCount": 3,
+    "toolCount": 3,
+    "availableToolCount": 2,
+    "uploadPackageCount": 0,
+    "signedUploadPackageCount": 0,
+    "currentVersionUploadPackageCount": 0,
+    "signedCurrentVersionUploadPackageCount": 0,
+    "masSubmissionReady": false,
+    "uploadCredentialStatus": "blocked",
+    "uploadEvidenceStatus": "pending",
+    "signingAssetStatus": "blocked"
+  },
+  "selectedPackage": null,
+  "selectedPackageSelection": {
+    "reason": "pending",
+    "requiresRebuild": true,
+    "policy": "Prefer a signed package whose filename matches the current package.json version/build before any stale signed package."
+  },
+  "uploadPackages": [],
+  "tools": [
+    {
+      "id": "transporter-app",
+      "label": "Transporter.app",
+      "available": false,
+      "path": null,
+      "command": null
+    },
+    {
+      "id": "altool",
+      "label": "xcrun altool",
+      "available": true,
+      "path": "/Applications/Xcode.app/Contents/Developer/usr/bin/altool",
+      "command": "xcrun altool --upload-app --type osx --file \"<signed-mas-pkg>\" --apiKey \"<ASC_API_KEY_ID>\" --apiIssuer \"<ASC_API_ISSUER_ID>\""
+    },
+    {
+      "id": "itms-transporter",
+      "label": "xcrun iTMSTransporter",
+      "available": true,
+      "path": "/Applications/Xcode.app/Contents/Developer/usr/bin/iTMSTransporter",
+      "command": "xcrun iTMSTransporter -m upload -f \"<signed-mas-pkg>\" -apiKey \"<ASC_API_KEY_ID>\" -apiIssuer \"<ASC_API_ISSUER_ID>\""
+    }
+  ],
+  "credentialCheck": {
+    "command": "npm run check:upload-credentials -- --strict",
+    "ready": false,
+    "exitCode": 1,
+    "failureCount": 3,
+    "warningCount": 0,
+    "summary": "App Store upload credential checks (strict): 0 passed, 0 warnings, 3 failures"
+  },
+  "commands": [
+    "npm run check:mas-package -- --strict",
+    "npm run check:upload-tooling -- --strict",
+    "npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run",
+    "npm run check:upload-credentials -- --strict",
+    "open -a Transporter \"<signed-mas-pkg>\"",
+    "npm run upload-evidence:store -- --log /path/to/transporter.log --tool transporter --status selected --processed-bundle-id com.sachittumuluri.codycartridge --processed-version 0.1.0 --processed-build 0.1.0",
+    "npm run check:upload-evidence",
+    "npm run report:store-blockers && npm run upload-packet:store && npm run evidence:store && npm run manifest:store && npm run handoff:store"
+  ],
+  "sourceArtifacts": [
+    "package.json",
+    "app-store-assets/RELEASE_MANIFEST.json",
+    "app-store-assets/SIGNING_ASSET_REPORT.json",
+    "app-store-assets/UPLOAD_EVIDENCE.json",
+    "scripts/build-upload-command-packet.cjs",
+    "scripts/check-upload-command-packet.cjs",
+    "scripts/check-mas-package.cjs",
+    "scripts/check-upload-tooling.cjs",
+    "scripts/install-asc-key.cjs",
+    "scripts/check-upload-credentials.cjs",
+    "scripts/build-upload-evidence.cjs",
+    "scripts/check-upload-evidence.cjs"
+  ],
+  "redaction": {
+    "storesAppleCredentials": false,
+    "storesSigningSecrets": false,
+    "storesRawUploadLogs": false,
+    "credentialPlaceholdersOnly": true
+  }
+}
