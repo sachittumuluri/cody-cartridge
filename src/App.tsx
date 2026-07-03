@@ -1205,8 +1205,11 @@ function App() {
   const previousTrackIdRef = useRef("");
   const relockTimerRef = useRef<number | null>(null);
   const shelfWheelAtRef = useRef(0);
+  const shelfWheelDeltaRef = useRef(0);
+  const shelfWheelTsRef = useRef(0);
   const seekPulseTimerRef = useRef<number | null>(null);
   const systemMessageTimerRef = useRef<number | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
   const shellRef = useRef<HTMLElement | null>(null);
   const visualizerRef = useRef<HTMLDivElement | null>(null);
   const signalColumnsRef = useRef<HTMLDivElement | null>(null);
@@ -1241,6 +1244,7 @@ function App() {
   const [seekPulse, setSeekPulse] = useState("");
   const [transientSystemMessage, setTransientSystemMessage] = useState("");
   const [cartridgeSwap, setCartridgeSwap] = useState<"ejecting" | "inserting" | null>(null);
+  const [consoleScale, setConsoleScale] = useState(1);
   const [attract, setAttract] = useState(false);
   const [shuttle, setShuttle] = useState<{ dir: 1 | -1; rate: number } | null>(null);
   const cartridgeSwapTimerRef = useRef<number | null>(null);
@@ -1580,8 +1584,67 @@ function App() {
       return;
     }
 
-    const timeout = window.setTimeout(() => setBootMode(null), reducedMotion ? 300 : 1400);
+    const duration = reducedMotion ? 300 : bootMode === "reindex" ? 1150 : 2000;
+    const timeout = window.setTimeout(() => setBootMode(null), duration);
     return () => window.clearTimeout(timeout);
+  }, [bootMode, reducedMotion]);
+
+  // Boot self-test: during the cinematic power-on, sweep a synthetic trace
+  // across the scope and swing the VU needles, so the hardware "warms up".
+  useEffect(() => {
+    if (bootMode !== "boot" || reducedMotion) {
+      return undefined;
+    }
+
+    let rafId: number | null = null;
+    let start = 0;
+    const wave = new Uint8Array(2048);
+
+    const render = (ts: number) => {
+      if (!start) {
+        start = ts;
+      }
+
+      const elapsed = ts - start;
+      const progress = Math.min(1, elapsed / 1400);
+      // A sweep that fills in left-to-right, then settles into a full trace.
+      const reach = Math.min(1, progress * 1.35);
+      const energy = progress < 0.7 ? progress / 0.7 : 1 - (progress - 0.7) / 0.3 * 0.4;
+
+      for (let index = 0; index < wave.length; index += 1) {
+        const t = index / wave.length;
+        const inReach = t <= reach ? 1 : 0;
+        const value =
+          (Math.sin(t * Math.PI * 9 + elapsed * 0.02) * 0.5 +
+            Math.sin(t * Math.PI * 30 + elapsed * 0.03) * 0.3) *
+          energy *
+          inReach;
+        wave[index] = Math.max(0, Math.min(255, Math.round(128 + value * 96)));
+      }
+
+      drawScopeTrace(wave, 0.4 + energy * 0.3, elapsed % 300 < 40 ? 1 : 0.3);
+      const vu = vuStateRef.current;
+      // Needles sweep up to full then settle.
+      const swing = progress < 0.5 ? progress * 2 : 1 - (progress - 0.5) * 1.2;
+      vu.l = Math.max(0, swing);
+      vu.r = Math.max(0, swing * 0.9);
+      vu.peakHoldL = Math.max(vu.peakHoldL, vu.l);
+      vu.peakHoldR = Math.max(vu.peakHoldR, vu.r);
+      writeVuNeedles();
+
+      if (progress < 1) {
+        rafId = window.requestAnimationFrame(render);
+      }
+    };
+
+    rafId = window.requestAnimationFrame(render);
+
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bootMode, reducedMotion]);
 
   useEffect(() => {
@@ -1798,6 +1861,36 @@ function App() {
     };
   }, []);
 
+  // Scale-to-fit: the console is a fixed 1440x900 stage that scales (contain)
+  // to the viewport and centers, so it never clips or reflows. Exactly 1.0 at
+  // a 1440x900 viewport (keeps the store smoke/screenshots pixel-stable).
+  useEffect(() => {
+    const DESIGN_W = 1440;
+    const DESIGN_H = 900;
+
+    const measure = () => {
+      const viewport = viewportRef.current;
+      const width = viewport?.clientWidth ?? window.innerWidth;
+      const height = viewport?.clientHeight ?? window.innerHeight;
+      const next = Math.min(width / DESIGN_W, height / DESIGN_H);
+      setConsoleScale(Number.isFinite(next) && next > 0 ? next : 1);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+
+    let observer: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== "undefined" && viewportRef.current) {
+      observer = new ResizeObserver(measure);
+      observer.observe(viewportRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("resize", measure);
+      observer?.disconnect();
+    };
+  }, []);
+
   // Attract mode: after a stretch of no input while music plays, fade the
   // chrome and let the scope + cartridge take the screen. Any input exits.
   useEffect(() => {
@@ -1904,6 +1997,10 @@ function App() {
           behavior: reducedMotion ? "auto" : "smooth",
           left: selectedCard.offsetLeft - (trackList.clientWidth - selectedCard.clientWidth) / 2
         });
+
+        // Keep the active catalog row in view too as selection moves.
+        const activeRow = document.querySelector(".metadata-row.active") as HTMLElement | null;
+        activeRow?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
       });
     });
   }, [activeShelf, currentId, filteredCards.length, query, reducedMotion]);
@@ -3043,6 +3140,8 @@ function App() {
     .join(" ");
 
   return (
+    <div className="console-viewport" ref={viewportRef}>
+      <div className="console-stage" style={{ "--console-scale": consoleScale } as CSSProperties}>
     <main
       ref={shellRef}
       className={appClasses}
@@ -3130,6 +3229,7 @@ function App() {
               }
             }}
           >
+            <span className="boot-scanline" aria-hidden="true" />
             <div className="boot-terminal">
               {bootLines.map((line, index) => (
                 <span key={`${bootMode}-${line}`} style={{ "--boot-delay": `${index * 92}ms` } as CSSProperties}>
@@ -3359,19 +3459,29 @@ function App() {
               }}
               onWheel={(event) => {
                 const now = event.timeStamp;
+                const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
 
-                if (now - shelfWheelAtRef.current < 180) {
+                // Accumulate wheel/trackpad delta and advance exactly one card
+                // when it crosses a threshold, with a short cooldown so the glide
+                // can settle. Responsive, but still one card per "deck advance".
+                if (now - shelfWheelTsRef.current > 220) {
+                  shelfWheelDeltaRef.current = 0;
+                }
+
+                shelfWheelTsRef.current = now;
+                shelfWheelDeltaRef.current += delta;
+
+                if (now - shelfWheelAtRef.current < 90) {
                   return;
                 }
 
-                const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-
-                if (Math.abs(delta) < 18) {
+                if (Math.abs(shelfWheelDeltaRef.current) < 40) {
                   return;
                 }
 
                 shelfWheelAtRef.current = now;
-                selectShelfOffset(delta > 0 ? 1 : -1);
+                selectShelfOffset(shelfWheelDeltaRef.current > 0 ? 1 : -1);
+                shelfWheelDeltaRef.current = 0;
               }}
             >
               {filteredCards.length === 0 ? (
@@ -3645,6 +3755,8 @@ function App() {
       </section>
 
     </main>
+      </div>
+    </div>
   );
 }
 

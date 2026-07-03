@@ -1533,7 +1533,7 @@ async function createWindow() {
     minWidth: 980,
     minHeight: 680,
     title: "Cody Cartridge",
-    backgroundColor: "#16141d",
+    backgroundColor: "#050506",
     show: !isShellSmoke,
     titleBarStyle: "hiddenInset",
     webPreferences: {
@@ -1543,6 +1543,10 @@ async function createWindow() {
       sandbox: true
     }
   });
+
+  // Lock the window to the console's 16:10 design aspect so the scale-to-fit
+  // stage fills it with no letterboxing on ordinary resizes.
+  mainWindow.setAspectRatio(1440 / 900);
 
   configureSessionSecurity(mainWindow.webContents.session);
   configureWebContentsSecurity(mainWindow.webContents, isMainWindowNavigationAllowed);

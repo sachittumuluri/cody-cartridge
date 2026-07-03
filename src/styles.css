@@ -34,6 +34,30 @@ body {
   overflow: hidden;
 }
 
+/* Scale-to-fit console: a fixed 1440x900 stage scaled (contain) to the
+   viewport and centered, so the layout never clips or reflows. */
+.console-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #050506;
+}
+
+.console-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1440px;
+  height: 900px;
+  transform: translate(-50%, -50%) scale(var(--console-scale, 1));
+  transform-origin: center center;
+}
+
+.console-stage .app-shell {
+  height: 100%;
+  min-height: 0;
+}
+
 button,
 input {
   font: inherit;
@@ -842,6 +866,13 @@ button:disabled {
   padding: 42px 26px;
   scroll-padding-inline: 28px;
   scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+.app-shell.reduced-motion .track-list,
+.app-shell.reduced-motion .metadata-list {
+  scroll-behavior: auto;
 }
 
 .song-card {
@@ -856,6 +887,7 @@ button:disabled {
   border-radius: 7px;
   color: var(--muted);
   scroll-snap-align: center;
+  scroll-snap-stop: always;
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.055), transparent),
     rgba(0, 0, 0, 0.14);
@@ -2412,6 +2444,9 @@ button:disabled {
   min-height: 0;
   overflow: auto;
   padding: 1px;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   scrollbar-color: rgba(156, 199, 216, 0.28) rgba(0, 0, 0, 0.18);
 }
 
@@ -2857,6 +2892,7 @@ button:disabled {
   display: grid;
   gap: 6px;
   align-content: end;
+  justify-items: center;
   min-width: 0;
 }
 
@@ -2892,9 +2928,10 @@ button:disabled {
 
 .volume-rail {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 22px auto;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -3022,11 +3059,8 @@ button:disabled {
 }
 
 @media (max-width: 1180px) {
-  body {
-    overflow: auto;
-  }
-
-  .app-shell,
+  /* Scale-to-fit replaces responsive reflow; the fixed .app-shell stage must
+     not restructure. Legacy (non-noir) layout classes below are inert. */
   .mode-handheld,
   .mode-visualizer {
     grid-template-columns: 1fr;
@@ -3069,10 +3103,7 @@ button:disabled {
 }
 
 @media (max-width: 840px) {
-  .app-shell {
-    padding: 10px;
-  }
-
+  /* Scale-to-fit keeps the cabinet fixed; only inert legacy classes reflow. */
   .console-rail,
   .console-screen,
   .right-panel > section {
@@ -3080,8 +3111,7 @@ button:disabled {
   }
 
   .console-rail,
-  .right-panel,
-  .cabinet-grid {
+  .right-panel {
     grid-template-columns: 1fr;
   }
 
@@ -3099,39 +3129,15 @@ button:disabled {
     width: 100%;
   }
 
-  .now-playing-bay {
-    grid-template-rows: minmax(320px, auto) auto auto;
-  }
-
-  .transport {
-    grid-template-columns: 42px 52px 42px;
-    justify-content: center;
-  }
-
-  .volume-control {
-    grid-column: 1 / -1;
-  }
-
   .right-panel {
     display: none;
   }
 }
 
 @media (max-width: 560px) {
+  /* Only inert legacy classes; noir cabinet stays fixed via scale-to-fit. */
   .brand-lockup p {
     font-size: 1.18rem;
-  }
-
-  .screen-header h1 {
-    font-size: 1.8rem;
-  }
-
-  .cartridge-art {
-    min-height: 230px;
-  }
-
-  .album-graphic-tile {
-    width: 128px;
   }
 
   .badge-grid,
@@ -3638,40 +3644,9 @@ button:disabled {
   overflow: hidden;
 }
 
-@media (max-width: 1180px) {
-  .system-header-line,
-  .now-playing-module,
-  .catalog-toolbar {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
-
-  .system-header-line {
-    display: grid;
-  }
-
-  .metadata-panel {
-    min-height: 420px;
-  }
-}
-
-@media (max-width: 840px) {
-  .now-playing-bay {
-    grid-template-rows: minmax(320px, auto) auto auto auto;
-  }
-
-  .crt-window {
-    grid-template-rows: auto minmax(250px, auto) auto 74px;
-  }
-
-  .transport {
-    grid-template-columns: 64px 80px 64px;
-  }
-
-  .key-hints {
-    justify-content: center;
-  }
-}
+/* Reflow at small viewports intentionally removed: the console is a fixed
+   1440x900 scale-to-fit stage, so these bay/toolbar/transport restructures
+   would distort the layout when the window (not the stage) is shrunk. */
 
 /* Diegetic state feedback: boot, relock, interference, shelf artifacts. */
 .interference-control {
@@ -3720,18 +3695,42 @@ button:disabled {
   z-index: 20;
   display: grid;
   place-items: center;
+  overflow: hidden;
   border: 1px solid rgba(239, 239, 231, 0.18);
   background:
     linear-gradient(90deg, rgba(156, 199, 216, 0.05) 1px, transparent 1px) 0 0 / 22px 22px,
     linear-gradient(0deg, rgba(139, 17, 27, 0.045) 1px, transparent 1px) 0 0 / 22px 22px,
-    rgba(3, 3, 4, 0.88);
-  animation: bootFade 1400ms steps(5, end) forwards;
+    rgba(3, 3, 4, 0.9);
   cursor: pointer;
   pointer-events: auto;
 }
 
+/* Cinematic power-on: the screen "opens" (a scanline expands vertically),
+   warms up with a flicker, the terminal types, then the overlay dissolves. */
+.boot-boot {
+  animation: bootOpen 300ms ease-out, bootWarm 620ms 300ms ease-out, bootDissolve 500ms 1500ms ease-in forwards;
+}
+
 .boot-reindex {
-  animation-duration: 1150ms;
+  animation: bootWarm 400ms ease-out, bootDissolve 400ms 750ms ease-in forwards;
+}
+
+/* The screen-open flash line that expands into the full overlay. */
+.boot-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(224, 244, 255, 0.95) 20%, rgba(224, 244, 255, 0.95) 80%, transparent);
+  box-shadow: 0 0 24px rgba(156, 199, 216, 0.9);
+  transform: translateY(-50%) scaleX(1);
+  animation: bootScanline 420ms ease-out forwards;
+}
+
+.boot-reindex .boot-scanline {
+  display: none;
 }
 
 .boot-terminal {
@@ -3750,12 +3749,47 @@ button:disabled {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  opacity: 0;
+  animation: bootTerminalIn 300ms 260ms ease-out forwards;
+}
+
+.boot-reindex .boot-terminal {
+  animation-delay: 40ms;
 }
 
 .boot-terminal span {
   opacity: 0;
   transform: translateX(-8px);
-  animation: bootLine 320ms steps(3, end) var(--boot-delay) forwards;
+  animation: bootLine 300ms steps(3, end) calc(var(--boot-delay) + 300ms) forwards;
+}
+
+@keyframes bootOpen {
+  0% { clip-path: inset(50% 0 50% 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes bootScanline {
+  0% { opacity: 0; transform: translateY(-50%) scaleX(0.2); }
+  30% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+  100% { opacity: 0; transform: translateY(-50%) scaleX(1); }
+}
+
+@keyframes bootWarm {
+  0% { filter: brightness(2.4) contrast(1.4); }
+  20% { filter: brightness(0.7); }
+  45% { filter: brightness(1.8); }
+  70% { filter: brightness(0.9); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes bootTerminalIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bootDissolve {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .track-list:focus-visible {
