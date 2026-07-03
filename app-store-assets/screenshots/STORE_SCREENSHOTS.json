@@ -32,7 +32,7 @@
     "requiredFor": "Mac apps",
     "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
   },
-  "generatedAt": "2026-07-03T00:05:38.755Z",
+  "generatedAt": "2026-07-03T00:45:38.014Z",
   "renderer": "dist/index.html",
   "screenshotCount": 3,
   "source": "store-demo",
@@ -42,7 +42,7 @@
   },
   "screenshots": [
     {
-      "bytes": 578554,
+      "bytes": 682145,
       "filePath": "app-store-assets/screenshots/01-library-1440x900.png",
       "height": 900,
       "id": "library",
@@ -51,15 +51,16 @@
       "format": "png",
       "query": {
         "store-demo": "1",
-        "store-shelf": "library"
+        "store-shelf": "library",
+        "store-poster": "1"
       },
-      "sha256": "b8344b91aa791030fd450f18a8007b13ead1ea537d5a2baf4474ef63261d61e2",
+      "sha256": "8d0d866a3083ddee8d59f0c072b35a6954452adb8801e714d6e9db5fb1e4e670",
       "source": "store-demo",
-      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 578898,
+      "bytes": 682241,
       "filePath": "app-store-assets/screenshots/02-takeout-map-1440x900.png",
       "height": 900,
       "id": "takeout",
@@ -68,15 +69,16 @@
       "format": "png",
       "query": {
         "store-demo": "1",
-        "store-shelf": "takeout"
+        "store-shelf": "takeout",
+        "store-poster": "1"
       },
-      "sha256": "4ad477e3277897ef4f0fb53de5f193aa8320ff536d09444feddaecd83b1dd1b1",
+      "sha256": "09dfbee3455405a02372bdc4691b8f771c81792247c3f0adb05e4bd7b6b32497",
       "source": "store-demo",
-      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=takeout",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=takeout&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 468322,
+      "bytes": 575877,
       "filePath": "app-store-assets/screenshots/03-missing-files-1440x900.png",
       "height": 900,
       "id": "missing",
@@ -85,11 +87,12 @@
       "format": "png",
       "query": {
         "store-demo": "1",
-        "store-shelf": "missing"
+        "store-shelf": "missing",
+        "store-poster": "1"
       },
-      "sha256": "41fce2ab304b98fc866413524cbf6e3481ebe77a0812b864fb18be8ef5287899",
+      "sha256": "82dc46202531fe4dc301dd13c9b8de36a6fd5577abfa12cf7da1cbce045bd374",
       "source": "store-demo",
-      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=missing",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=missing&store-poster=1",
       "width": 1440
     }
   ]

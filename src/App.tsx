@@ -161,6 +161,17 @@ function isStoreDemoMode() {
   return new URLSearchParams(window.location.search).get("store-demo") === "1";
 }
 
+// Marketing-only poster mode: paints a representative live scope + VU into the
+// paused store-demo so screenshots showcase the reactive hardware. Kept behind
+// its own flag so the store smoke (store-demo=1, no poster) is unaffected.
+function isStorePosterMode() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return new URLSearchParams(window.location.search).get("store-poster") === "1";
+}
+
 function getStoreDemoShelf(): ShelfView {
   if (typeof window === "undefined") {
     return "library";
@@ -1166,6 +1177,7 @@ function VuMeter({ containerRef }: { containerRef: React.RefObject<HTMLDivElemen
 
 function App() {
   const storeDemoMode = isStoreDemoMode();
+  const storePosterMode = isStorePosterMode();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analysisCacheRef = useRef<Map<string, Promise<TrackAnalysis> | TrackAnalysis>>(new Map());
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -1709,6 +1721,58 @@ function App() {
     stopVisualizerFrame();
   }, [isPlaying, reducedMotion]);
 
+  // Store-poster: build a representative phosphor trace + deflected VU so
+  // marketing screenshots show the reactive hardware even with no audio.
+  useEffect(() => {
+    if (!isStorePosterMode()) {
+      return undefined;
+    }
+
+    let frame = 0;
+    let rafId: number | null = null;
+    const wave = new Uint8Array(2048);
+
+    const render = () => {
+      for (let index = 0; index < wave.length; index += 1) {
+        const t = index / wave.length;
+        const value =
+          Math.sin(t * Math.PI * 11 + frame * 0.22) * 0.5 +
+          Math.sin(t * Math.PI * 33 + frame * 0.4) * 0.26 +
+          Math.sin(t * Math.PI * 3) * 0.2;
+        wave[index] = Math.max(0, Math.min(255, Math.round(128 + value * 96)));
+      }
+
+      drawScopeTrace(wave, 0.55, frame % 12 === 0 ? 1 : 0.35);
+      writeBassVars(0.5, 0.35);
+      const vu = vuStateRef.current;
+      vu.l = 0.64;
+      vu.r = 0.56;
+      vu.peakHoldL = 0.82;
+      vu.peakHoldR = 0.72;
+      writeVuNeedles();
+      writeMeterLevels(
+        Array.from({ length: 24 }, (_, index) => 20 + Math.round(58 * Math.abs(Math.sin(index * 0.5 + 1.2))))
+      );
+
+      frame += 1;
+      if (frame < 34) {
+        rafId = window.requestAnimationFrame(render);
+      }
+    };
+
+    const startTimer = window.setTimeout(() => {
+      rafId = window.requestAnimationFrame(render);
+    }, 80);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     return () => {
       stopVisualizerFrame();
@@ -2233,15 +2297,15 @@ function App() {
     }
 
     const points = 140;
-    const amplitude = height * (0.4 + bass * 0.12);
+    const waveHeight = height * (0.4 + bass * 0.12);
     const stride = wave.length / points;
     const path: Array<[number, number]> = [];
 
     for (let index = 0; index <= points; index += 1) {
       const sample = ((wave[Math.floor(index * stride)] ?? 128) - 128) / 128;
-      const smear = shuttle > 0 ? (((index * 53) % 17) / 17 - 0.5) * shuttle * amplitude * 0.5 : 0;
+      const smear = shuttle > 0 ? (((index * 53) % 17) / 17 - 0.5) * shuttle * waveHeight * 0.5 : 0;
       const x = (index / points) * width;
-      const y = middle + sample * amplitude + smear;
+      const y = middle + sample * waveHeight + smear;
       path.push([x, y]);
     }
 
@@ -3081,11 +3145,11 @@ function App() {
             <div className="crt-window">
               <div className="screen-status">
                 <span>{currentTrack ? "SIGNAL" : "STANDBY"}</span>
-                <span>{isPlaying ? "TRACE LIVE" : "TRACE HOLD"}</span>
+                <span>{isPlaying || storePosterMode ? "TRACE LIVE" : "TRACE HOLD"}</span>
               </div>
 
               <div
-                className={`cartridge-art ${isPlaying ? "powered" : ""} ${currentTrack ? "has-track" : "is-empty"} ${
+                className={`cartridge-art ${isPlaying || storePosterMode ? "powered" : ""} ${currentTrack ? "has-track" : "is-empty"} ${
                   cartridgeSwap ? `is-${cartridgeSwap}` : ""
                 }`}
                 data-wear={currentWearTier > 0 ? currentWearTier : undefined}

@@ -187,11 +187,9 @@
       "checkId": "mas-package-strict",
       "command": "node scripts/check-mas-package.cjs --strict",
       "details": [
-        "Packaged MAS app does not contain Contents/embedded.provisionprofile",
-        "No MAS upload .pkg artifact found in dist; Transporter upload expects a signed current-version installer package",
-        "Packaged MAS app code signature does not verify"
+        "MAS app bundle is missing at dist/mas-arm64/Cody Cartridge.app; run npm run dist:mas on the release machine before upload."
       ],
-      "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
+      "evidence": "strict check failed · 1 failure(s) · 0 warning(s)",
       "id": "signing-package:mas-package-strict",
       "label": "Signed MAS package boundary passes",
       "order": 2,
@@ -448,11 +446,9 @@
           "action": "Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements.",
           "command": "node scripts/check-mas-package.cjs --strict",
           "details": [
-            "Packaged MAS app does not contain Contents/embedded.provisionprofile",
-            "No MAS upload .pkg artifact found in dist; Transporter upload expects a signed current-version installer package",
-            "Packaged MAS app code signature does not verify"
+            "MAS app bundle is missing at dist/mas-arm64/Cody Cartridge.app; run npm run dist:mas on the release machine before upload."
           ],
-          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
+          "evidence": "strict check failed · 1 failure(s) · 0 warning(s)",
           "id": "mas-package-strict",
           "label": "Signed MAS package boundary passes",
           "owner": "release-machine",
@@ -561,7 +557,7 @@
       "status": "blocked"
     }
   ],
-  "generatedAt": "2026-07-02T22:38:06.884Z",
+  "generatedAt": "2026-07-03T00:46:20.614Z",
   "nextActionQueue": [
     {
       "blockerCount": 6,

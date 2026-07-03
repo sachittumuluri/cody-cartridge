@@ -7,26 +7,30 @@ Name: Cody Cartridge
 Subtitle: Local music, signal mapped.
 
 Promotional text:
-Turn your own music files into a visual archive: album art, metadata, signal maps, bass-reactive panels, and a hardware-inspired player.
+Play your own music through a hardware-style deck: a live reactive oscilloscope, analog VU meters, a rotary amp knob, album art, and Takeout metadata.
 
 Description:
 Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-object archive.
 
-Import audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, signal maps, and subtle audio-reactive motion.
+Import audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, cartridge labels, and subtle audio-reactive motion.
+
+Playback happens on a hardware-style deck: a live oscilloscope traces the actual waveform of whatever is playing, twin analog VU needles swing with the left and right channels, and a rotary amp knob shapes the level and low end. The visuals are driven by the real audio signal, not canned animation, so the panel breathes with the music.
 
 The app is designed for local playback and private organization. It does not download music, scrape streaming services, run ads, require an account, or send your listening library to a server.
 
 Features:
 - Local audio playback for user-selected files
 - Embedded metadata and album artwork display
+- Live reactive oscilloscope driven by the real audio signal
+- Analog L/R VU meters with peak-hold
+- Rotary amp knob for level and low-end warmth
+- Generated cassette-style labels for tracks without cover art
 - Optional YouTube Music Takeout CSV matching
 - Missing-file and missing-cover visibility
-- Signal Map view for browsing tracks spatially
-- Bass-reactive visual panels and physical transport controls
 - Local-only state for library, volume, shelf, and playback preferences
 
 Keywords:
-music,player,local,audio,mp3,album,library,archive,cassette,visualizer
+music,player,local,audio,mp3,album,library,visualizer,cassette,oscilloscope,retro
 
 Category:
 Music

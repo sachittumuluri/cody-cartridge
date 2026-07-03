@@ -16,9 +16,9 @@ Generated from the current repo state by `npm run packet:store`.
 
 ### Field Audit
 
-- Promotional text: 136 / 170 characters
-- Description: 593 / 4000 characters
-- Keywords: 70 / 100 bytes
+- Promotional text: 150 / 170 characters
+- Description: 937 / 4000 characters
+- Keywords: 81 / 100 bytes
 - Review notes: 713 / 4000 characters
 - TestFlight beta app description: 219 characters
 - TestFlight What to Test: 1317 characters
@@ -33,7 +33,7 @@ Local music, signal mapped.
 ### Promotional Text
 
 ```text
-Turn your own music files into a visual archive: album art, metadata, signal maps, bass-reactive panels, and a hardware-inspired player.
+Play your own music through a hardware-style deck: a live reactive oscilloscope, analog VU meters, a rotary amp knob, album art, and Takeout metadata.
 ```
 
 ### Description
@@ -41,7 +41,9 @@ Turn your own music files into a visual archive: album art, metadata, signal map
 ```text
 Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-object archive.
 
-Import audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, signal maps, and subtle audio-reactive motion.
+Import audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, cartridge labels, and subtle audio-reactive motion.
+
+Playback happens on a hardware-style deck: a live oscilloscope traces the actual waveform of whatever is playing, twin analog VU needles swing with the left and right channels, and a rotary amp knob shapes the level and low end. The visuals are driven by the real audio signal, not canned animation, so the panel breathes with the music.
 
 The app is designed for local playback and private organization. It does not download music, scrape streaming services, run ads, require an account, or send your listening library to a server.
 ```
@@ -49,7 +51,7 @@ The app is designed for local playback and private organization. It does not dow
 ### Keywords
 
 ```text
-music,player,local,audio,mp3,album,library,archive,cassette,visualizer
+music,player,local,audio,mp3,album,library,visualizer,cassette,oscilloscope,retro
 ```
 
 ## URLs

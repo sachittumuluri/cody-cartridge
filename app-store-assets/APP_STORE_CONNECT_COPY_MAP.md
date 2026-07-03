@@ -172,9 +172,9 @@ Commands:
 | --- | --- | --- | --- | --- | --- | --- |
 | Product Page | Name | Yes | ready | 14/30 characters | `APP_STORE_CONNECT_FIELDS.json productPage.name` | Cody Cartridge |
 | Product Page | Subtitle | Yes | ready | 27/30 characters | `APP_STORE_CONNECT_FIELDS.json productPage.subtitle` | Local music, signal mapped. |
-| Product Page | Promotional Text | Yes | ready | 136/170 characters | `APP_STORE_CONNECT_FIELDS.json productPage.promotionalText` | Turn your own music files into a visual archive: album art, metadata, signal maps, bass-reactive panels, and a hardwa... |
-| Product Page | Description | Yes | ready | 593/4000 characters | `APP_STORE_CONNECT_FIELDS.json productPage.description` | Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-ob... |
-| Product Page | Keywords | Yes | ready | 70/100 bytes | `APP_STORE_CONNECT_FIELDS.json productPage.keywords` | music,player,local,audio,mp3,album,library,archive,cassette,visualizer |
+| Product Page | Promotional Text | Yes | ready | 150/170 characters | `APP_STORE_CONNECT_FIELDS.json productPage.promotionalText` | Play your own music through a hardware-style deck: a live reactive oscilloscope, analog VU meters, a rotary amp knob,... |
+| Product Page | Description | Yes | ready | 937/4000 characters | `APP_STORE_CONNECT_FIELDS.json productPage.description` | Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-ob... |
+| Product Page | Keywords | Yes | ready | 81/100 bytes | `APP_STORE_CONNECT_FIELDS.json productPage.keywords` | music,player,local,audio,mp3,album,library,visualizer,cassette,oscilloscope,retro |
 | Product Page | Category | Yes | ready | - | `APP_STORE_CONNECT_FIELDS.json productPage.category` | Music |
 | Product Page | Support URL | Yes | blocker | - | `APP_STORE_CONNECT_FIELDS.json productPage.supportUrl` | supportURL=placeholder |
 | Product Page | Privacy Policy URL | Yes | blocker | - | `APP_STORE_CONNECT_FIELDS.json productPage.privacyPolicyUrl` | privacyPolicyURL=placeholder |
@@ -225,7 +225,7 @@ Local music, signal mapped.
 - Source: `APP_STORE_CONNECT_FIELDS.json productPage.promotionalText`
 
 ```text
-Turn your own music files into a visual archive: album art, metadata, signal maps, bass-reactive panels, and a hardware-inspired player.
+Play your own music through a hardware-style deck: a live reactive oscilloscope, analog VU meters, a rotary amp knob, album art, and Takeout metadata.
 ```
 
 ### Product Page / Description
@@ -237,7 +237,9 @@ Turn your own music files into a visual archive: album art, metadata, signal map
 ```text
 Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-object archive.
 
-Import audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, signal maps, and subtle audio-reactive motion.
+Import audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, cartridge labels, and subtle audio-reactive motion.
+
+Playback happens on a hardware-style deck: a live oscilloscope traces the actual waveform of whatever is playing, twin analog VU needles swing with the left and right channels, and a rotary amp knob shapes the level and low end. The visuals are driven by the real audio signal, not canned animation, so the panel breathes with the music.
 
 The app is designed for local playback and private organization. It does not download music, scrape streaming services, run ads, require an account, or send your listening library to a server.
 ```
@@ -249,7 +251,7 @@ The app is designed for local playback and private organization. It does not dow
 - Source: `APP_STORE_CONNECT_FIELDS.json productPage.keywords`
 
 ```text
-music,player,local,audio,mp3,album,library,archive,cassette,visualizer
+music,player,local,audio,mp3,album,library,visualizer,cassette,oscilloscope,retro
 ```
 
 ### Product Page / Category

@@ -27,7 +27,7 @@ const screenshots = [
     fileName: "01-library-1440x900.png",
     id: "library",
     label: "Local library shelf",
-    query: { "store-demo": "1", "store-shelf": "library" },
+    query: { "store-demo": "1", "store-shelf": "library", "store-poster": "1" },
     width: 1440,
     height: 900
   },
@@ -35,7 +35,7 @@ const screenshots = [
     fileName: "02-takeout-map-1440x900.png",
     id: "takeout",
     label: "YouTube Music Takeout map",
-    query: { "store-demo": "1", "store-shelf": "takeout" },
+    query: { "store-demo": "1", "store-shelf": "takeout", "store-poster": "1" },
     width: 1440,
     height: 900
   },
@@ -43,7 +43,7 @@ const screenshots = [
     fileName: "03-missing-files-1440x900.png",
     id: "missing",
     label: "Missing local files",
-    query: { "store-demo": "1", "store-shelf": "missing" },
+    query: { "store-demo": "1", "store-shelf": "missing", "store-poster": "1" },
     width: 1440,
     height: 900
   }

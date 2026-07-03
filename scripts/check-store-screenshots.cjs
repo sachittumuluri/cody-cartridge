@@ -30,17 +30,17 @@ const expectedManifestEntries = [
   {
     filePath: "app-store-assets/screenshots/01-library-1440x900.png",
     id: "library",
-    query: { "store-demo": "1", "store-shelf": "library" }
+    query: { "store-demo": "1", "store-shelf": "library", "store-poster": "1" }
   },
   {
     filePath: "app-store-assets/screenshots/02-takeout-map-1440x900.png",
     id: "takeout",
-    query: { "store-demo": "1", "store-shelf": "takeout" }
+    query: { "store-demo": "1", "store-shelf": "takeout", "store-poster": "1" }
   },
   {
     filePath: "app-store-assets/screenshots/03-missing-files-1440x900.png",
     id: "missing",
-    query: { "store-demo": "1", "store-shelf": "missing" }
+    query: { "store-demo": "1", "store-shelf": "missing", "store-poster": "1" }
   }
 ];
 const passes = [];

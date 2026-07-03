@@ -14,10 +14,10 @@
   "productPage": {
     "category": "Music",
     "copyright": "2026 Sachit Tumuluri",
-    "description": "Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-object archive.\n\nImport audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, signal maps, and subtle audio-reactive motion.\n\nThe app is designed for local playback and private organization. It does not download music, scrape streaming services, run ads, require an account, or send your listening library to a server.",
-    "keywords": "music,player,local,audio,mp3,album,library,archive,cassette,visualizer",
+    "description": "Cody Cartridge is a local-first music player for people who want their personal music library to feel like a found-object archive.\n\nImport audio files you already own, read embedded artwork and tags, optionally match your library against your own YouTube Music Takeout CSV export, and browse everything through a visual shelf built around album covers, cartridge labels, and subtle audio-reactive motion.\n\nPlayback happens on a hardware-style deck: a live oscilloscope traces the actual waveform of whatever is playing, twin analog VU needles swing with the left and right channels, and a rotary amp knob shapes the level and low end. The visuals are driven by the real audio signal, not canned animation, so the panel breathes with the music.\n\nThe app is designed for local playback and private organization. It does not download music, scrape streaming services, run ads, require an account, or send your listening library to a server.",
+    "keywords": "music,player,local,audio,mp3,album,library,visualizer,cassette,oscilloscope,retro",
     "name": "Cody Cartridge",
-    "promotionalText": "Turn your own music files into a visual archive: album art, metadata, signal maps, bass-reactive panels, and a hardware-inspired player.",
+    "promotionalText": "Play your own music through a hardware-style deck: a live reactive oscilloscope, analog VU meters, a rotary amp knob, album art, and Takeout metadata.",
     "subtitle": "Local music, signal mapped.",
     "supportUrl": "TODO_PUBLIC_SITE_URL/support.html",
     "privacyPolicyUrl": "TODO_PUBLIC_SITE_URL/privacy.html",
@@ -346,7 +346,7 @@
       "requiredFor": "Mac apps",
       "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
     },
-    "generatedAt": "2026-06-20T20:01:25.724Z",
+    "generatedAt": "2026-07-03T00:45:38.014Z",
     "screenshotCount": 3,
     "source": "store-demo",
     "viewport": {
@@ -381,11 +381,11 @@
     }
   ],
   "fieldAudit": {
-    "descriptionCharacters": 593,
+    "descriptionCharacters": 937,
     "descriptionLimit": 4000,
-    "keywordsBytes": 70,
+    "keywordsBytes": 81,
     "keywordsLimitBytes": 100,
-    "promotionalTextCharacters": 136,
+    "promotionalTextCharacters": 150,
     "promotionalTextLimit": 170,
     "reviewNotesCharacters": 713,
     "reviewNotesLimit": 4000,
