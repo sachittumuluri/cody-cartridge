@@ -32,7 +32,7 @@
     "requiredFor": "Mac apps",
     "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
   },
-  "generatedAt": "2026-07-03T04:55:45.666Z",
+  "generatedAt": "2026-07-05T04:52:16.540Z",
   "renderer": "dist/index.html",
   "screenshotCount": 3,
   "source": "store-demo",
@@ -42,7 +42,7 @@
   },
   "screenshots": [
     {
-      "bytes": 917601,
+      "bytes": 919297,
       "filePath": "app-store-assets/screenshots/01-library-1440x900.png",
       "height": 900,
       "id": "library",
@@ -54,13 +54,13 @@
         "store-shelf": "library",
         "store-poster": "1"
       },
-      "sha256": "e5d5ba4c53a7c74ef16e2335f31958121d9f0c94a3a415b32f773fe96031f72f",
+      "sha256": "cd704bd032fc12d2a1ebab7333a52d95a00eef601eea9977d9ab70e6b3efacc1",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 924017,
+      "bytes": 925001,
       "filePath": "app-store-assets/screenshots/02-takeout-map-1440x900.png",
       "height": 900,
       "id": "takeout",
@@ -72,13 +72,13 @@
         "store-shelf": "takeout",
         "store-poster": "1"
       },
-      "sha256": "a21a68244ecb51c4b501783b358621949988e16c895a5002919344fb544e725a",
+      "sha256": "b4c2a406b3868760b03f21f7d48fb1742e00d1e502b6afe72f0d31586cd267e9",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=takeout&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 873395,
+      "bytes": 879455,
       "filePath": "app-store-assets/screenshots/03-missing-files-1440x900.png",
       "height": 900,
       "id": "missing",
@@ -90,7 +90,7 @@
         "store-shelf": "missing",
         "store-poster": "1"
       },
-      "sha256": "8c825919c946bcca54bffa13c533ac6cb3c20ce370c936df7fd894d1b8ee6b4b",
+      "sha256": "fd2a166f7d594d52d5fedec3347cefa67bbf88599e8198f76e17f63d295906c1",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=missing&store-poster=1",
       "width": 1440

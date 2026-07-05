@@ -7649,12 +7649,11 @@ button:disabled {
 
 /* --- Bottom control strip --- */
 .deck-controls {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  align-items: center;
-  gap: 8px 24px;
-  padding: 10px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 30px;
+  padding: 12px 22px 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background:
@@ -7662,23 +7661,65 @@ button:disabled {
     rgba(0, 0, 0, 0.18);
 }
 
+/* Control shelf: every control (buttons + knob + meters) sits on one bottom
+   line; labels stack above. */
 .deck-controls .transport {
-  grid-row: 1;
-  grid-column: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
   min-height: 0;
   padding: 0;
   background: none;
 }
 
+.deck-controls .transport-pad,
+.deck-controls .volume-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.deck-controls .icon-button {
+  width: 52px;
+  height: 50px;
+}
+
+.deck-controls .play-button {
+  width: 66px;
+  height: 50px;
+}
+
+.deck-controls .amp-knob {
+  width: 50px;
+}
+
+.deck-controls .amp-knob-face {
+  width: 50px;
+  height: 50px;
+}
+
+.deck-controls .amp-knob-db {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 2px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .deck-controls .meter-bank {
-  grid-row: 1;
-  grid-column: 2;
+  flex: 1 1 340px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 18px;
   margin: 0;
 }
 
 .deck-controls .key-hints {
-  grid-row: 2;
-  grid-column: 1 / -1;
+  flex-basis: 100%;
   justify-content: center;
   margin: 0;
 }
