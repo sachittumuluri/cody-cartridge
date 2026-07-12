@@ -50,8 +50,8 @@ function main() {
   assert(main.includes("getAppProtocolFilePath"), "Electron shell resolves app protocol paths through a containment guard");
   assert(main.includes("isTrustedRendererEvent"), "Electron IPC validates trusted sender frame");
   assert(main.includes("withTrustedRenderer"), "Electron IPC handlers use trusted sender wrapper");
-  assert((main.match(/ipcMain\.handle\("music:/g) ?? []).length === 6, "Electron shell exposes expected music IPC handler count");
-  assert((main.match(/ipcMain\.handle\("music:[^"]+", withTrustedRenderer/g) ?? []).length === 6, "All music IPC handlers are trusted-renderer guarded");
+  assert((main.match(/ipcMain\.handle\("music:/g) ?? []).length === 7, "Electron shell exposes expected music IPC handler count");
+  assert((main.match(/ipcMain\.handle\("music:[^"]+", withTrustedRenderer/g) ?? []).length === 7, "All music IPC handlers are trusted-renderer guarded");
   assert(main.includes("event.senderFrame?.url"), "Trusted IPC guard checks sender frame URL");
   assert(main.includes("filterRendererProvidedPaths"), "Electron shell filters renderer-provided file paths");
   assert(main.includes("if (!process.mas)"), "Renderer-provided path filtering preserves non-MAS local imports");

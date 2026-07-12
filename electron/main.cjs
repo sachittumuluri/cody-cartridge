@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain, Menu, net, protocol } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, Menu, net, powerSaveBlocker, protocol } = require("electron");
 const { createReadStream } = require("node:fs");
 const fs = require("node:fs/promises");
 const path = require("node:path");
@@ -1344,13 +1344,15 @@ async function runShellSmoke(mainWindow) {
       const check = () => {
         const selectors = [
           ".app-shell",
-          ".now-playing-bay",
-          ".library-bay",
+          ".console-screen",
+          ".deck",
+          ".deck-hero",
+          ".signal-scope",
           ".metadata-panel",
-          ".track-list",
-          ".focused-track-strip",
-          ".catalog-index-line",
-          ".catalog-index-thumb"
+          ".metadata-list",
+          ".stage-path",
+          ".deck-controls",
+          ".vu-meter"
         ];
         const missingSelectors = selectors.filter((selector) => !document.querySelector(selector));
         const host = window.musicHost || {};
@@ -1361,10 +1363,11 @@ async function runShellSmoke(mainWindow) {
           "loadDefaultLibrary",
           "importAudioPaths",
           "readTakeoutCsvPaths",
-          "onMenuCommand"
+          "onMenuCommand",
+          "setPlaybackActive"
         ];
         const missingHostMethods = hostMethods.filter((key) => typeof host[key] !== "function");
-        const cards = document.querySelectorAll(".song-card").length;
+        const cards = document.querySelectorAll(".metadata-cover").length;
         const rows = document.querySelectorAll(".metadata-row").length;
         const shell = document.querySelector(".app-shell");
         const ready = missingSelectors.length === 0 &&
@@ -1484,7 +1487,7 @@ async function runShellSmoke(mainWindow) {
         const started = Date.now();
         const inspect = () => {
           const storedState = window.localStorage.getItem(${JSON.stringify(rendererStorageKey)});
-          const cards = document.querySelectorAll(".song-card").length;
+          const cards = document.querySelectorAll(".metadata-row").length;
           const statusText = document.body?.innerText || "";
           const ready = storedState === null && cards === 0;
 
@@ -1514,7 +1517,7 @@ async function runShellSmoke(mainWindow) {
 
   console.log(`Electron shell smoke checks: ${passCount} passed`);
   console.log(`- menu labels: ${requiredMenuLabels.length}`);
-  console.log(`- preload bridge methods: ${state.missingHostMethods.length === 0 ? 7 : 0}`);
+  console.log(`- preload bridge methods: ${state.missingHostMethods.length === 0 ? 8 : 0}`);
   console.log(`- renderer cards/rows: ${state.cards}/${state.rows}`);
   if (smokeAudioPath) {
     console.log("- local audio import IPC and media range streaming: passed");
@@ -1749,6 +1752,25 @@ app.whenReady().then(async () => {
 
     const csvPaths = await collectTakeoutCsvPaths(safePaths);
     return Promise.all(csvPaths.map(readTakeoutCsvFile));
+  }));
+
+  // Keep long playback alive with the lid interaction idle: the renderer
+  // reports playback state and the host holds a power-save blocker only while
+  // audio is actually playing.
+  let playbackBlockerId = null;
+
+  ipcMain.handle("music:playback-active", withTrustedRenderer((_event, active) => {
+    if (active && playbackBlockerId === null) {
+      playbackBlockerId = powerSaveBlocker.start("prevent-app-suspension");
+    } else if (!active && playbackBlockerId !== null) {
+      if (powerSaveBlocker.isStarted(playbackBlockerId)) {
+        powerSaveBlocker.stop(playbackBlockerId);
+      }
+
+      playbackBlockerId = null;
+    }
+
+    return playbackBlockerId !== null;
   }));
 
   const mainWindow = await createWindow();

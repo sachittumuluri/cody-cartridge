@@ -102,7 +102,7 @@ async function waitForStoreSurface(window, surface) {
         const containsX = (outer, inner) =>
           Boolean(outer) && Boolean(inner) && inner.left >= outer.left -1 && inner.right <= outer.right + 1 && inner.width > 0;
         const layout = {
-          catalogToolbar: rectSnapshot(".catalog-toolbar"),
+          catalogToolbar: rectSnapshot(".shelf-bar"),
           documentScrollWidth: Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0),
           deckHero: rectSnapshot(".deck-hero"),
           deckCatalog: rectSnapshot(".deck-catalog"),

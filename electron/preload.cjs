@@ -12,5 +12,6 @@ contextBridge.exposeInMainWorld("musicHost", {
   pickAudioFiles: () => ipcRenderer.invoke("music:pick-audio-files"),
   pickAudioFolder: () => ipcRenderer.invoke("music:pick-audio-folder"),
   pickTakeoutCsv: () => ipcRenderer.invoke("music:pick-takeout-csv"),
-  readTakeoutCsvPaths: (filePaths) => ipcRenderer.invoke("music:read-takeout-csv-paths", filePaths)
+  readTakeoutCsvPaths: (filePaths) => ipcRenderer.invoke("music:read-takeout-csv-paths", filePaths),
+  setPlaybackActive: (active) => ipcRenderer.invoke("music:playback-active", Boolean(active))
 });

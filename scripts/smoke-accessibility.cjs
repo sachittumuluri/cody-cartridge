@@ -114,7 +114,7 @@ async function readAccessibilityState(window) {
       activeRow,
       buttonCount: document.querySelectorAll("button").length,
       disabledPlayHasTitle: Boolean(document.querySelector(".play-button[disabled][title='Play']")),
-      filterChipCount: document.querySelectorAll(".catalog-filter-chips button").length,
+      filterChipCount: document.querySelectorAll(".metadata-row .status-chip").length,
       focusableCount: focusables.length,
       labeledFocusableCount: focusables.length - unlabeled.length,
       metadataButtonRows: document.querySelectorAll(".metadata-row[role='button']").length,
@@ -183,7 +183,7 @@ async function main() {
     assert(state.focusableCount >= 24, `Expected at least 24 focusable controls, saw ${state.focusableCount}.`);
     assert(state.unlabeled.length === 0, `Found unlabeled focusable controls: ${JSON.stringify(state.unlabeled)}`);
     assert(state.metadataButtonRows >= 8, `Expected at least 8 keyboard metadata rows, saw ${state.metadataButtonRows}.`);
-    assert(state.filterChipCount >= 5, `Expected fast filter buttons, saw ${state.filterChipCount}.`);
+    assert(state.filterChipCount >= 5, `Expected clickable row status chips, saw ${state.filterChipCount}.`);
     assert(state.searchAriaLabel === "Filter catalog", "Catalog search is missing aria-label.");
     assert(state.seekRange?.type === "range" && state.seekRange.min === "0", "Seek control is not a labeled range input.");
     assert(

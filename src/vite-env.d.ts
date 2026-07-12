@@ -49,5 +49,6 @@ interface Window {
     pickAudioFolder: () => Promise<CodyFileTrack[]>;
     pickTakeoutCsv: () => Promise<CodyTakeoutCsv[]>;
     readTakeoutCsvPaths: (filePaths: string[]) => Promise<CodyTakeoutCsv[]>;
+    setPlaybackActive: (active: boolean) => Promise<boolean>;
   };
 }

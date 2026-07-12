@@ -7723,3 +7723,1773 @@ button:disabled {
   justify-content: center;
   margin: 0;
 }
+
+/* ============================================================
+   Spectral Spines + animation language pass: spine seek bar,
+   row underlays, pressings, signal-lock support, radar sweep,
+   degauss, teletype, split-flap stats, shelf tabs, favorites,
+   repeat, key legend, empty-state cartridge slot.
+   ============================================================ */
+
+/* --- Spine seek bar: the rail becomes the song's shape --- */
+.seek-spine {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+}
+
+.seek-spine-canvas {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 4px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+
+.seek-spine.has-spine .seek-spine-canvas {
+  opacity: 1;
+}
+
+.seek-spine input[type="range"] {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* With a live spine the painted rail goes glassy so the trace reads through;
+   the mechanical thumb stays as the physical handle riding the signal. */
+.seek-spine.has-spine input[type="range"]::-webkit-slider-runnable-track {
+  border-color: rgba(208, 208, 200, 0.18);
+  background: rgba(4, 4, 6, 0.3);
+}
+
+.seek-spine.has-spine input[type="range"]::-moz-range-track {
+  border-color: rgba(208, 208, 200, 0.18);
+  background: rgba(4, 4, 6, 0.3);
+}
+
+.seek-spine.is-tracing input[type="range"]::-webkit-slider-runnable-track {
+  animation: seekTracing 1.2s linear infinite;
+}
+
+.seek-spine.is-tracing input[type="range"]::-moz-range-track {
+  animation: seekTracing 1.2s linear infinite;
+}
+
+@keyframes seekTracing {
+  50% {
+    filter: brightness(1.55);
+  }
+}
+
+/* --- Catalog row spine underlays (C10 develop as traces land) --- */
+.metadata-row-spine {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  bottom: 2px;
+  left: 6px;
+  z-index: 0;
+  width: calc(100% - 12px);
+  height: calc(100% - 4px);
+  object-fit: fill;
+  opacity: 0.11;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: spineDevelop 800ms ease-out;
+}
+
+.metadata-row.active .metadata-row-spine {
+  opacity: 0.2;
+}
+
+.metadata-row > span {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes spineDevelop {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+/* --- Hero backdrop: dimmed cover / rotating pressing behind the scope --- */
+.hero-backdrop {
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  bottom: -10%;
+  left: -10%;
+  z-index: 0;
+  pointer-events: none;
+  background-position: center;
+  background-size: cover;
+  filter: blur(30px) saturate(1.15) brightness(0.5);
+  opacity: 0.24;
+  transform: scale(1.06) rotate(0deg);
+}
+
+.hero-backdrop.is-pressing {
+  animation: pressingSpin 90s linear infinite;
+  animation-play-state: paused;
+}
+
+.app-shell.is-playing .hero-backdrop.is-pressing {
+  animation-play-state: running;
+}
+
+@keyframes pressingSpin {
+  from {
+    transform: scale(1.06) rotate(0deg);
+  }
+
+  to {
+    transform: scale(1.06) rotate(360deg);
+  }
+}
+
+/* --- C4 phosphor burn-in: the most-worn title ghosts into attract mode --- */
+.burn-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  max-width: 86%;
+  overflow: hidden;
+  color: rgba(156, 199, 216, 0.05);
+  font-family: "Courier New", monospace;
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  filter: blur(0.6px);
+  animation: burnGhostFlicker 7s ease-in-out infinite;
+}
+
+@keyframes burnGhostFlicker {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* --- B1 shelf tabs --- */
+.shelf-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 12px;
+}
+
+.shelf-tabs button {
+  padding: 4px 9px;
+  border: 1px solid rgba(156, 199, 216, 0.22);
+  background: rgba(5, 5, 6, 0.5);
+  color: rgba(156, 199, 216, 0.6);
+  font-family: "Courier New", monospace;
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.shelf-tabs button:hover {
+  border-color: rgba(156, 199, 216, 0.42);
+  color: rgba(239, 239, 231, 0.85);
+}
+
+.shelf-tabs button.active {
+  border-color: rgba(139, 17, 27, 0.7);
+  background: linear-gradient(180deg, rgba(139, 17, 27, 0.32), rgba(139, 17, 27, 0.12));
+  color: #efefe7;
+  box-shadow: inset 0 -2px 0 #8b111b;
+}
+
+/* --- B2 favorites --- */
+.fav-toggle {
+  padding: 0 4px;
+  margin-right: 6px;
+  border: 0;
+  background: none;
+  color: rgba(156, 199, 216, 0.4);
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fav-toggle:hover {
+  color: rgba(239, 239, 231, 0.85);
+}
+
+.fav-toggle.is-fav {
+  color: #c24242;
+  text-shadow: 0 0 8px rgba(196, 66, 66, 0.5);
+}
+
+.fav-toggle.hero-fav {
+  margin-left: 10px;
+  margin-right: 0;
+  font-size: 0.95rem;
+}
+
+/* --- B6 repeat toggle --- */
+.deck-controls .repeat-button {
+  color: rgba(208, 208, 200, 0.62);
+}
+
+.deck-controls .repeat-button.engaged {
+  color: #16130d;
+  background: linear-gradient(180deg, #efe4c4, #d8c79b);
+  box-shadow: 2px 2px 0 #000, inset 0 -3px 0 #8b111b;
+}
+
+/* --- B7 key legend overlay: printed faceplate reference card --- */
+.key-legend-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 3, 5, 0.78);
+}
+
+.key-legend-panel {
+  min-width: 470px;
+  padding: 18px 22px 16px;
+  border: 2px outset rgba(208, 208, 200, 0.4);
+  background: linear-gradient(180deg, #17151c, #0b0a10);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-family: "Courier New", monospace;
+}
+
+.key-legend-title {
+  display: block;
+  margin-bottom: 12px;
+  color: rgba(156, 199, 216, 0.75);
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.key-legend-grid {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 7px 16px;
+}
+
+.key-legend-keys {
+  padding: 2px 6px;
+  border: 1px outset rgba(208, 208, 200, 0.4);
+  background: #b7b7b1;
+  color: #131313;
+  font-size: 0.58rem;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 1px 1px 0 #000;
+}
+
+.key-legend-action {
+  align-self: center;
+  color: rgba(239, 239, 231, 0.78);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.key-legend-close {
+  margin-top: 14px;
+  padding: 5px 14px;
+  border: 1px outset #d0d0c8;
+  background: #b7b7b1;
+  color: #131313;
+  font-family: inherit;
+  font-size: 0.58rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.key-legend-close:active {
+  border-style: inset;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+/* --- B9 empty-state cartridge slot --- */
+.no-cartridge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 220px;
+  margin: 10px;
+  border: 1px dashed rgba(156, 199, 216, 0.22);
+  font-family: "Courier New", monospace;
+  text-align: center;
+}
+
+.no-cartridge-title {
+  color: rgba(239, 239, 231, 0.82);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+
+.no-cartridge-sub {
+  color: rgba(156, 199, 216, 0.55);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.no-cartridge-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.no-cartridge-actions button {
+  padding: 7px 16px;
+  border: 1px outset #d0d0c8;
+  background: #b7b7b1;
+  color: #131313;
+  font-family: inherit;
+  font-size: 0.6rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.no-cartridge-actions button:active {
+  border-style: inset;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.no-cartridge-hint {
+  color: rgba(239, 239, 231, 0.34);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+}
+
+.no-cartridge.no-trace-match {
+  min-height: 140px;
+}
+
+/* --- C12 split-flap stat rolls --- */
+.stat-roll {
+  display: inline-block;
+  animation: statRoll 340ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@keyframes statRoll {
+  from {
+    opacity: 0;
+    transform: translateY(-0.85em);
+  }
+}
+
+/* --- C11 teletype cursor --- */
+.system-message.is-printing::after {
+  content: "▌";
+  margin-left: 1px;
+  animation: printCursor 240ms steps(2) infinite;
+}
+
+@keyframes printCursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* --- C8 find radar sweep --- */
+.app-shell.is-findsweep .metadata-panel {
+  position: relative;
+}
+
+.app-shell.is-findsweep .metadata-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 5;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(156, 199, 216, 0.75), transparent);
+  box-shadow: 0 0 14px rgba(156, 199, 216, 0.5);
+  pointer-events: none;
+  animation: findSweep 480ms cubic-bezier(0.3, 0.1, 0.6, 1) both;
+}
+
+@keyframes findSweep {
+  from {
+    top: 0;
+    opacity: 0.9;
+  }
+
+  to {
+    top: calc(100% - 2px);
+    opacity: 0;
+  }
+}
+
+.app-shell.is-findsweep .metadata-row {
+  animation: rowResolve 300ms both;
+  animation-delay: calc(var(--row-i, 0) * 22ms);
+}
+
+@keyframes rowResolve {
+  from {
+    opacity: 0.2;
+    transform: translateX(5px);
+    filter: brightness(1.7);
+  }
+}
+
+/* --- C13 degauss ripple on shelf switch / reset --- */
+.console-screen.is-degauss {
+  animation: degaussWobble 480ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes degaussWobble {
+  0% {
+    transform: scale(1) skewX(0deg);
+  }
+
+  18% {
+    transform: scale(1.012, 0.988) skewX(0.6deg);
+    filter: hue-rotate(14deg) brightness(1.35);
+  }
+
+  38% {
+    transform: scale(0.994, 1.006) skewX(-0.45deg);
+    filter: hue-rotate(-10deg) brightness(0.92);
+  }
+
+  60% {
+    transform: scale(1.004, 0.997) skewX(0.2deg);
+    filter: hue-rotate(5deg) brightness(1.1);
+  }
+
+  100% {
+    transform: scale(1) skewX(0deg);
+  }
+}
+
+/* --- C6 hot-signal torque: above stock gain, bass hits shake the shelf --- */
+.app-shell.is-hot .amp-knob-db {
+  color: #e0524a;
+  text-shadow: 0 0 calc(var(--beat-pulse, 0) * 9px) rgba(224, 82, 74, 0.9);
+}
+
+.app-shell.is-hot.is-playing .deck-controls {
+  transform: translateY(calc(var(--beat-pulse, 0) * -1.4px));
+}
+
+/* --- Reduced motion: every new animation degrades to its final state --- */
+.app-shell.reduced-motion .seek-spine-canvas {
+  transition: none;
+}
+
+.app-shell.reduced-motion .seek-spine.is-tracing input[type="range"]::-webkit-slider-runnable-track,
+.app-shell.reduced-motion .seek-spine.is-tracing input[type="range"]::-moz-range-track,
+.app-shell.reduced-motion .metadata-row-spine,
+.app-shell.reduced-motion .hero-backdrop.is-pressing,
+.app-shell.reduced-motion .burn-ghost,
+.app-shell.reduced-motion .stat-roll,
+.app-shell.reduced-motion .system-message.is-printing::after,
+.app-shell.reduced-motion.is-findsweep .metadata-panel::after,
+.app-shell.reduced-motion.is-findsweep .metadata-row {
+  animation: none !important;
+}
+
+.app-shell.reduced-motion .console-screen.is-degauss {
+  animation: none !important;
+}
+
+.app-shell.reduced-motion.is-hot.is-playing .deck-controls {
+  transform: none;
+}
+
+/* ============================================================
+   Meter-bank calibration pass: real pixel range, zero rest
+   state, REACT sensitivity control.
+   ============================================================ */
+
+/* Bars now live inside the cabinet: JS maps 3-32px against the ~37px inner
+   height, so nothing pins at the ceiling or bleeds past the bezel. */
+.deck-controls .visualizer span {
+  min-height: 3px;
+}
+
+.deck-controls .visualizer {
+  overflow: hidden;
+}
+
+/* The old 620ms idle glide made bars drift out of sync across track swaps;
+   rest fast, rise only on real data. */
+.app-shell.is-idle .visualizer span {
+  transition: height 180ms ease-out, opacity 300ms ease-out;
+}
+
+/* --- REACT sensitivity: segmented toggle on the control shelf --- */
+.deck-controls .react-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.deck-controls .react-control > span {
+  color: rgba(156, 199, 216, 0.62);
+  font-family: "Courier New", monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.deck-controls .react-control > div {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 50px;
+}
+
+.deck-controls .react-control button {
+  padding: 5px 8px;
+  border: 1px solid rgba(156, 199, 216, 0.24);
+  background: rgba(5, 5, 6, 0.5);
+  color: rgba(156, 199, 216, 0.6);
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.deck-controls .react-control button:hover {
+  border-color: rgba(156, 199, 216, 0.42);
+  color: rgba(239, 239, 231, 0.85);
+}
+
+.deck-controls .react-control button.active {
+  border-color: rgba(139, 17, 27, 0.7);
+  background: linear-gradient(180deg, rgba(139, 17, 27, 0.34), rgba(139, 17, 27, 0.14));
+  color: #efefe7;
+  box-shadow: inset 0 -2px 0 #8b111b;
+}
+
+/* ============================================================
+   Archive-density pass: procedural hero plates, amber error
+   semantics, glanceable seek, dockable scope, compact shelf,
+   readable metadata values.
+   ============================================================ */
+
+/* --- Item 3: procedural "archive plate" for artless tracks --- */
+.hero-texture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.5;
+}
+
+/* --- Item 4: red is signal; faults speak amber --- */
+.status-chip.alert {
+  border-color: rgba(255, 189, 79, 0.3);
+  color: rgba(255, 189, 79, 0.72);
+  background: rgba(255, 189, 79, 0.06);
+}
+
+.system-message.warn {
+  border-color: rgba(255, 189, 79, 0.36);
+  color: rgba(255, 189, 79, 0.8);
+  background: rgba(255, 189, 79, 0.07);
+  box-shadow: none;
+}
+
+.interference-med.is-relocking .status-chip.alert::after,
+.interference-max.is-relocking .status-chip.alert::after {
+  background: rgba(255, 189, 79, 0.14);
+}
+
+/* --- Item 6: dockable scope --- */
+.hero-dock-toggle {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 6;
+  padding: 3px 8px;
+  border: 1px solid rgba(156, 199, 216, 0.24);
+  background: rgba(5, 5, 6, 0.6);
+  color: rgba(156, 199, 216, 0.62);
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.hero-dock-toggle:hover {
+  border-color: rgba(156, 199, 216, 0.45);
+  color: rgba(239, 239, 231, 0.9);
+}
+
+.deck.hero-docked {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.deck.hero-docked .deck-hero .cartridge-art,
+.deck.hero-docked .deck-hero .file-inspector {
+  display: none;
+}
+
+.deck.hero-docked .deck-hero {
+  grid-template-rows: auto auto;
+  padding: 10px 12px;
+}
+
+.hero-mini {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+  padding: 2px 96px 0 8px;
+  font-family: "Courier New", monospace;
+}
+
+.hero-mini-index {
+  color: rgba(156, 199, 216, 0.6);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.hero-mini-title {
+  overflow: hidden;
+  color: rgba(239, 239, 231, 0.95);
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero-mini-artist {
+  overflow: hidden;
+  color: rgba(239, 239, 231, 0.66);
+  font-size: 0.68rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-mini-quality {
+  margin-left: auto;
+  color: rgba(156, 199, 216, 0.55);
+  font-size: 0.6rem;
+  white-space: nowrap;
+}
+
+/* --- Item 6: compact shelf rows --- */
+.catalog-toolbar {
+  grid-template-columns: minmax(220px, 1fr) auto auto;
+}
+
+.catalog-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-hint {
+  color: rgba(156, 199, 216, 0.42);
+  font-family: "Courier New", monospace;
+  font-size: 0.54rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.density-toggle {
+  padding: 4px 9px;
+  border: 1px solid rgba(156, 199, 216, 0.24);
+  background: rgba(5, 5, 6, 0.5);
+  color: rgba(156, 199, 216, 0.6);
+  font-family: "Courier New", monospace;
+  font-size: 0.54rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.density-toggle:hover {
+  border-color: rgba(156, 199, 216, 0.42);
+  color: rgba(239, 239, 231, 0.85);
+}
+
+.density-toggle.active {
+  border-color: rgba(139, 17, 27, 0.7);
+  background: linear-gradient(180deg, rgba(139, 17, 27, 0.32), rgba(139, 17, 27, 0.12));
+  color: #efefe7;
+  box-shadow: inset 0 -2px 0 #8b111b;
+}
+
+.rows-compact .metadata-columns,
+.rows-compact .metadata-row {
+  grid-template-columns:
+    40px
+    30px
+    minmax(150px, 1fr)
+    minmax(100px, 0.62fr)
+    minmax(120px, 0.72fr)
+    52px
+    minmax(110px, 0.72fr)
+    minmax(126px, 0.8fr);
+}
+
+.rows-compact .metadata-row {
+  min-height: 30px;
+  padding: 2px 8px;
+}
+
+.rows-compact .metadata-cover {
+  width: 24px;
+  height: 24px;
+}
+
+.rows-compact .metadata-quality small,
+.rows-compact .metadata-row-spine {
+  display: none;
+}
+
+.rows-compact .metadata-title strong {
+  font-size: 0.68rem;
+}
+
+.rows-compact .status-chip {
+  min-height: 15px;
+  font-size: 0.46rem;
+}
+
+/* --- Item 6: values readable, labels stay faded --- */
+.metadata-row {
+  color: rgba(239, 239, 231, 0.74);
+}
+
+.metadata-artist {
+  color: rgba(239, 239, 231, 0.8);
+}
+
+.metadata-album {
+  color: rgba(239, 239, 231, 0.62);
+}
+
+.metadata-time {
+  color: rgba(239, 239, 231, 0.72);
+}
+
+.metadata-quality {
+  color: rgba(156, 199, 216, 0.78);
+}
+
+.metadata-quality small {
+  color: rgba(156, 199, 216, 0.52);
+}
+
+.file-inspector strong {
+  color: rgba(239, 239, 231, 0.85);
+}
+
+/* Compact mode must also shrink the list's row tracks, not just row content. */
+.rows-compact .metadata-list {
+  grid-auto-rows: minmax(28px, auto);
+}
+
+/* ============================================================
+   Signature pass: illuminated VU glass, interference layers,
+   signal-identity motion, transition grammar accents.
+   ============================================================ */
+
+/* --- Item 13: the VU meter as a signature object --- */
+.deck-controls .vu-meter {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px 14px;
+  border: 2px inset rgba(208, 208, 200, 0.34);
+  background: linear-gradient(180deg, #1a1712, #0b0a08);
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.8), 0 0 22px rgba(139, 17, 27, calc(var(--beat-pulse, 0) * 0.16));
+  cursor: pointer;
+  appearance: none;
+}
+
+.deck-controls .vu-meter:hover .vu-mode-tag {
+  color: rgba(239, 239, 231, 0.9);
+}
+
+.deck-controls .vu-gauge {
+  position: relative;
+  width: 112px;
+  height: 76px;
+  overflow: hidden;
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at 50% 118%, #f4ead0, #ddcc9f 58%, #b7a878 88%, #97865c);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -10px 16px rgba(120, 96, 40, 0.42),
+    inset 0 0 22px rgba(255, 236, 190, calc(0.12 + var(--bass-level, 0) * 0.2));
+}
+
+.deck-controls .vu-arc {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  height: 52px;
+  border-top: 2px solid rgba(90, 60, 20, 0.55);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+.deck-controls .vu-arc::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -2px;
+  width: 40%;
+  height: 18px;
+  border-top: 3px solid rgba(168, 34, 30, 0.8);
+  border-radius: 0 50% 0 0 / 0 100% 0 0;
+}
+
+/* Scale ticks on the glass dial. */
+.deck-controls .vu-arc::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0 0;
+  background:
+    repeating-conic-gradient(from -54deg at 50% 130%, rgba(90, 60, 20, 0.5) 0deg 0.8deg, transparent 0.8deg 13.5deg);
+  -webkit-mask: radial-gradient(circle at 50% 130%, transparent 0 58%, #000 58% 74%, transparent 74%);
+  mask: radial-gradient(circle at 50% 130%, transparent 0 58%, #000 58% 74%, transparent 74%);
+}
+
+/* Peak lamp: lights above 0.86 channel peak, lingers as it decays. */
+.deck-controls .vu-lamp {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(90, 60, 20, 0.5);
+  background: radial-gradient(circle at 40% 35%, #ff8a7e, #a82420 60%, #571310);
+  opacity: calc(0.18 + var(--vu-lamp, 0) * 0.82);
+  box-shadow: 0 0 calc(var(--vu-lamp, 0) * 12px) rgba(255, 92, 74, 0.9);
+}
+
+.deck-controls .vu-gauge-l .vu-lamp {
+  --vu-lamp: var(--vu-lamp-l, 0);
+}
+
+.deck-controls .vu-gauge-r .vu-lamp {
+  --vu-lamp: var(--vu-lamp-r, 0);
+}
+
+/* Glass: a curved reflection that slides slightly with the needle —
+   the parallax that sells the physical face. */
+.deck-controls .vu-glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 26%, transparent 40%),
+    radial-gradient(ellipse at 78% -20%, rgba(255, 255, 255, 0.18), transparent 52%);
+  transform: translateX(calc(var(--vu-shift, 0) * 5px));
+  transition: transform 120ms linear;
+}
+
+.deck-controls .vu-gauge-l .vu-glass {
+  --vu-shift: var(--vu-l, 0);
+}
+
+.deck-controls .vu-gauge-r .vu-glass {
+  --vu-shift: var(--vu-r, 0);
+}
+
+.deck-controls .vu-label {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  color: rgba(90, 60, 20, 0.78);
+  font-family: "Courier New", monospace;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+
+.vu-mode-tag {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  padding: 1px 8px;
+  border: 1px solid rgba(156, 199, 216, 0.3);
+  background: #0b0a08;
+  color: rgba(156, 199, 216, 0.66);
+  font-family: "Courier New", monospace;
+  font-size: 0.48rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+/* --- Item 3: signal-identity motion for the playing cartridge --- */
+.metadata-cover.identity-live.identity-pulse .metadata-cover-img,
+.metadata-cover.identity-live.identity-pulse .metadata-cover-bands {
+  animation: identityPulse var(--pulse-period, 0.5s) linear infinite;
+}
+
+@keyframes identityPulse {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  12% {
+    transform: scale(1.14);
+    filter: brightness(1.4) saturate(1.2);
+  }
+
+  34% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.metadata-cover.identity-live.identity-liquid .metadata-cover-img,
+.metadata-cover.identity-live.identity-liquid .metadata-cover-bands {
+  animation: identityLiquid calc(var(--pulse-period, 0.6s) * 6) ease-in-out infinite;
+}
+
+@keyframes identityLiquid {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: hue-rotate(0deg) brightness(1);
+  }
+
+  33% {
+    transform: scale(1.05) rotate(2.4deg);
+    filter: hue-rotate(12deg) brightness(1.12);
+  }
+
+  66% {
+    transform: scale(1.02) rotate(-2deg);
+    filter: hue-rotate(-10deg) brightness(0.96);
+  }
+}
+
+/* --- Item 11: favorite = archival punch --- */
+.fav-toggle.is-fav {
+  animation: stampPunch 240ms cubic-bezier(0.2, 1.7, 0.4, 1);
+}
+
+.fav-toggle.is-fav::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgba(196, 66, 66, 0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: stampRing 300ms ease-out forwards;
+}
+
+.fav-toggle {
+  position: relative;
+}
+
+@keyframes stampPunch {
+  0% {
+    transform: scale(1.7);
+    filter: brightness(1.8);
+  }
+
+  55% {
+    transform: scale(0.88);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes stampRing {
+  from {
+    opacity: 0.9;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+/* --- Item 14: interference becomes a visible layer stack --- */
+.interference-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: none;
+  pointer-events: none;
+}
+
+/* OFF: crisp archival workstation — no veil, no scanlines. */
+.app-shell.interference-off .console-screen::after {
+  display: none;
+}
+
+/* LOW: grain, faint scan lines, gentle glow. */
+.app-shell.interference-low .interference-veil,
+.app-shell.interference-med .interference-veil,
+.app-shell.interference-max .interference-veil {
+  display: block;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>");
+  background-size: 160px 160px;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+}
+
+.app-shell.interference-low .console-screen {
+  box-shadow: 0 0 34px rgba(139, 17, 27, 0.07), inset 0 0 60px rgba(0, 0, 0, 0.3);
+}
+
+/* MED: chromatic separation + waveform instability (scope jitter is fed by
+   the audio loop; the fringe applies to decorative surfaces only). */
+.app-shell.interference-med .interference-veil {
+  opacity: 0.08;
+}
+
+.app-shell.interference-med .signal-map,
+.app-shell.interference-max .signal-map {
+  filter: drop-shadow(1px 0 0 rgba(255, 40, 70, 0.14)) drop-shadow(-1px 0 0 rgba(60, 200, 255, 0.14));
+}
+
+.app-shell.interference-med .metadata-cover,
+.app-shell.interference-max .metadata-cover {
+  filter: drop-shadow(0.6px 0 0 rgba(255, 40, 70, 0.22)) drop-shadow(-0.6px 0 0 rgba(60, 200, 255, 0.22));
+}
+
+/* MAX: intercepted broadcast — heavier grain, roll bar, tear bands. */
+.app-shell.interference-max .interference-veil {
+  opacity: 0.13;
+  animation: veilShift 1.4s steps(5, end) infinite;
+}
+
+.app-shell.interference-max .interference-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(239, 239, 231, 0.05) 48%, transparent 55%);
+  animation: broadcastRoll 7s linear infinite;
+}
+
+.app-shell.interference-max .interference-veil::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(239, 239, 231, 0.16);
+  animation: tearBand 3.7s steps(7, end) infinite;
+}
+
+@keyframes veilShift {
+  0% { background-position: 0 0; }
+  25% { background-position: -18px 6px; }
+  50% { background-position: 12px -10px; }
+  75% { background-position: -6px 14px; }
+  100% { background-position: 0 0; }
+}
+
+@keyframes broadcastRoll {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes tearBand {
+  0%, 74% { top: -3px; opacity: 0; }
+  76% { top: 22%; opacity: 1; }
+  80% { top: 23%; opacity: 0.6; }
+  84% { top: 61%; opacity: 0.9; }
+  88% { top: 62%; opacity: 0; }
+  100% { top: -3px; opacity: 0; }
+}
+
+/* Interference never destabilizes the operator: reduced motion kills the
+   veil animation and the identity motion outright. */
+.app-shell.reduced-motion .interference-veil,
+.app-shell.reduced-motion .interference-veil::before,
+.app-shell.reduced-motion .interference-veil::after,
+.app-shell.reduced-motion .metadata-cover.identity-live .metadata-cover-img,
+.app-shell.reduced-motion .metadata-cover.identity-live .metadata-cover-bands,
+.app-shell.reduced-motion .fav-toggle.is-fav,
+.app-shell.reduced-motion .fav-toggle.is-fav::after {
+  animation: none !important;
+}
+
+/* ============================================================
+   Shelf redesign: single-line shelf bar, signal-strip rows,
+   horizontal row actions, scanner, filter tuner, 3-state
+   resizable shelf.
+   ============================================================ */
+
+/* --- Panel: shelf-bar / column labels / list --- */
+.metadata-panel {
+  grid-template-rows: auto auto minmax(0, 1fr);
+  margin-top: 0;
+}
+
+.deck-catalog {
+  position: relative;
+}
+
+/* --- 1. Single-line shelf bar (~48px) --- */
+.shelf-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 2px 8px;
+  border-bottom: 1px solid rgba(156, 199, 216, 0.12);
+}
+
+.shelf-id {
+  display: grid;
+  gap: 1px;
+  flex: 0 0 auto;
+}
+
+.shelf-id .eyebrow {
+  font-size: 0.5rem;
+}
+
+.shelf-id-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.shelf-id-line h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.shelf-count {
+  color: rgba(156, 199, 216, 0.6);
+  font-family: "Courier New", monospace;
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.shelf-bar .shelf-tabs {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.shelf-bar .catalog-search {
+  flex: 1 1 200px;
+  min-width: 130px;
+}
+
+.shelf-bar .catalog-tools {
+  flex: 0 0 auto;
+}
+
+/* --- 2. Signal-strip rows (~44px, five visible by default) --- */
+.metadata-list {
+  grid-auto-rows: minmax(44px, auto);
+}
+
+.metadata-row {
+  min-height: 44px;
+}
+
+.metadata-columns {
+  min-height: 18px;
+}
+
+.metadata-row:focus-visible {
+  outline: 1px solid rgba(156, 199, 216, 0.55);
+  outline-offset: -1px;
+}
+
+/* Waveform: subtle at rest, brighter on hover/selection, progress-lit while
+   playing. Text cells sit above it (z-index set in the density pass). */
+.metadata-row-spine {
+  opacity: 0.09;
+  transition: opacity 180ms linear, filter 180ms linear;
+}
+
+.metadata-row:hover .metadata-row-spine,
+.metadata-row:focus-visible .metadata-row-spine {
+  opacity: 0.2;
+}
+
+.metadata-row.active .metadata-row-spine {
+  opacity: 0.17;
+}
+
+.metadata-row .metadata-row-spine-lit {
+  opacity: 0.55;
+  clip-path: inset(0 calc(100% - var(--playback-progress, 0%)) 0 0);
+  filter: brightness(1.7) sepia(0.5) hue-rotate(-32deg) saturate(2.4);
+}
+
+/* Slim red active edge instead of a full red fill. */
+.metadata-row.active {
+  border-color: rgba(139, 17, 27, 0.42);
+  background: linear-gradient(90deg, rgba(139, 17, 27, 0.1), rgba(5, 5, 6, 0.6) 34%);
+  box-shadow: inset 3px 0 0 #8b111b, 0 0 12px rgba(139, 17, 27, 0.12);
+}
+
+/* --- 3. Horizontally transforming selected row --- */
+.metadata-row .metadata-time,
+.metadata-row .metadata-quality,
+.metadata-row .metadata-status-chips {
+  transition: opacity 180ms linear;
+}
+
+.metadata-row .row-actions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 6px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateX(16px);
+  pointer-events: none;
+  transition: opacity 200ms linear, transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.metadata-row.active .row-actions,
+.metadata-row:focus-within .row-actions {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.metadata-row.active .metadata-time,
+.metadata-row.active .metadata-quality,
+.metadata-row.active .metadata-status-chips,
+.metadata-row:focus-within .metadata-time,
+.metadata-row:focus-within .metadata-quality,
+.metadata-row:focus-within .metadata-status-chips {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.row-action {
+  padding: 4px 8px;
+  border: 1px solid rgba(156, 199, 216, 0.28);
+  background: rgba(5, 5, 6, 0.85);
+  color: rgba(239, 239, 231, 0.8);
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.row-action:hover {
+  border-color: rgba(156, 199, 216, 0.5);
+  color: #efefe7;
+}
+
+.row-action:focus-visible {
+  outline: 1px solid #9cc7d8;
+  outline-offset: 1px;
+}
+
+.row-action:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.row-action.engaged {
+  border-color: rgba(139, 17, 27, 0.7);
+  background: rgba(139, 17, 27, 0.3);
+  color: #efefe7;
+}
+
+.row-menu-pop {
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 0;
+  z-index: 40;
+  display: grid;
+  gap: 1px;
+  padding: 3px;
+  border: 1px solid rgba(156, 199, 216, 0.3);
+  background: #0a090d;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
+}
+
+.row-menu-pop button {
+  padding: 5px 10px;
+  border: 0;
+  background: transparent;
+  color: rgba(239, 239, 231, 0.78);
+  font-family: "Courier New", monospace;
+  font-size: 0.54rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.row-menu-pop button:hover,
+.row-menu-pop button:focus-visible {
+  background: rgba(156, 199, 216, 0.1);
+  color: #efefe7;
+  outline: none;
+}
+
+/* --- 4. Scanner (driven by the real tracing queue) --- */
+.metadata-row.is-scanning .metadata-row-spine {
+  opacity: 0.3;
+  filter: brightness(1.5);
+}
+
+.metadata-row.is-scanning::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  z-index: 2;
+  background: linear-gradient(180deg, transparent, rgba(156, 199, 216, 0.9), transparent);
+  box-shadow: 0 0 12px rgba(156, 199, 216, 0.8);
+  pointer-events: none;
+  animation: scanBeam 1.15s linear infinite;
+}
+
+@keyframes scanBeam {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: calc(100% - 3px);
+  }
+}
+
+.status-chip.scanning {
+  border-color: rgba(156, 199, 216, 0.5);
+  background: rgba(156, 199, 216, 0.1);
+  color: #bfe3f2;
+  animation: scanChipPulse 1.15s linear infinite;
+}
+
+@keyframes scanChipPulse {
+  50% {
+    background: rgba(156, 199, 216, 0.22);
+  }
+}
+
+.status-chip.trace-locked {
+  border-color: rgba(139, 17, 27, 0.72);
+  background: rgba(139, 17, 27, 0.32);
+  color: #efefe7;
+  animation: traceLockedFlash 320ms steps(2, end) 2;
+}
+
+@keyframes traceLockedFlash {
+  50% {
+    filter: brightness(1.9);
+  }
+}
+
+.metadata-row.is-lock-flash .metadata-row-spine {
+  opacity: 0.34;
+  filter: brightness(1.9);
+}
+
+/* Failure reads as an interrupted signal: dashed amber, no motion. */
+.status-chip.no-lock {
+  border-style: dashed;
+}
+
+/* Reduced motion: the beam becomes a static cyan wash over the row. */
+.app-shell.reduced-motion .metadata-row.is-scanning::before {
+  width: 100%;
+  background: rgba(156, 199, 216, 0.07);
+  box-shadow: none;
+  animation: none !important;
+}
+
+.app-shell.reduced-motion .status-chip.scanning,
+.app-shell.reduced-motion .status-chip.trace-locked {
+  animation: none !important;
+}
+
+/* --- 6. Three-state resizable shelf --- */
+.shelf-resize-handle {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  z-index: 6;
+  width: 140px;
+  height: 14px;
+  border: 1px solid rgba(156, 199, 216, 0.25);
+  background: linear-gradient(180deg, #191722, #0c0b12);
+  color: rgba(156, 199, 216, 0.55);
+  font-size: 7px;
+  line-height: 1;
+  letter-spacing: 2px;
+  text-align: center;
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+  transform: translateX(-50%);
+}
+
+.shelf-resize-handle:hover {
+  border-color: rgba(156, 199, 216, 0.45);
+  color: #cfe7f2;
+}
+
+.shelf-resize-handle:focus-visible {
+  outline: 1px solid #9cc7d8;
+}
+
+.deck {
+  transition: grid-template-rows 220ms ease;
+}
+
+.app-shell.reduced-motion .deck {
+  transition: none;
+}
+
+/* Collapsed: toolbar + one row; the scope takes the reclaimed space. */
+.deck.shelf-collapsed {
+  grid-template-rows: minmax(0, 1fr) auto auto;
+}
+
+.deck.shelf-collapsed .metadata-columns {
+  display: none;
+}
+
+.deck.shelf-collapsed .metadata-list {
+  max-height: 47px;
+  overflow-y: auto;
+}
+
+/* Expanded: shelf takes the viewport; scope docks to the mini strip. */
+.deck.shelf-expanded {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.deck.shelf-expanded .deck-hero .cartridge-art,
+.deck.shelf-expanded .deck-hero .file-inspector {
+  display: none;
+}
+
+.deck.shelf-expanded .deck-hero {
+  grid-template-rows: auto auto;
+  padding: 10px 12px;
+}
+
+/* Live drag preview: inline vars, no transition. */
+.deck.is-shelf-dragging {
+  grid-template-rows: var(--hero-h, 320px) minmax(0, 1fr) auto;
+  transition: none;
+}
+
+.deck.is-shelf-dragging .metadata-list {
+  max-height: var(--shelf-cap, none);
+}
+
+/* Default shelf state fits five full signal-strip rows. */
+.deck {
+  grid-template-rows: 264px minmax(0, 1fr) auto;
+}
+
+.deck.shelf-collapsed {
+  grid-template-rows: minmax(0, 1fr) auto auto;
+}
+
+.deck.shelf-expanded {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.deck.is-shelf-dragging {
+  grid-template-rows: var(--hero-h, 264px) minmax(0, 1fr) auto;
+}
+
+/* At the compact default hero height the meta line (album · quality · trace
+   badge) collides with the inspector; it duplicates inspector/row data, so
+   the default shelf state retires it. Collapsed (tall hero) keeps it. */
+.deck.shelf-shelf .hero-meta {
+  display: none;
+}
+
+/* FIND is the single filter surface; one-click clear when a query is live. */
+.shelf-bar .catalog-search {
+  position: relative;
+}
+
+.find-clear {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  padding: 2px 7px;
+  border: 1px solid rgba(156, 199, 216, 0.28);
+  background: rgba(5, 5, 6, 0.85);
+  color: rgba(239, 239, 231, 0.72);
+  font-family: "Courier New", monospace;
+  font-size: 0.56rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.find-clear:hover {
+  border-color: rgba(156, 199, 216, 0.5);
+  color: #efefe7;
+}
+
+.find-clear:focus-visible {
+  outline: 1px solid #9cc7d8;
+  outline-offset: 1px;
+}
+
+/* ============================================================
+   Calibration pass: contain the row waveform to a signal lane,
+   structure the inspector grid, fix label placement/cutoffs.
+   ============================================================ */
+
+/* --- Row waveform: a clean lane under the text, never behind it --- */
+.metadata-row-spine {
+  top: auto;
+  right: 6px;
+  bottom: 3px;
+  left: 6px;
+  height: 10px;
+  width: calc(100% - 12px);
+  opacity: 0.3;
+  mix-blend-mode: normal;
+}
+
+.metadata-row:hover .metadata-row-spine,
+.metadata-row:focus-visible .metadata-row-spine {
+  opacity: 0.5;
+}
+
+.metadata-row.active .metadata-row-spine {
+  opacity: 0.42;
+}
+
+.metadata-row .metadata-row-spine-lit {
+  opacity: 0.9;
+}
+
+.metadata-row.is-scanning .metadata-row-spine {
+  opacity: 0.65;
+}
+
+/* Text rides slightly high so the lane owns the bottom edge. */
+.metadata-row {
+  padding-bottom: 12px;
+  padding-top: 4px;
+}
+
+/* --- Quality cell: one clean line; details live in the tooltip --- */
+.metadata-quality small {
+  display: none;
+}
+
+/* --- Status chips: single line, soft fade instead of hard cutoff --- */
+.metadata-status-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, #000 84%, transparent);
+  mask: linear-gradient(90deg, #000 84%, transparent);
+}
+
+/* --- Shelf identity: fixed lane, no wrap, aligned baselines --- */
+.shelf-id {
+  min-width: 104px;
+}
+
+.shelf-id .eyebrow {
+  line-height: 1.1;
+}
+
+.shelf-id-line {
+  white-space: nowrap;
+  gap: 7px;
+}
+
+/* --- Seek spine: stay inside the rail lane, clear of the labels --- */
+.seek-spine-canvas {
+  top: 6px;
+  bottom: 6px;
+  height: calc(100% - 12px);
+}
+
+.stage-path > span {
+  color: rgba(239, 239, 231, 0.62);
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-path > .stage-elapsed {
+  color: rgba(239, 239, 231, 0.78);
+}
+
+/* --- Inspector: structured grid — SOURCE full width, pairs below --- */
+.deck-inspector {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3px 22px;
+  padding-right: 14px;
+}
+
+.deck-inspector > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deck-inspector > .inspector-source {
+  grid-column: 1 / -1;
+}
+
+/* --- Hero: calm the texture under the title block --- */
+.hero-texture {
+  opacity: 0.38;
+}
+
+.hero-np {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
+}
+
+/* ============================================================
+   AMP knob, machined: panel tick ring, spinning knurled rim,
+   shaded cap, stock-gain detent, LED dB window.
+   ============================================================ */
+
+.amp-knob-ticks line {
+  stroke: rgba(208, 208, 200, 0.34);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+.amp-knob-detent {
+  stroke: rgba(239, 239, 231, 0.65);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+/* The rotor carries the knurl and pointer; the cap's light stays fixed. */
+.amp-knob-rotor {
+  transform: rotate(var(--knob-angle, 0deg));
+  transform-origin: 24px 24px;
+  transition: transform 70ms cubic-bezier(0.3, 0.8, 0.4, 1);
+}
+
+.amp-knob-knurl {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 2.4;
+  stroke-dasharray: 0.9 1.6;
+}
+
+.amp-knob-cap-ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+}
+
+.amp-knob-pointer {
+  stroke: #c24040;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 2px rgba(194, 64, 64, 0.55));
+}
+
+/* Legacy body rule no longer applies (cap replaces it); keep pointer motion
+   on the rotor only. */
+.amp-knob-body circle {
+  display: none;
+}
+
+/* Overload posture: past stock gain the sweep and pointer run hot. */
+.app-shell.is-hot .amp-knob-arc-fill {
+  stroke: #c24242;
+  filter: drop-shadow(0 0 4px rgba(194, 66, 66, 0.7));
+}
+
+.app-shell.is-hot .amp-knob-pointer {
+  filter: drop-shadow(0 0 calc(2px + var(--beat-pulse, 0) * 5px) rgba(224, 82, 74, 0.9));
+}
+
+/* Program glow breathes through the face while playing. */
+.app-shell.is-playing .amp-knob-face {
+  filter: drop-shadow(0 0 calc(var(--bass-level, 0) * 7px) rgba(139, 17, 27, 0.4));
+}
+
+/* LED readout window: recessed, tabular, warm — red when hot. */
+.deck-controls .amp-knob-db {
+  min-width: 50px;
+  padding: 2px 6px;
+  border: 1px solid rgba(156, 199, 216, 0.18);
+  border-top-color: rgba(0, 0, 0, 0.85);
+  background: linear-gradient(180deg, #030304, #0a090c);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  color: rgba(255, 214, 140, 0.85);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  text-align: center;
+}

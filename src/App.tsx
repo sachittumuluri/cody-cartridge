@@ -1,15 +1,47 @@
 import React, { ChangeEvent, CSSProperties, DragEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ListMusic,
   Pause,
   Play,
+  Repeat,
+  Repeat1,
   SkipBack,
   SkipForward,
   Volume2
 } from "lucide-react";
+import {
+  SPINE_VERSION,
+  SerializedSpine,
+  SpinePalette,
+  TrackSpine,
+  buildTrackSpine,
+  computeSpineStats,
+  deserializeSpine,
+  drawSpineStrip,
+  heroTextureDataUrl,
+  serializeSpine,
+  spineCoverDataUrl,
+  spineIdentity,
+  spineToDataUrl,
+  syntheticSpine
+} from "./spine";
 
 type BadgeId = "heart" | "star" | "bolt" | "moon" | "flame" | "gem";
 type InterferenceMode = "off" | "low" | "med" | "max";
+type RepeatMode = "off" | "all" | "one";
+type ReactLevel = "low" | "med" | "high";
+type MeterMode = "vu" | "width" | "loud" | "spec";
+type ShelfSize = "collapsed" | "shelf" | "expanded";
+
+const shelfSizeOrder: ShelfSize[] = ["collapsed", "shelf", "expanded"];
+
+const meterModeOrder: MeterMode[] = ["vu", "width", "loud", "spec"];
+const meterModeTitles: Record<MeterMode, string> = { vu: "VU", width: "WIDTH", loud: "LOUD", spec: "SPEC" };
+const meterModeChannels: Record<MeterMode, [string, string]> = {
+  vu: ["L", "R"],
+  width: ["WID", "BAL"],
+  loud: ["MOM", "AVG"],
+  spec: ["LOW", "HI"]
+};
 type MicroGlitchKind = "header" | "map" | "row" | "shelf";
 type SaveSlotId = "save-01" | "save-02" | "save-03";
 type ShelfView = "library" | "favorites" | "takeout" | "missing" | SaveSlotId;
@@ -73,8 +105,14 @@ type TrackAnalysis = {
 type StoredState = {
   activeShelf?: ShelfView;
   currentId?: string;
+  denseRows?: boolean;
+  heroDock?: boolean;
   interference?: InterferenceMode;
+  meter?: MeterMode;
+  react?: ReactLevel;
   reducedMotion?: boolean;
+  repeat?: RepeatMode;
+  shelfSize?: ShelfSize;
   scanlines?: boolean;
   saveSlots?: SaveSlot[];
   takeoutSongs?: TakeoutSong[];
@@ -83,6 +121,9 @@ type StoredState = {
 };
 
 const storageKey = "cody-cartridge-state-v1";
+const spineStorageKey = "cody-cartridge-spines-v1";
+const spineStoreLimit = 500;
+const defaultVolume = 0.72;
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 const defaultSaveSlots: SaveSlot[] = [
   { id: "save-01", label: "SAVE 01", trackIds: [] },
@@ -319,6 +360,59 @@ function prefersReducedMotion() {
   return window.matchMedia(reducedMotionQuery).matches;
 }
 
+type StoredSpineFile = {
+  version: number;
+  spines: Record<string, SerializedSpine>;
+};
+
+function loadStoredSpines(): Map<string, TrackSpine> {
+  const spines = new Map<string, TrackSpine>();
+
+  if (typeof window === "undefined" || isStoreDemoMode()) {
+    return spines;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(spineStorageKey);
+
+    if (!raw) {
+      return spines;
+    }
+
+    const parsed = JSON.parse(raw) as StoredSpineFile;
+
+    if (parsed?.version !== SPINE_VERSION || !parsed.spines || typeof parsed.spines !== "object") {
+      return spines;
+    }
+
+    for (const [trackId, serialized] of Object.entries(parsed.spines)) {
+      const spine = deserializeSpine(serialized);
+
+      if (spine) {
+        spines.set(trackId, spine);
+      }
+    }
+  } catch {
+    // Corrupt archive: start clean, the tracing queue rebuilds it.
+  }
+
+  return spines;
+}
+
+function persistSpines(spines: Map<string, TrackSpine>) {
+  try {
+    const entries = [...spines.entries()].slice(-spineStoreLimit);
+    const file: StoredSpineFile = {
+      version: SPINE_VERSION,
+      spines: Object.fromEntries(entries.map(([trackId, spine]) => [trackId, serializeSpine(spine)]))
+    };
+
+    window.localStorage.setItem(spineStorageKey, JSON.stringify(file));
+  } catch {
+    // Quota or serialization failure: spines are a rebuildable cache.
+  }
+}
+
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) {
     return "0:00";
@@ -530,6 +624,29 @@ function getAnalysisFrame(analysis: TrackAnalysis | undefined, time: number) {
     levels: levels.length ? levels : undefined
   };
 }
+
+function albumHue(track: AlbumSource | undefined) {
+  const seed = hashText(track ? `${track.title}-${track.artist}-${track.album}` : "empty-cart");
+  return (seed * 7) % 360;
+}
+
+// Spine render palettes stay on the deck's red/steel-blue/cream hardware
+// colors so the spine reads as another instrument, not a new visual language.
+const seekSpinePalette: SpinePalette = {
+  // Played history burns bright red; the road ahead sits well dimmed so
+  // position reads at a glance.
+  played: "rgba(202, 48, 48, 0.94)",
+  unplayed: "rgba(156, 199, 216, 0.15)",
+  core: "rgba(139, 17, 27, 0.5)",
+  tick: "rgba(239, 239, 231, 0.42)"
+};
+
+const rowSpinePalette: SpinePalette = {
+  played: "rgba(156, 199, 216, 0.5)",
+  unplayed: "rgba(156, 199, 216, 0.5)",
+  core: "rgba(139, 17, 27, 0.72)",
+  tick: "rgba(239, 239, 231, 0.42)"
+};
 
 function albumGraphicStyle(track: AlbumSource | undefined, index = 0): CSSProperties {
   const seed = hashText(track ? `${track.title}-${track.artist}-${track.album}` : "empty-cart");
@@ -1010,6 +1127,10 @@ function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
         return value === "missing";
       }
 
+      if (value === "favorite") {
+        return track.favorite;
+      }
+
       if (value === "matched") {
         return Boolean(track.youtubeVideoId);
       }
@@ -1028,6 +1149,11 @@ function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
       if (value === "local") {
         return !isTakeoutMatched(track);
       }
+    }
+
+    if (key === "fav" || key === "favorite") {
+      const wantsFavorite = value === "yes" || value === "true" || value === "1";
+      return track ? track.favorite === wantsFavorite : !wantsFavorite;
     }
 
     if (key === "tag") {
@@ -1072,6 +1198,35 @@ function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
 
     return searchable.includes(value);
   });
+}
+
+// C11 teletype: system messages print character-by-character like a dot-matrix
+// head instead of swapping instantly. Disabled for reduced motion and store
+// captures, where the full text lands immediately.
+function useTeletype(text: string, enabled: boolean) {
+  const [printed, setPrinted] = useState(text);
+
+  useEffect(() => {
+    if (!enabled) {
+      setPrinted(text);
+      return undefined;
+    }
+
+    setPrinted("");
+    let index = 0;
+    const interval = window.setInterval(() => {
+      index += 2;
+      setPrinted(text.slice(0, index));
+
+      if (index >= text.length) {
+        window.clearInterval(interval);
+      }
+    }, 24);
+
+    return () => window.clearInterval(interval);
+  }, [text, enabled]);
+
+  return printed;
 }
 
 // Rotary AMP knob: replaces the range slider but keeps role=slider + aria for
@@ -1130,15 +1285,37 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
       aria-valuemax={100}
       aria-valuenow={Math.round(value * 100)}
       aria-valuetext={`${Math.round(value * 100)} percent, ${label}`}
+      title="Double-click to reset to stock gain"
       style={{ "--knob-angle": `${angle}deg`, "--knob-fill": value.toFixed(3) } as CSSProperties}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
+      onDoubleClick={() => onChange(defaultVolume)}
       onWheel={onWheel}
       onKeyDown={onKeyDown}
     >
       <svg viewBox="0 0 48 48" className="amp-knob-face" aria-hidden="true">
+        <defs>
+          <radialGradient id="ampCapShade" cx="38%" cy="30%" r="85%">
+            <stop offset="0%" stopColor="#33333b" />
+            <stop offset="55%" stopColor="#1c1c22" />
+            <stop offset="100%" stopColor="#0b0b0f" />
+          </radialGradient>
+        </defs>
+        {/* Panel tick ring across the 270° sweep. */}
+        <g className="amp-knob-ticks">
+          {Array.from({ length: 13 }).map((_, tick) => (
+            <line
+              key={tick}
+              x1="24"
+              y1="1.6"
+              x2="24"
+              y2={tick % 3 === 0 ? "4.6" : "3.6"}
+              transform={`rotate(${-135 + tick * 22.5} 24 24)`}
+            />
+          ))}
+        </g>
         <circle className="amp-knob-arc-track" cx="24" cy="24" r="20" pathLength={100} />
         <circle
           className="amp-knob-arc-fill"
@@ -1148,9 +1325,23 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
           pathLength={100}
           style={{ strokeDashoffset: 100 - value * 75 }}
         />
-        <g className="amp-knob-body">
-          <circle cx="24" cy="24" r="14" />
-          <line className="amp-knob-pointer" x1="24" y1="24" x2="24" y2="12" />
+        {/* Stock-gain detent mark. */}
+        <line
+          className="amp-knob-detent"
+          x1="24"
+          y1="1.2"
+          x2="24"
+          y2="5"
+          transform={`rotate(${-135 + defaultVolume * 270} 24 24)`}
+        />
+        {/* Knurled rim spins with the setting; the lit cap stays put. */}
+        <g className="amp-knob-rotor">
+          <circle className="amp-knob-knurl" cx="24" cy="24" r="15.6" pathLength={100} />
+        </g>
+        <circle className="amp-knob-cap" cx="24" cy="24" r="13.2" fill="url(#ampCapShade)" />
+        <circle className="amp-knob-cap-ring" cx="24" cy="24" r="9.6" />
+        <g className="amp-knob-rotor">
+          <line className="amp-knob-pointer" x1="24" y1="21.4" x2="24" y2="11.4" />
         </g>
       </svg>
       <span className="amp-knob-db">{label}</span>
@@ -1158,20 +1349,41 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
   );
 }
 
-// Twin analog VU needles (L/R) with peak-hold. Purely presentational — the
-// audio loop writes --vu-l/--vu-r/--vu-peak-* onto containerRef each frame.
-function VuMeter({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> }) {
+// Item 13: the signature meter — twin illuminated glass faces. The audio loop
+// writes --vu-l/--vu-r/--vu-peak-*/--vu-lamp-* onto containerRef each frame;
+// clicking the face cycles what the needles read (VU / WIDTH / LOUD / SPEC).
+function VuMeter({
+  containerRef,
+  mode,
+  onCycle
+}: {
+  containerRef: React.RefObject<HTMLButtonElement>;
+  mode: MeterMode;
+  onCycle: () => void;
+}) {
+  const channels = meterModeChannels[mode];
+
   return (
-    <div ref={containerRef} className="vu-meter" aria-hidden="true">
-      {(["L", "R"] as const).map((channel) => (
-        <div key={channel} className={`vu-gauge vu-gauge-${channel.toLowerCase()}`}>
+    <button
+      type="button"
+      ref={containerRef}
+      className={`vu-meter meter-face-${mode}`}
+      aria-label={`Meter face: ${meterModeTitles[mode]}. Click to cycle meter modes`}
+      title={`Meter face: ${meterModeTitles[mode]} — click to cycle`}
+      onClick={onCycle}
+    >
+      {channels.map((channelLabel, channelIndex) => (
+        <span key={`${mode}-${channelLabel}`} className={`vu-gauge vu-gauge-${channelIndex === 0 ? "l" : "r"}`}>
           <span className="vu-arc" />
           <span className="vu-peak" />
           <span className="vu-needle" />
-          <span className="vu-label">{channel}</span>
-        </div>
+          <span className="vu-lamp" />
+          <span className="vu-glass" />
+          <span className="vu-label">{channelLabel}</span>
+        </span>
       ))}
-    </div>
+      <span className="vu-mode-tag">{meterModeTitles[mode]}</span>
+    </button>
   );
 }
 
@@ -1187,8 +1399,8 @@ function App() {
   const splitterRef = useRef<ChannelSplitterNode | null>(null);
   const analyserLRef = useRef<AnalyserNode | null>(null);
   const analyserRRef = useRef<AnalyserNode | null>(null);
-  const vuMeterRef = useRef<HTMLDivElement | null>(null);
-  const vuStateRef = useRef({ l: 0, r: 0, peakL: 0, peakR: 0, peakHoldL: 0, peakHoldR: 0 });
+  const vuMeterRef = useRef<HTMLButtonElement | null>(null);
+  const vuStateRef = useRef({ l: 0, r: 0, peakL: 0, peakR: 0, peakHoldL: 0, peakHoldR: 0, lampL: 0, lampR: 0 });
   const animationFrameRef = useRef<number | null>(null);
   const bassAnalyserRef = useRef<AnalyserNode | null>(null);
   const bassBinsRef = useRef<Uint8Array | null>(null);
@@ -1219,6 +1431,34 @@ function App() {
   const lastTickAtRef = useRef(0);
   const shuttleRateRef = useRef(0);
   const countedPlayForRef = useRef("");
+  // Spectral Spines: decoded spine cache + derived image caches, plus the
+  // background tracing queue's bookkeeping. Spines persist separately from the
+  // main state key so reset/sanitize stay simple.
+  const [initialSpines] = useState(() => loadStoredSpines());
+  const spinesRef = useRef<Map<string, TrackSpine>>(initialSpines);
+  const spineImagesRef = useRef<Map<string, string>>(new Map());
+  const pressingsRef = useRef<Map<string, string>>(new Map());
+  const spineFailedRef = useRef<Set<string>>(new Set());
+  const spineQueueRunningRef = useRef(false);
+  const spineQueueStoppedRef = useRef(false);
+  const spinePersistTimerRef = useRef<number | null>(null);
+  const seekSpineCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  // Plotter reveal: 0 means "fully revealed"; otherwise the wall-clock start
+  // of the sweep. Deriving progress from elapsed time (not accumulated rAF
+  // frames) keeps the spine correct even when a hidden window starves rAF.
+  const seekRevealStartRef = useRef(0);
+  const seekRevealRafRef = useRef<number | null>(null);
+  const paintSeekSpineRef = useRef<() => void>(() => undefined);
+  const tracksQueueRef = useRef<Track[]>([]);
+  const currentIdQueueRef = useRef("");
+  const signalLockRef = useRef<{ startedAt: number; duration: number } | null>(null);
+  const scratchWaveRef = useRef<Uint8Array | null>(null);
+  const spoolStartRef = useRef(0);
+  const idleTwitchTimerRef = useRef<number | null>(null);
+  const idleTwitchRafRef = useRef<number | null>(null);
+  const findSweepTimerRef = useRef<number | null>(null);
+  const findSweepSkipRef = useRef(true);
+  const degaussTimerRef = useRef<number | null>(null);
   const [initialState] = useState<StoredState>(() => loadStoredState());
   const [tracks, setTracks] = useState<Track[]>(() => initialState.tracks ?? []);
   const [takeoutSongs, setTakeoutSongs] = useState<TakeoutSong[]>(() => initialState.takeoutSongs ?? []);
@@ -1226,7 +1466,7 @@ function App() {
   const [interference, setInterference] = useState<InterferenceMode>(() => initialState.interference ?? "low");
   const [isPlaying, setIsPlaying] = useState(false);
   const [query, setQuery] = useState("");
-  const [volume, setVolume] = useState(() => initialState.volume ?? 0.72);
+  const [volume, setVolume] = useState(() => initialState.volume ?? defaultVolume);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [importStatus, setImportStatus] = useState("Loading desktop music");
@@ -1248,10 +1488,77 @@ function App() {
   const [attract, setAttract] = useState(false);
   const [shuttle, setShuttle] = useState<{ dir: 1 | -1; rate: number } | null>(null);
   const cartridgeSwapTimerRef = useRef<number | null>(null);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>(() =>
+    initialState.repeat === "all" || initialState.repeat === "one" ? initialState.repeat : "off"
+  );
+  const [reactLevel, setReactLevel] = useState<ReactLevel>(() =>
+    initialState.react === "low" || initialState.react === "high" ? initialState.react : "med"
+  );
+  const reactGainRef = useRef(1);
+  const meterBallisticsRef = useRef(new Float32Array(24));
+  const heroTexturesRef = useRef<Map<string, string>>(new Map());
+  const [heroDocked, setHeroDocked] = useState(() => initialState.heroDock === true);
+  const [denseRows, setDenseRows] = useState(() => initialState.denseRows === true);
+  const [meterMode, setMeterMode] = useState<MeterMode>(() =>
+    meterModeOrder.includes(initialState.meter as MeterMode) ? (initialState.meter as MeterMode) : "vu"
+  );
+  const [shelfSize, setShelfSize] = useState<ShelfSize>(() =>
+    shelfSizeOrder.includes(initialState.shelfSize as ShelfSize) ? (initialState.shelfSize as ShelfSize) : "shelf"
+  );
+  const [playNextId, setPlayNextId] = useState("");
+  const [lockFlashId, setLockFlashId] = useState("");
+  const [rowMenuId, setRowMenuId] = useState("");
+  const lockFlashTimerRef = useRef<number | null>(null);
+  const deckRef = useRef<HTMLDivElement | null>(null);
+  const shelfDragRef = useRef<{ startY: number; pointerId: number; moved: boolean } | null>(null);
+  const meterModeRef = useRef<MeterMode>("vu");
+  const interferenceRef = useRef<InterferenceMode>("low");
+  const loudnessRef = useRef({ momentary: 0, average: 0 });
+  const meterDecayRafRef = useRef<number | null>(null);
+  const tapeWindRef = useRef<{ startedAt: number } | null>(null);
+  const skipWindRef = useRef(false);
+  const seekLoopRef = useRef(0);
+  const scopeDropoutRef = useRef({ until: 0, nextAt: 0 });
+  const [spineRevision, setSpineRevision] = useState(0);
+  const [tracing, setTracing] = useState<{ done: number; total: number; label: string; trackId: string } | null>(
+    null
+  );
+  const [isFindSweeping, setIsFindSweeping] = useState(false);
+  const [isDegaussing, setIsDegaussing] = useState(false);
+  const [showKeyLegend, setShowKeyLegend] = useState(false);
 
   const currentTrack = tracks.find((track) => track.id === currentId);
   const currentPlayCount = currentTrack?.playCount ?? 0;
   const currentWearTier = currentPlayCount >= 25 ? 3 : currentPlayCount >= 10 ? 2 : currentPlayCount >= 3 ? 1 : 0;
+  // Reading the spine cache during render is safe: spineRevision bumps a
+  // re-render whenever the tracing queue lands a new spine.
+  const currentSpine = getTrackSpine(currentTrack);
+  const currentSpineStats = useMemo(
+    () => (currentSpine ? computeSpineStats(currentSpine) : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentSpine, spineRevision]
+  );
+  const isTracingCurrentTrack = Boolean(
+    !currentSpine && currentTrack && tracing && isLocalPlaybackUrl(currentTrack.url)
+  );
+  // Covered tracks get their art as a dim blurred wash; artless tracks get a
+  // sharp procedural "archive plate" texture instead — missing covers read as
+  // an aesthetic, not an error. Texture regenerates once the spine lands.
+  const heroBackdropUrl = currentTrack?.artworkUrl || "";
+  const heroTextureUrl = currentTrack && !currentTrack.artworkUrl ? getHeroTexture(currentTrack) : undefined;
+  // C4 phosphor burn-in: the most-worn cartridge's title ghosts into the tube
+  // during attract mode.
+  const burnGhostTitle = useMemo(() => {
+    let mostPlayed: Track | undefined;
+
+    for (const track of tracks) {
+      if ((track.playCount ?? 0) >= 3 && (track.playCount ?? 0) > (mostPlayed?.playCount ?? 0)) {
+        mostPlayed = track;
+      }
+    }
+
+    return mostPlayed?.title ?? "";
+  }, [tracks]);
   const takeoutMatchMap = useMemo(() => createTakeoutMatchMap(takeoutSongs, tracks), [takeoutSongs, tracks]);
   const takeoutMatchedCount = useMemo(
     () => takeoutSongs.filter((song) => takeoutMatchMap.get(song.id)).length,
@@ -1395,11 +1702,32 @@ function App() {
           : activeShelf === "missing"
             ? "Missing"
             : activeSaveSlot?.label ?? "Save slot";
+  // B1: only shelves with content earn a tab; Local is always present.
+  const shelfTabs = useMemo(() => {
+    const tabs: Array<{ id: ShelfView; label: string }> = [{ id: "library", label: "LOCAL" }];
+
+    if (tracks.some((track) => track.favorite)) {
+      tabs.push({ id: "favorites", label: "CROWNED" });
+    }
+
+    if (takeoutSongs.length > 0) {
+      tabs.push({ id: "takeout", label: "YT MAP" });
+    }
+
+    if (takeoutMissingCount > 0) {
+      tabs.push({ id: "missing", label: "MISSING" });
+    }
+
+    saveSlots
+      .filter((slot) => slot.trackIds.length > 0)
+      .forEach((slot) => tabs.push({ id: slot.id, label: slot.label }));
+
+    return tabs;
+  }, [saveSlots, takeoutMissingCount, takeoutSongs.length, tracks]);
+  // Filtering runs entirely through the FIND query language; the clickable
+  // status chips on each row set the same query contextually.
   const currentTrackIndex = tracks.findIndex((track) => track.id === currentTrack?.id);
   const currentTrackNumber = currentTrackIndex >= 0 ? currentTrackIndex + 1 : 0;
-  const systemStatus = `CODY NOIR // LOCAL INDEX · ${tracks.length.toString().padStart(2, "0")} FILES · ${ytMatchCount
-    .toString()
-    .padStart(2, "0")} MATCHED · ${tagIssueCount.toString().padStart(2, "0")} TAG GAPS · ${activeShelfLabel.toUpperCase()}`;
   const diagnosticsTitle = `${importStatus} · ${takeoutMetadataCount} Takeout metadata rows · ${coverMissingCount} cover gaps · ${takeoutMissingCount} missing local rows`;
   const derivedSystemMessage = currentTrack
     ? isPlaying
@@ -1408,7 +1736,14 @@ function App() {
         ? "TRACE FOUND / TAG GAP"
         : "TRACE FOUND"
     : "AWAITING FILE";
-  const systemMessage = transientSystemMessage || derivedSystemMessage;
+  const tracingMessage = tracing
+    ? `TRACING ${String(Math.min(tracing.done + 1, tracing.total)).padStart(2, "0")}/${String(tracing.total).padStart(
+        2,
+        "0"
+      )} · ${tracing.label.toUpperCase()}`
+    : "";
+  const systemMessage = transientSystemMessage || (!isPlaying && tracingMessage ? tracingMessage : derivedSystemMessage);
+  const printedSystemMessage = useTeletype(systemMessage, !reducedMotion && !storeDemoMode);
   const bootLines =
     bootMode === "reindex"
       ? [
@@ -1428,6 +1763,14 @@ function App() {
             .padStart(2, "0")} TAG GAPS`,
           "READY"
         ];
+  useEffect(() => {
+    // The tick loop reads these through refs so the long-lived rAF closure
+    // never goes stale.
+    reactGainRef.current = reactLevel === "low" ? 0.6 : reactLevel === "high" ? 1.55 : 1;
+    meterModeRef.current = meterMode;
+    interferenceRef.current = interference;
+  }, [interference, meterMode, reactLevel]);
+
   useEffect(() => {
     // When the Web Audio graph is live, volume + warmth run through the amp
     // stage so meters/scope/VU react to the knob; otherwise fall back to the
@@ -1484,6 +1827,25 @@ function App() {
     setBootMode("reindex");
   }
 
+  // C13 degauss: a brief CRT ripple that "wipes" the tube between contexts
+  // (shelf switches and library resets).
+  function triggerDegauss() {
+    if (reducedMotion || storeDemoMode) {
+      return;
+    }
+
+    setIsDegaussing(true);
+
+    if (degaussTimerRef.current !== null) {
+      window.clearTimeout(degaussTimerRef.current);
+    }
+
+    degaussTimerRef.current = window.setTimeout(() => {
+      setIsDegaussing(false);
+      degaussTimerRef.current = null;
+    }, 480);
+  }
+
   function selectShelfOffset(offset: number) {
     const playableCards = filteredCards.filter((card): card is TrackCard => card.kind === "track");
 
@@ -1530,6 +1892,23 @@ function App() {
     stopVisualizerFrame();
     analysisCacheRef.current.clear();
     window.localStorage.removeItem(storageKey);
+    window.localStorage.removeItem(spineStorageKey);
+    spinesRef.current.clear();
+    spineImagesRef.current.clear();
+    pressingsRef.current.clear();
+    heroTexturesRef.current.clear();
+    spineFailedRef.current.clear();
+    setTracing(null);
+    setSpineRevision((revision) => revision + 1);
+    setRepeatMode("off");
+    setReactLevel("med");
+    setHeroDocked(false);
+    setDenseRows(false);
+    setMeterMode("vu");
+    setShelfSize("shelf");
+    setPlayNextId("");
+    setLockFlashId("");
+    setRowMenuId("");
     setTracks([]);
     setTakeoutSongs([]);
     setCurrentId("");
@@ -1541,6 +1920,7 @@ function App() {
     setSaveSlots(cloneDefaultSaveSlots());
     setImportStatus("Local library reset");
     setBootMode("reindex");
+    triggerDegauss();
     flashSystemMessage("LOCAL DATA CLEARED", 1200);
   }
 
@@ -1591,11 +1971,15 @@ function App() {
 
   // Boot self-test: during the cinematic power-on, sweep a synthetic trace
   // across the scope and swing the VU needles, so the hardware "warms up".
+  // Re-index boots instead re-read the current cartridge: the sweep's
+  // amplitude follows the track's archived spine.
   useEffect(() => {
-    if (bootMode !== "boot" || reducedMotion) {
+    if (!bootMode || reducedMotion) {
       return undefined;
     }
 
+    const spine = bootMode === "reindex" ? getTrackSpine(currentTrack) : undefined;
+    const sweepDuration = bootMode === "reindex" ? 1000 : 1400;
     let rafId: number | null = null;
     let start = 0;
     const wave = new Uint8Array(2048);
@@ -1606,7 +1990,7 @@ function App() {
       }
 
       const elapsed = ts - start;
-      const progress = Math.min(1, elapsed / 1400);
+      const progress = Math.min(1, elapsed / sweepDuration);
       // A sweep that fills in left-to-right, then settles into a full trace.
       const reach = Math.min(1, progress * 1.35);
       const energy = progress < 0.7 ? progress / 0.7 : 1 - (progress - 0.7) / 0.3 * 0.4;
@@ -1614,11 +1998,15 @@ function App() {
       for (let index = 0; index < wave.length; index += 1) {
         const t = index / wave.length;
         const inReach = t <= reach ? 1 : 0;
+        const spineLevel = spine
+          ? 0.3 + (spine.energy[Math.min(spine.cols - 1, Math.floor(t * spine.cols))] / 255) * 0.95
+          : 1;
         const value =
           (Math.sin(t * Math.PI * 9 + elapsed * 0.02) * 0.5 +
             Math.sin(t * Math.PI * 30 + elapsed * 0.03) * 0.3) *
           energy *
-          inReach;
+          inReach *
+          spineLevel;
         wave[index] = Math.max(0, Math.min(255, Math.round(128 + value * 96)));
       }
 
@@ -1652,6 +2040,12 @@ function App() {
       setActiveShelf("library");
     }
   }, [activeShelf, takeoutSongs.length]);
+
+  useEffect(() => {
+    if (activeShelf === "favorites" && !tracks.some((track) => track.favorite)) {
+      setActiveShelf("library");
+    }
+  }, [activeShelf, tracks]);
 
   useEffect(() => {
     if (microGlitchTimerRef.current !== null) {
@@ -1730,6 +2124,28 @@ function App() {
       previousTrackIdRef.current = currentId;
       triggerRelock(hasTagGap(currentTrack) ? "TRACE FOUND / TAG GAP" : "TRACE FOUND");
 
+      // Bug-2: re-arm the meter bank at zero for the new cartridge so stale
+      // heights never carry across a track swap; bars only rise again once
+      // real FFT data flows.
+      meterBallisticsRef.current.fill(0);
+      writeMeterLevels(undefined);
+
+      // The clock belongs to the new cartridge: elapsed restarts at 0:00 and
+      // the total comes from the track record until real metadata loads —
+      // never the previous track's leftover duration state.
+      setCurrentTime(0);
+      setDuration(0);
+
+      // C1 signal-lock: while playing, the scope loses the trace to static,
+      // slides sync bars into place, then locks onto the new cartridge.
+      // A skip that just triggered the tape-wind smear replaces the lock —
+      // the grammar is "tape winds past", not "signal re-locks".
+      if (skipWindRef.current) {
+        skipWindRef.current = false;
+      } else if (!reducedMotion && isPlaying) {
+        signalLockRef.current = { startedAt: performance.now(), duration: 620 };
+      }
+
       // Physical cartridge swap: eject the old, click in the new.
       if (!reducedMotion) {
         if (cartridgeSwapTimerRef.current !== null) {
@@ -1746,7 +2162,7 @@ function App() {
         }, 160);
       }
     }
-  }, [currentId, currentTrack?.id, currentTrack?.metadataSource, currentTrack?.artworkUrl, reducedMotion]);
+  }, [currentId, currentTrack?.id, currentTrack?.metadataSource, currentTrack?.artworkUrl, isPlaying, reducedMotion]);
 
   useEffect(() => {
     if (!audioRef.current || !currentTrack?.url || !isLocalPlaybackUrl(currentTrack.url)) {
@@ -1781,7 +2197,8 @@ function App() {
       return;
     }
 
-    stopVisualizerFrame();
+    stopVisualizerFrame("freeze");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, reducedMotion]);
 
   // Store-poster: build a representative phosphor trace + deflected VU so
@@ -1916,6 +2333,150 @@ function App() {
     };
   }, [isPlaying, reducedMotion, storeDemoMode]);
 
+  // Item 6: a collapsed shelf keeps the current cartridge in view.
+  useEffect(() => {
+    if (shelfSize !== "collapsed") {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      const activeRow = document.querySelector(".metadata-row.active") as HTMLElement | null;
+      activeRow?.scrollIntoView({ block: "nearest" });
+    });
+  }, [shelfSize, currentId]);
+
+  // Row overflow menu closes on outside pointer or Escape.
+  useEffect(() => {
+    if (!rowMenuId) {
+      return undefined;
+    }
+
+    const closeOnOutside = (event: Event) => {
+      if (!(event.target instanceof HTMLElement) || !event.target.closest(".row-menu-pop, .row-menu-btn")) {
+        setRowMenuId("");
+      }
+    };
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setRowMenuId("");
+      }
+    };
+
+    document.addEventListener("pointerdown", closeOnOutside);
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutside);
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [rowMenuId]);
+
+  // C8 find radar sweep: every FIND change sweeps a scanline down the shelf
+  // and lets the surviving rows resolve in its wake.
+  useEffect(() => {
+    if (findSweepSkipRef.current) {
+      findSweepSkipRef.current = false;
+      return undefined;
+    }
+
+    if (reducedMotion || storeDemoMode) {
+      return undefined;
+    }
+
+    setIsFindSweeping(false);
+    const restartFrame = window.requestAnimationFrame(() => setIsFindSweeping(true));
+
+    if (findSweepTimerRef.current !== null) {
+      window.clearTimeout(findSweepTimerRef.current);
+    }
+
+    findSweepTimerRef.current = window.setTimeout(() => {
+      setIsFindSweeping(false);
+      findSweepTimerRef.current = null;
+    }, 560);
+
+    return () => {
+      window.cancelAnimationFrame(restartFrame);
+    };
+  }, [query, reducedMotion, storeDemoMode]);
+
+  // C7 idle twitch: while paused the machine stays subtly alive — a needle
+  // twitch and a single heartbeat blip on the scope every 9-15 seconds.
+  useEffect(() => {
+    if (isPlaying || reducedMotion || storeDemoMode || bootMode || attract) {
+      return undefined;
+    }
+
+    let cancelled = false;
+    const blip = new Uint8Array(512);
+
+    const schedule = () => {
+      idleTwitchTimerRef.current = window.setTimeout(() => {
+        if (cancelled) {
+          return;
+        }
+
+        const startedAt = performance.now();
+
+        const animate = (timestamp: number) => {
+          if (cancelled) {
+            return;
+          }
+
+          const elapsed = timestamp - startedAt;
+          const kickProgress = Math.min(1, elapsed / 340);
+          const kick = Math.sin(kickProgress * Math.PI);
+          const vu = vuStateRef.current;
+          vu.l = kick * 0.07;
+          vu.r = kick * 0.05;
+          writeVuNeedles();
+
+          if (kickProgress < 1) {
+            for (let index = 0; index < blip.length; index += 1) {
+              const t = index / blip.length;
+              const pulse = Math.exp(-(((t - 0.5) * 14) ** 2)) * kick;
+              blip[index] = 128 + Math.round(pulse * 52 * Math.sin(t * Math.PI * 42));
+            }
+
+            drawScopeTrace(blip, kick * 0.12, 0);
+            idleTwitchRafRef.current = window.requestAnimationFrame(animate);
+            return;
+          }
+
+          // Let the phosphor persistence fade the blip back to baseline.
+          if (elapsed < 760) {
+            drawScopeTrace(null, 0, 0);
+            idleTwitchRafRef.current = window.requestAnimationFrame(animate);
+            return;
+          }
+
+          idleTwitchRafRef.current = null;
+          schedule();
+        };
+
+        idleTwitchRafRef.current = window.requestAnimationFrame(animate);
+      }, 9000 + Math.random() * 6000);
+    };
+
+    schedule();
+
+    return () => {
+      cancelled = true;
+
+      if (idleTwitchTimerRef.current !== null) {
+        window.clearTimeout(idleTwitchTimerRef.current);
+        idleTwitchTimerRef.current = null;
+      }
+
+      if (idleTwitchRafRef.current !== null) {
+        window.cancelAnimationFrame(idleTwitchRafRef.current);
+        idleTwitchRafRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, reducedMotion, storeDemoMode, bootMode, attract]);
+
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) {
       return undefined;
@@ -1947,8 +2508,14 @@ function App() {
       JSON.stringify({
         currentId: durableCurrentId,
         activeShelf,
+        denseRows,
+        heroDock: heroDocked,
         interference,
+        meter: meterMode,
+        react: reactLevel,
         reducedMotion: initialState.reducedMotion === true,
+        repeat: repeatMode,
+        shelfSize,
         scanlines,
         saveSlots,
         takeoutSongs,
@@ -1959,8 +2526,14 @@ function App() {
   }, [
     activeShelf,
     currentId,
+    denseRows,
+    heroDocked,
     interference,
     initialState.reducedMotion,
+    meterMode,
+    reactLevel,
+    repeatMode,
+    shelfSize,
     saveSlots,
     scanlines,
     storeDemoMode,
@@ -2020,6 +2593,170 @@ function App() {
       isCancelled = true;
     };
   }, [currentTrack?.id, currentTrack?.url, isPlaying]);
+
+  // Keep queue-visible mirrors fresh so the long-running tracing loop always
+  // reads the latest library and selection without restarting.
+  useEffect(() => {
+    tracksQueueRef.current = tracks;
+    currentIdQueueRef.current = currentId;
+  });
+
+  useEffect(() => {
+    // Re-arm on mount so StrictMode's simulated remount doesn't leave the
+    // tracing queue permanently stopped.
+    spineQueueStoppedRef.current = false;
+
+    return () => {
+      spineQueueStoppedRef.current = true;
+
+      if (spinePersistTimerRef.current !== null) {
+        window.clearTimeout(spinePersistTimerRef.current);
+        persistSpines(spinesRef.current);
+      }
+    };
+  }, []);
+
+  // Background tracing queue: one decode at a time, current track first, with
+  // breathing room between items. Each new import kicks the runner; the loop
+  // re-scans the library every iteration so it never goes stale.
+  useEffect(() => {
+    if (storeDemoMode) {
+      return;
+    }
+
+    async function runSpineQueue() {
+      if (spineQueueRunningRef.current) {
+        return;
+      }
+
+      const isPendingTrack = (track: Track) =>
+        isLocalPlaybackUrl(track.url) && !spinesRef.current.has(track.id) && !spineFailedRef.current.has(track.id);
+
+      if (!tracksQueueRef.current.some(isPendingTrack)) {
+        return;
+      }
+
+      spineQueueRunningRef.current = true;
+      let done = 0;
+
+      try {
+        for (;;) {
+          if (spineQueueStoppedRef.current) {
+            return;
+          }
+
+          const pending = tracksQueueRef.current.filter(isPendingTrack);
+
+          if (pending.length === 0) {
+            break;
+          }
+
+          const next = pending.find((track) => track.id === currentIdQueueRef.current) ?? pending[0];
+          setTracing({ done, total: done + pending.length, label: next.title, trackId: next.id });
+
+          try {
+            const spine = await buildTrackSpine(next.url);
+
+            if (spineQueueStoppedRef.current) {
+              return;
+            }
+
+            spinesRef.current.set(next.id, spine);
+            spineImagesRef.current.delete(next.id);
+            pressingsRef.current.delete(next.id);
+            heroTexturesRef.current.delete(next.id);
+            schedulePersistSpines();
+            setSpineRevision((revision) => revision + 1);
+
+            // Scanner grammar: flash TRACE LOCKED on the row before it
+            // settles back into its normal status chips.
+            setLockFlashId(next.id);
+
+            if (lockFlashTimerRef.current !== null) {
+              window.clearTimeout(lockFlashTimerRef.current);
+            }
+
+            lockFlashTimerRef.current = window.setTimeout(() => {
+              setLockFlashId("");
+              lockFlashTimerRef.current = null;
+            }, 950);
+          } catch {
+            spineFailedRef.current.add(next.id);
+            // Re-render so the row settles into its NO LOCK state.
+            setSpineRevision((revision) => revision + 1);
+          }
+
+          done += 1;
+          await new Promise((resolve) => window.setTimeout(resolve, 320));
+        }
+      } finally {
+        spineQueueRunningRef.current = false;
+
+        if (!spineQueueStoppedRef.current) {
+          setTracing(null);
+
+          if (done > 0) {
+            flashSystemMessage(
+              `TRACE ARCHIVE UPDATED · ${String(spinesRef.current.size).padStart(2, "0")} SPINES`,
+              1600
+            );
+          }
+        }
+      }
+    }
+
+    runSpineQueue();
+    // spineRevision is included so manual RETRACE requests re-kick the runner.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracks, storeDemoMode, spineRevision]);
+
+  // C2 plotter draw: when a spine lands for the selected track (track change
+  // or trace completion), the seek bar draws it left→right like a pen sweep.
+  // The rAF loop is purely cosmetic — paintSeekSpine derives progress from
+  // wall-clock time, so any later paint lands on the correct frame.
+  const currentSpineAvailable = Boolean(currentSpine);
+  useEffect(() => {
+    if (seekRevealRafRef.current !== null) {
+      window.cancelAnimationFrame(seekRevealRafRef.current);
+      seekRevealRafRef.current = null;
+    }
+
+    if (!currentSpineAvailable || reducedMotion || storeDemoMode) {
+      seekRevealStartRef.current = 0;
+      paintSeekSpineRef.current();
+      return undefined;
+    }
+
+    seekRevealStartRef.current = performance.now();
+    paintSeekSpineRef.current();
+
+    const step = () => {
+      paintSeekSpineRef.current();
+      seekRevealRafRef.current = seekRevealStartRef.current > 0 ? window.requestAnimationFrame(step) : null;
+    };
+
+    seekRevealRafRef.current = window.requestAnimationFrame(step);
+    // Safety net for rAF-starved (hidden) windows: land the finished sweep.
+    const settleTimer = window.setTimeout(() => paintSeekSpineRef.current(), 1050);
+
+    return () => {
+      window.clearTimeout(settleTimer);
+
+      if (seekRevealRafRef.current !== null) {
+        window.cancelAnimationFrame(seekRevealRafRef.current);
+        seekRevealRafRef.current = null;
+      }
+
+      seekRevealStartRef.current = 0;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrack?.id, currentSpineAvailable, reducedMotion, storeDemoMode]);
+
+  // Keep the seek spine painted outside the visualizer loop too (paused,
+  // seeking, spine arrival) — cheap, and the tick loop covers 60fps playback.
+  useEffect(() => {
+    paintSeekSpineRef.current();
+  });
 
   function mergeTracks(nextTracks: Track[]) {
     if (nextTracks.length === 0) {
@@ -2302,6 +3039,183 @@ function App() {
     return analysisPromise;
   }
 
+  function getTrackSpine(track: Track | undefined): TrackSpine | undefined {
+    if (!track) {
+      return undefined;
+    }
+
+    const cached = spinesRef.current.get(track.id);
+
+    if (cached) {
+      return cached;
+    }
+
+    // Store surfaces get deterministic synthetic spines so screenshots stay
+    // alive and pixel-stable without shipping audio.
+    if (storeDemoMode || storePosterMode) {
+      const synthetic = syntheticSpine(track.id, track.duration || 214);
+      spinesRef.current.set(track.id, synthetic);
+      return synthetic;
+    }
+
+    return undefined;
+  }
+
+  function getSpineRowImage(track: Track | undefined) {
+    if (!track) {
+      return undefined;
+    }
+
+    const cached = spineImagesRef.current.get(track.id);
+
+    if (cached) {
+      return cached;
+    }
+
+    const spine = getTrackSpine(track);
+
+    if (!spine) {
+      return undefined;
+    }
+
+    const url = spineToDataUrl(spine, 480, 30, rowSpinePalette);
+
+    if (url) {
+      spineImagesRef.current.set(track.id, url);
+    }
+
+    return url;
+  }
+
+  function getPressing(track: Track | undefined) {
+    if (!track) {
+      return undefined;
+    }
+
+    const cached = pressingsRef.current.get(track.id);
+
+    if (cached) {
+      return cached;
+    }
+
+    const spine = getTrackSpine(track);
+
+    if (!spine) {
+      return undefined;
+    }
+
+    const url = spineCoverDataUrl(spine, albumHue(track), 160);
+
+    if (url) {
+      pressingsRef.current.set(track.id, url);
+    }
+
+    return url;
+  }
+
+  function getHeroTexture(track: Track | undefined) {
+    if (!track) {
+      return undefined;
+    }
+
+    const cached = heroTexturesRef.current.get(track.id);
+
+    if (cached) {
+      return cached;
+    }
+
+    const url = heroTextureDataUrl(track.id + track.fileName, albumHue(track), getTrackSpine(track));
+
+    if (url) {
+      heroTexturesRef.current.set(track.id, url);
+    }
+
+    return url;
+  }
+
+  function schedulePersistSpines() {
+    if (storeDemoMode) {
+      return;
+    }
+
+    if (spinePersistTimerRef.current !== null) {
+      window.clearTimeout(spinePersistTimerRef.current);
+    }
+
+    spinePersistTimerRef.current = window.setTimeout(() => {
+      spinePersistTimerRef.current = null;
+      persistSpines(spinesRef.current);
+    }, 800);
+  }
+
+  // The seek bar IS the song's shape: paint the current spine with a
+  // played/unplayed split and the plotter-reveal sweep. Reads live audio time
+  // so the visualizer tick can repaint at 60fps without re-rendering React.
+  function paintSeekSpine() {
+    const canvas = seekSpineCanvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    if (!canvas || !context) {
+      return;
+    }
+
+    const pixelRatio = Math.min(2, window.devicePixelRatio || 1);
+    const width = Math.round(canvas.clientWidth * pixelRatio);
+    const height = Math.round(canvas.clientHeight * pixelRatio);
+
+    if (!width || !height) {
+      return;
+    }
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    const spine = getTrackSpine(currentTrack);
+
+    if (!spine) {
+      context.clearRect(0, 0, width, height);
+      return;
+    }
+
+    const total = audioRef.current?.duration || playbackDuration || spine.duration || 0;
+    const time = audioRef.current?.currentTime ?? currentTime;
+    const progress = total > 0 ? Math.min(1, Math.max(0, time / total)) : 0;
+    let reveal = 1;
+
+    if (seekRevealStartRef.current > 0) {
+      const linear = Math.min(1, (performance.now() - seekRevealStartRef.current) / 950);
+      reveal = linear < 1 ? Math.pow(linear, 0.9) : 1;
+
+      if (linear >= 1) {
+        seekRevealStartRef.current = 0;
+      }
+    }
+
+    drawSpineStrip(context, spine, width, height, {
+      progress,
+      reveal,
+      palette: seekSpinePalette
+    });
+
+    // Repeat grammar: on a repeat-one wrap, a highlight sweeps back through
+    // the line right-to-left as the machine rewinds to the top.
+    if (seekLoopRef.current > 0) {
+      const loopProgress = (performance.now() - seekLoopRef.current) / 380;
+
+      if (loopProgress >= 1) {
+        seekLoopRef.current = 0;
+      } else {
+        const sweepX = width * (1 - loopProgress);
+        context.fillStyle = `rgba(202, 48, 48, ${(0.85 * (1 - loopProgress)).toFixed(3)})`;
+        context.fillRect(sweepX - 2, 0, 3, height);
+      }
+    }
+  }
+
+  paintSeekSpineRef.current = paintSeekSpine;
+
   function writeBassVars(bass: number, beat: number) {
     const shell = shellRef.current;
 
@@ -2328,7 +3242,7 @@ function App() {
     }
 
     for (let index = 0; index < spans.length; index += 1) {
-      (spans[index] as HTMLElement).style.setProperty("--meter-height", `${levels?.[index] ?? 16}px`);
+      (spans[index] as HTMLElement).style.setProperty("--meter-height", `${levels?.[index] ?? 3}px`);
     }
   }
 
@@ -2373,7 +3287,7 @@ function App() {
   // draw a phosphor CRT trace: a translucent black wash for persistence
   // ghosting, a wide soft glow pass, and a thin bright core whose brightness
   // rides the beat. `shuttle` renders a horizontally smeared "tape whir".
-  function drawScopeTrace(wave: Uint8Array | null, bass: number, beat: number, shuttle = 0) {
+  function drawScopeTrace(wave: Uint8Array | null, bass: number, beat: number, shuttle = 0, jitter = 0) {
     const resolved = resolveScopeContext();
 
     if (!resolved) {
@@ -2401,8 +3315,10 @@ function App() {
     for (let index = 0; index <= points; index += 1) {
       const sample = ((wave[Math.floor(index * stride)] ?? 128) - 128) / 128;
       const smear = shuttle > 0 ? (((index * 53) % 17) / 17 - 0.5) * shuttle * waveHeight * 0.5 : 0;
+      // Interference instability: per-point vertical noise on the trace only.
+      const wobble = jitter > 0 ? (Math.random() - 0.5) * jitter * waveHeight : 0;
       const x = (index / points) * width;
-      const y = middle + sample * waveHeight + smear;
+      const y = middle + sample * waveHeight + smear + wobble;
       path.push([x, y]);
     }
 
@@ -2474,6 +3390,8 @@ function App() {
     container.style.setProperty("--vu-r", vu.r.toFixed(3));
     container.style.setProperty("--vu-peak-l", vu.peakHoldL.toFixed(3));
     container.style.setProperty("--vu-peak-r", vu.peakHoldR.toFixed(3));
+    container.style.setProperty("--vu-lamp-l", vu.lampL.toFixed(3));
+    container.style.setProperty("--vu-lamp-r", vu.lampR.toFixed(3));
   }
 
   function readChannelLevel(analyser: AnalyserNode | null, buffer: Uint8Array | undefined) {
@@ -2493,23 +3411,84 @@ function App() {
     return Math.min(1, Math.sqrt(sum / buffer.length) * 2.4);
   }
 
-  function stopVisualizerFrame() {
+  // "hard" clears everything including the scope (track ops, reset).
+  // "freeze" is the pause grammar: the trace stays burned on the tube while
+  // glow, meters, and needles decay to rest over ~480ms.
+  function stopVisualizerFrame(mode: "hard" | "freeze" = "hard") {
     if (animationFrameRef.current !== null) {
       window.cancelAnimationFrame(animationFrameRef.current);
       window.clearTimeout(animationFrameRef.current);
       animationFrameRef.current = null;
     }
 
+    if (meterDecayRafRef.current !== null) {
+      window.cancelAnimationFrame(meterDecayRafRef.current);
+      meterDecayRafRef.current = null;
+    }
+
     bassBinsRef.current = null;
     bassEnvelopeRef.current = { floor: 0.035, hold: 0, last: 0, peak: 0.26 };
     beatRef.current = { pulse: 0, gate: 0, threshold: 0.12 };
-    bassLevelRef.current = 0;
     lastTickAtRef.current = 0;
-    vuStateRef.current = { l: 0, r: 0, peakL: 0, peakR: 0, peakHoldL: 0, peakHoldR: 0 };
-    writeBassVars(0, 0);
-    writeMeterLevels(undefined);
-    writeSignalColumns(0);
-    writeVuNeedles();
+
+    const settle = () => {
+      bassLevelRef.current = 0;
+      meterBallisticsRef.current.fill(0);
+      vuStateRef.current = { l: 0, r: 0, peakL: 0, peakR: 0, peakHoldL: 0, peakHoldR: 0, lampL: 0, lampR: 0 };
+      writeBassVars(0, 0);
+      writeMeterLevels(undefined);
+      writeSignalColumns(0);
+      writeVuNeedles();
+    };
+
+    if (mode === "freeze") {
+      if (reducedMotion) {
+        settle();
+        return;
+      }
+
+      const startedAt = performance.now();
+      const metersAtPause = Float32Array.from(meterBallisticsRef.current);
+      const vuAtPause = { ...vuStateRef.current };
+      const bassAtPause = bassLevelRef.current;
+
+      const decay = () => {
+        const progress = Math.min(1, (performance.now() - startedAt) / 480);
+        const keep = Math.pow(1 - progress, 1.7);
+        const meters = meterBallisticsRef.current;
+
+        for (let index = 0; index < meters.length; index += 1) {
+          meters[index] = metersAtPause[index] * keep;
+        }
+
+        const vu = vuStateRef.current;
+        vu.l = vuAtPause.l * keep;
+        vu.r = vuAtPause.r * keep;
+        vu.peakHoldL = Math.max(vu.l, vuAtPause.peakHoldL * keep);
+        vu.peakHoldR = Math.max(vu.r, vuAtPause.peakHoldR * keep);
+        vu.lampL = vuAtPause.lampL * keep;
+        vu.lampR = vuAtPause.lampR * keep;
+        bassLevelRef.current = bassAtPause * keep;
+
+        writeMeterLevels(Array.from(meters, (level) => Math.round(3 + level * 29)));
+        writeVuNeedles();
+        writeBassVars(bassLevelRef.current, 0);
+        writeSignalColumns(bassLevelRef.current);
+
+        if (progress < 1) {
+          meterDecayRafRef.current = window.requestAnimationFrame(decay);
+          return;
+        }
+
+        meterDecayRafRef.current = null;
+        settle();
+      };
+
+      meterDecayRafRef.current = window.requestAnimationFrame(decay);
+      return;
+    }
+
+    settle();
     drawScopeTrace(null, 0, 0);
   }
 
@@ -2526,6 +3505,12 @@ function App() {
   function startVisualizerFrame() {
     if (animationFrameRef.current !== null || reducedMotion) {
       return;
+    }
+
+    // A resume cancels any in-flight pause decay.
+    if (meterDecayRafRef.current !== null) {
+      window.cancelAnimationFrame(meterDecayRafRef.current);
+      meterDecayRafRef.current = null;
     }
 
     let freqData: Uint8Array | undefined;
@@ -2585,7 +3570,13 @@ function App() {
 
           const average = sum / (end - start);
           analyserSignal += average;
-          return Math.round(10 + Math.pow(average / 255, 0.8) * 78);
+          // Analyser bytes are linear-in-dB across the configured window, so
+          // this is a dB mapping with floor/ceiling headroom, plus a treble
+          // tilt so the energy-heavy low bands don't own the whole bank.
+          // Result is NORMALIZED 0..1; ballistics + pixel fit happen below.
+          const dbNorm = Math.min(1, Math.max(0, (average / 255 - 0.14) / 0.78));
+          const tilt = 0.66 + (index / 23) * 0.62;
+          return Math.min(1, dbNorm * tilt);
         });
       }
 
@@ -2678,6 +3669,80 @@ function App() {
         wave = waveData;
       }
 
+      // C1 signal-lock: on track change (or resume) the scope shows a static
+      // burst, then the trace slides horizontally and snaps into sync.
+      // Duration is per-trigger: 620ms for a new cartridge, ~300ms on resume.
+      const lock = signalLockRef.current;
+
+      if (lock && wave) {
+        const lockElapsed = timestamp - lock.startedAt;
+        const staticPhase = lock.duration * 0.38;
+
+        if (lockElapsed >= lock.duration) {
+          signalLockRef.current = null;
+        } else {
+          if (!scratchWaveRef.current || scratchWaveRef.current.length !== wave.length) {
+            scratchWaveRef.current = new Uint8Array(wave.length);
+          }
+
+          const scratch = scratchWaveRef.current;
+
+          if (lockElapsed < staticPhase) {
+            let noiseSeed = (Math.floor(timestamp * 7) * 2654435761) >>> 0;
+
+            for (let index = 0; index < scratch.length; index += 1) {
+              noiseSeed = (noiseSeed * 1664525 + 1013904223) >>> 0;
+              scratch[index] = 128 + Math.round(((noiseSeed >>> 24) - 128) * 0.55);
+            }
+          } else {
+            const syncProgress = (lockElapsed - staticPhase) / (lock.duration - staticPhase);
+            const offset = Math.round(
+              (1 - syncProgress) * wave.length * 0.4 * Math.cos(syncProgress * Math.PI * 3)
+            );
+
+            for (let index = 0; index < scratch.length; index += 1) {
+              scratch[index] = wave[(index + offset + wave.length * 4) % wave.length];
+            }
+          }
+
+          wave = scratch;
+        }
+      }
+
+      // Skip grammar: the tape rapidly winds past — a short hard smear.
+      const wind = tapeWindRef.current;
+      const windActive = Boolean(wind && timestamp - wind.startedAt < 280);
+
+      if (wind && !windActive) {
+        tapeWindRef.current = null;
+      }
+
+      // MAX interference: intercepted-broadcast dropouts — the trace cuts out
+      // for ~160ms every so often.
+      const interferenceNow = interferenceRef.current;
+
+      if (interferenceNow === "max") {
+        const dropout = scopeDropoutRef.current;
+
+        if (dropout.nextAt === 0) {
+          dropout.nextAt = timestamp + 5000 + Math.random() * 7000;
+        }
+
+        if (timestamp >= dropout.nextAt && dropout.until < timestamp) {
+          dropout.until = timestamp + 160;
+          dropout.nextAt = timestamp + 6000 + Math.random() * 9000;
+        }
+
+        if (timestamp < dropout.until) {
+          wave = null;
+        }
+      } else {
+        scopeDropoutRef.current.until = 0;
+      }
+
+      const scopeJitter =
+        interferenceNow === "max" ? 0.15 : interferenceNow === "med" ? 0.07 : interferenceNow === "low" ? 0.02 : 0;
+
       if (!liveSignal) {
         const fallbackFrame = getAnalysisFrame(
           getCachedTrackAnalysis(currentTrack),
@@ -2688,7 +3753,9 @@ function App() {
           shapedBass = Math.max(shapedBass, Math.min(1, Math.pow(fallbackFrame.bass, 0.72) * 1.08));
 
           if (fallbackFrame.levels) {
-            nextLevels = fallbackFrame.levels;
+            // Offline analysis rows are stored in the legacy 10-92px scale;
+            // renormalize so they run through the same ballistics pipeline.
+            nextLevels = fallbackFrame.levels.map((value) => Math.min(1, Math.max(0, (value - 10) / 82)));
           }
         }
       }
@@ -2721,26 +3788,113 @@ function App() {
 
         const rawL = readChannelLevel(analyserLRef.current, vuBufferL);
         const rawR = readChannelLevel(analyserRRef.current, vuBufferR);
-        const attack = 1 - Math.pow(0.25, dtFrames);
-        const release = 1 - Math.pow(0.86, dtFrames);
+        // Item 13: the glass face has four readouts. Every mode derives from
+        // real channel data; the needles keep true VU ballistics either way.
+        const meterFace = meterModeRef.current;
+        let targetL = rawL;
+        let targetR = rawR;
 
-        vu.l += (rawL - vu.l) * (rawL > vu.l ? attack : release);
-        vu.r += (rawR - vu.r) * (rawR > vu.r ? attack : release);
+        if (meterFace === "width") {
+          // Left needle: stereo width (channel difference); right: balance,
+          // centered at half-scale.
+          targetL = Math.min(1, Math.abs(rawL - rawR) * 3.4);
+          targetR = Math.min(1, Math.max(0, 0.5 + (rawR - rawL) * 1.8));
+        } else if (meterFace === "loud") {
+          const mono = (rawL + rawR) / 2;
+          const loudness = loudnessRef.current;
+          loudness.momentary += (mono - loudness.momentary) * (1 - Math.exp(-(dtFrames * 33.33) / 400));
+          loudness.average += (mono - loudness.average) * (1 - Math.exp(-(dtFrames * 33.33) / 3000));
+          targetL = Math.min(1, loudness.momentary * 1.15);
+          targetR = Math.min(1, loudness.average * 1.3);
+        } else if (meterFace === "spec") {
+          const highBandCount = 8;
+          let highSum = 0;
+
+          if (nextLevels) {
+            for (let index = 24 - highBandCount; index < 24; index += 1) {
+              highSum += nextLevels[index] ?? 0;
+            }
+          }
+
+          targetL = Math.min(1, shapedBass);
+          targetR = Math.min(1, (highSum / highBandCount) * 1.5);
+        }
+
+        // True VU ballistics: symmetric ~300ms integration (99% of a step in
+        // 300ms → τ ≈ 100ms), so the needle averages program level like a
+        // real meter movement instead of snapping.
+        const vuCoef = 1 - Math.exp(-(dtFrames * 33.33) / 100);
+
+        vu.l += (targetL - vu.l) * vuCoef;
+        vu.r += (targetR - vu.r) * vuCoef;
+        // Peak lamps always track true channel peaks regardless of face mode,
+        // lighting above 0.86 and lingering as they decay.
         vu.peakHoldL = rawL > vu.peakHoldL ? rawL : Math.max(vu.l, vu.peakHoldL - 0.012 * dtFrames);
         vu.peakHoldR = rawR > vu.peakHoldR ? rawR : Math.max(vu.r, vu.peakHoldR - 0.012 * dtFrames);
+        vu.lampL = Math.max(vu.lampL * Math.pow(0.93, dtFrames), rawL > 0.86 ? 1 : 0);
+        vu.lampR = Math.max(vu.lampR * Math.pow(0.93, dtFrames), rawR > 0.86 ? 1 : 0);
       } else {
-        const release = 1 - Math.pow(0.86, dtFrames);
-        vu.l += (0 - vu.l) * release;
-        vu.r += (0 - vu.r) * release;
+        const vuCoef = 1 - Math.exp(-(dtFrames * 33.33) / 100);
+        vu.l += (0 - vu.l) * vuCoef;
+        vu.r += (0 - vu.r) * vuCoef;
         vu.peakHoldL = Math.max(vu.l, vu.peakHoldL - 0.012 * dtFrames);
         vu.peakHoldR = Math.max(vu.r, vu.peakHoldR - 0.012 * dtFrames);
+        vu.lampL *= Math.pow(0.93, dtFrames);
+        vu.lampR *= Math.pow(0.93, dtFrames);
       }
 
+      // C5 motor spool-up: from a standing start the meter bank lights bar by
+      // bar and the needles rise with one analog overshoot before tracking.
+      if (spoolStartRef.current) {
+        const spoolElapsed = timestamp - spoolStartRef.current;
+
+        if (spoolElapsed >= 700) {
+          spoolStartRef.current = 0;
+        } else {
+          const spoolProgress = spoolElapsed / 700;
+
+          if (nextLevels) {
+            nextLevels = nextLevels.map((value, index) => {
+              const gate = Math.max(0, Math.min(1, (spoolProgress * 1.7 - (index / 24) * 0.7) * 3));
+              return value * gate;
+            });
+          }
+
+          const overshoot =
+            spoolProgress < 0.55
+              ? (spoolProgress / 0.55) * 1.16
+              : 1 + 0.16 * Math.cos(((spoolProgress - 0.55) / 0.45) * Math.PI * 1.5) * (1 - (spoolProgress - 0.55) / 0.45 * 0.8);
+          vu.l = Math.min(1, vu.l * Math.max(0, overshoot));
+          vu.r = Math.min(1, vu.r * Math.max(0, overshoot));
+        }
+      }
+
+      // Meter ballistics: fast attack (~2 frames), slow release (~250ms),
+      // then a pixel fit into the bank's REAL inner height (~37px). The old
+      // 10-88px mapping overshot the cabinet, pinning every bar at the top.
+      const meters = meterBallisticsRef.current;
+      const reactGain = reactGainRef.current;
+
+      for (let index = 0; index < meters.length; index += 1) {
+        const target = Math.min(1, (nextLevels?.[index] ?? 0) * reactGain);
+        const coef = target > meters[index] ? 1 - Math.pow(0.3, dtFrames) : 1 - Math.pow(0.87, dtFrames);
+        meters[index] += (target - meters[index]) * coef;
+      }
+
+      const meterHeights = Array.from(meters, (level) => Math.round(3 + level * 29));
+
       writeBassVars(bassLevelRef.current, beat.pulse);
-      writeMeterLevels(nextLevels);
+      writeMeterLevels(meterHeights);
       writeSignalColumns(bassLevelRef.current);
       writeVuNeedles();
-      drawScopeTrace(wave, bassLevelRef.current, beat.pulse, shuttleRateRef.current > 0 ? 1 : 0);
+      drawScopeTrace(
+        wave,
+        bassLevelRef.current,
+        beat.pulse,
+        shuttleRateRef.current > 0 || windActive ? 1 : 0,
+        scopeJitter
+      );
+      paintSeekSpineRef.current();
       animationFrameRef.current = window.requestAnimationFrame(tick);
     };
 
@@ -2767,7 +3921,12 @@ function App() {
 
       analyserRef.current = context.createAnalyser();
       analyserRef.current.fftSize = 2048;
-      analyserRef.current.smoothingTimeConstant = 0.5;
+      analyserRef.current.smoothingTimeConstant = 0.4;
+      // Wider dB window than the default [-100,-30]: post-amp program
+      // material (plus the low-shelf warmth) routinely exceeds -30 dBFS in
+      // the low bins, which used to slam those bytes to 255 every frame.
+      analyserRef.current.minDecibels = -82;
+      analyserRef.current.maxDecibels = -14;
 
       // Amp stage: a low-shelf "warmth" filter into a gain node. The volume
       // knob drives this gain (not the element), so everything downstream —
@@ -2836,18 +3995,72 @@ function App() {
       return;
     }
 
+    const wasStopped = audio.paused;
+    const resumePosition = audio.currentTime;
     await ensureAudioGraph().catch(() => undefined);
 
     try {
       await audio.play();
       setIsPlaying(true);
+
+      // C5: a standing start (including a fresh cartridge) spools the motor.
+      if (wasStopped && !reducedMotion) {
+        spoolStartRef.current = performance.now();
+
+        // Play grammar: resuming mid-tape gets a short re-lock — the frozen
+        // trace snaps back into alignment. Fresh cartridges get the full
+        // sequence from the track-change effect instead.
+        if (resumePosition > 0.1) {
+          signalLockRef.current = { startedAt: performance.now(), duration: 300 };
+        }
+      }
+
       startVisualizerFrame();
     } catch (error) {
       const errorName = error instanceof DOMException ? error.name : "Playback error";
       setIsPlaying(false);
       setImportStatus(`${errorName} - click Play`);
+      playScopeTear();
       return;
     }
+  }
+
+  // File-error grammar: the waveform tears — segmented offsets and dropped
+  // samples that decay back to the baseline over ~340ms.
+  function playScopeTear() {
+    if (reducedMotion) {
+      return;
+    }
+
+    const startedAt = performance.now();
+    const wave = new Uint8Array(1024);
+
+    const frame = () => {
+      const progress = (performance.now() - startedAt) / 340;
+
+      if (progress >= 1) {
+        drawScopeTrace(null, 0, 0);
+        return;
+      }
+
+      const settle = 1 - progress;
+      let sliceOffset = 0;
+
+      for (let index = 0; index < wave.length; index += 1) {
+        if (index % 96 === 0 && Math.random() < 0.7) {
+          sliceOffset = (Math.random() - 0.5) * 150 * settle;
+        }
+
+        const dropped = Math.random() < 0.05 * settle;
+        const base = Math.sin((index / wave.length) * Math.PI * 7) * 26 * settle;
+        wave[index] = dropped ? 128 : Math.max(0, Math.min(255, Math.round(128 + base + sliceOffset)));
+      }
+
+      drawScopeTrace(wave, 0.5 * settle, 1, 0);
+      window.requestAnimationFrame(frame);
+    };
+
+    window.requestAnimationFrame(frame);
   }
 
   function playTrack(trackId = currentTrack?.id) {
@@ -2885,6 +4098,134 @@ function App() {
     startAudioPlayback();
   }
 
+  function toggleFavorite(trackId: string) {
+    setTracks((existing) =>
+      existing.map((track) => (track.id === trackId ? { ...track, favorite: !track.favorite } : track))
+    );
+  }
+
+  // Row action: force a fresh fingerprint pass for one cartridge. The bumped
+  // revision re-kicks the tracing queue, whose progress drives the scanner.
+  function retraceTrack(track: Track) {
+    spinesRef.current.delete(track.id);
+    spineFailedRef.current.delete(track.id);
+    spineImagesRef.current.delete(track.id);
+    pressingsRef.current.delete(track.id);
+    heroTexturesRef.current.delete(track.id);
+    setSpineRevision((revision) => revision + 1);
+    flashSystemMessage(`RETRACING · ${track.title.toUpperCase()}`, 900);
+  }
+
+  // Row action: re-strike the generated pressing/plate from the current
+  // trace (artless tracks only — real covers never get overwritten).
+  function restrikePressing(track: Track) {
+    pressingsRef.current.delete(track.id);
+    heroTexturesRef.current.delete(track.id);
+    spineImagesRef.current.delete(track.id);
+    setSpineRevision((revision) => revision + 1);
+    flashSystemMessage("PRESSING RE-STRUCK", 900);
+  }
+
+  function cueTrackNext(track: Track) {
+    setPlayNextId(track.id);
+    flashSystemMessage(`CUED NEXT · ${track.title.toUpperCase()}`, 1100);
+  }
+
+  function setShelfSizeAndReport(next: ShelfSize) {
+    setShelfSize(next);
+    flashSystemMessage(`SHELF ${next.toUpperCase()}`, 700);
+  }
+
+  function cycleShelfSize() {
+    const nextIndex = (shelfSizeOrder.indexOf(shelfSize) + 1) % shelfSizeOrder.length;
+    setShelfSizeAndReport(shelfSizeOrder[nextIndex]);
+  }
+
+  // Drag-resize: live deltas preview the resize, release snaps to the
+  // nearest of the three states. Deltas are divided by the console scale so
+  // the handle tracks the cursor on a scaled stage.
+  function onShelfHandlePointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    shelfDragRef.current = { startY: event.clientY, pointerId: event.pointerId, moved: false };
+    deckRef.current?.classList.add("is-shelf-dragging");
+  }
+
+  function onShelfHandlePointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+    const drag = shelfDragRef.current;
+    const deck = deckRef.current;
+
+    if (!drag || !deck) {
+      return;
+    }
+
+    const delta = (event.clientY - drag.startY) / Math.max(0.2, consoleScale);
+
+    if (Math.abs(delta) > 4) {
+      drag.moved = true;
+    }
+
+    // Dragging up grows the shelf (hero shrinks); dragging down shrinks the
+    // shelf toward the collapsed single-row state.
+    const heroBase = shelfSize === "expanded" ? 96 : 264;
+    deck.style.setProperty("--hero-h", `${Math.round(Math.min(264, Math.max(96, heroBase + delta)))}px`);
+    deck.style.setProperty(
+      "--shelf-cap",
+      delta > 0 && shelfSize !== "expanded" ? `${Math.round(Math.max(46, 260 - delta))}px` : "none"
+    );
+  }
+
+  function onShelfHandlePointerUp(event: React.PointerEvent<HTMLButtonElement>) {
+    const drag = shelfDragRef.current;
+    const deck = deckRef.current;
+    shelfDragRef.current = null;
+
+    if (deck) {
+      deck.classList.remove("is-shelf-dragging");
+      deck.style.removeProperty("--hero-h");
+      deck.style.removeProperty("--shelf-cap");
+    }
+
+    if (!drag) {
+      return;
+    }
+
+    if (event.currentTarget.hasPointerCapture(drag.pointerId)) {
+      event.currentTarget.releasePointerCapture(drag.pointerId);
+    }
+
+    const delta = (event.clientY - drag.startY) / Math.max(0.2, consoleScale);
+
+    if (!drag.moved) {
+      // A plain click on the handle cycles states.
+      cycleShelfSize();
+      return;
+    }
+
+    const currentIndex = shelfSizeOrder.indexOf(shelfSize);
+    const shift = delta < -140 ? 2 : delta < -55 ? 1 : delta > 140 ? -2 : delta > 55 ? -1 : 0;
+    const nextIndex = Math.max(0, Math.min(shelfSizeOrder.length - 1, currentIndex + shift));
+
+    if (nextIndex !== currentIndex) {
+      setShelfSizeAndReport(shelfSizeOrder[nextIndex]);
+    }
+  }
+
+  function onShelfHandleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    const currentIndex = shelfSizeOrder.indexOf(shelfSize);
+
+    if (event.key === "ArrowUp" && currentIndex < shelfSizeOrder.length - 1) {
+      event.preventDefault();
+      setShelfSizeAndReport(shelfSizeOrder[currentIndex + 1]);
+    } else if (event.key === "ArrowDown" && currentIndex > 0) {
+      event.preventDefault();
+      setShelfSizeAndReport(shelfSizeOrder[currentIndex - 1]);
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      cycleShelfSize();
+    }
+  }
+
   // A play only "counts" once the listener passes 30s (or half a short track),
   // so skipping through the shelf never ages a cartridge.
   function registerPlayProgress(time: number) {
@@ -2915,7 +4256,7 @@ function App() {
 
     if (audio && !audio.paused) {
       audio.pause();
-      stopVisualizerFrame();
+      stopVisualizerFrame("freeze");
       setIsPlaying(false);
     } else if (fallbackTrack?.url || currentTrack?.url) {
       playTrack(fallbackTrack?.id ?? currentTrack?.id);
@@ -2925,13 +4266,46 @@ function App() {
     }
   }
 
-  function nextTrack() {
+  // Skip grammar: mark the transition as a tape wind so the scope smears past
+  // instead of re-running the full signal-lock sequence.
+  function markTapeWind() {
+    if (reducedMotion || !isPlaying) {
+      return;
+    }
+
+    tapeWindRef.current = { startedAt: performance.now() };
+    skipWindRef.current = true;
+  }
+
+  function nextTrack(autoAdvance = false) {
+    // A cued PLAY NEXT wins over queue order, once.
+    if (playNextId) {
+      const cued = tracks.find((track) => track.id === playNextId);
+      setPlayNextId("");
+
+      if (cued && isLocalPlaybackUrl(cued.url)) {
+        if (!autoAdvance) {
+          markTapeWind();
+        }
+
+        playTrack(cued.id);
+        return;
+      }
+    }
+
     if (playbackQueue.length === 0) {
       return;
     }
 
     const queueIndex = playbackQueue.findIndex((track) => track.id === currentTrack?.id);
     const nextIndex = queueIndex < 0 ? 0 : (queueIndex + 1) % playbackQueue.length;
+
+    // A natural end-of-track advance re-locks like a fresh cartridge; only a
+    // deliberate skip winds the tape.
+    if (!autoAdvance) {
+      markTapeWind();
+    }
+
     playTrack(playbackQueue[nextIndex].id);
   }
 
@@ -2942,7 +4316,44 @@ function App() {
 
     const queueIndex = playbackQueue.findIndex((track) => track.id === currentTrack?.id);
     const previousIndex = queueIndex <= 0 ? playbackQueue.length - 1 : queueIndex - 1;
+    markTapeWind();
     playTrack(playbackQueue[previousIndex].id);
+  }
+
+  // B6 repeat: ONE re-arms the same cartridge, ALL wraps the queue (stock
+  // behavior), OFF lets the deck stop at the end of the shelf.
+  function onTrackEnded() {
+    if (repeatMode === "one" && audioRef.current) {
+      // Repeat grammar: the progress line visibly loops back through the
+      // machine — paintSeekSpine sweeps a highlight right-to-left.
+      if (!reducedMotion) {
+        seekLoopRef.current = performance.now();
+      }
+
+      audioRef.current.currentTime = 0;
+      setCurrentTime(0);
+      startAudioPlayback();
+      return;
+    }
+
+    if (repeatMode === "off") {
+      const queueIndex = playbackQueue.findIndex((track) => track.id === currentTrack?.id);
+
+      if (queueIndex >= 0 && queueIndex === playbackQueue.length - 1) {
+        setIsPlaying(false);
+        stopVisualizerFrame("freeze");
+        flashSystemMessage("END OF SHELF", 1200);
+        return;
+      }
+    }
+
+    nextTrack(true);
+  }
+
+  function cycleRepeatMode() {
+    const nextMode: RepeatMode = repeatMode === "off" ? "all" : repeatMode === "all" ? "one" : "off";
+    setRepeatMode(nextMode);
+    flashSystemMessage(`REPEAT ${nextMode.toUpperCase()}`, 760);
   }
 
   function seekBy(seconds: number) {
@@ -3010,6 +4421,18 @@ function App() {
         target?.getAttribute("contenteditable") === "true";
 
       if (isTyping) {
+        return;
+      }
+
+      if (event.key === "?") {
+        event.preventDefault();
+        setShowKeyLegend((visible) => !visible);
+        return;
+      }
+
+      if (event.key === "Escape" && showKeyLegend) {
+        event.preventDefault();
+        setShowKeyLegend(false);
         return;
       }
 
@@ -3098,7 +4521,58 @@ function App() {
     navigator.mediaSession.setActionHandler("pause", () => togglePlayback());
     navigator.mediaSession.setActionHandler("previoustrack", () => previousTrack());
     navigator.mediaSession.setActionHandler("nexttrack", () => nextTrack());
+    navigator.mediaSession.setActionHandler("seekbackward", () => seekBy(-10));
+    navigator.mediaSession.setActionHandler("seekforward", () => seekBy(10));
+
+    try {
+      navigator.mediaSession.setActionHandler("seekto", (details) => {
+        if (details.seekTime == null || !audioRef.current) {
+          return;
+        }
+
+        audioRef.current.currentTime = details.seekTime;
+        setCurrentTime(details.seekTime);
+      });
+    } catch {
+      // Older engines without seekto support.
+    }
+
+    navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
   });
+
+  // B5: hold a host power-save blocker only while audio actually plays, so
+  // long sessions survive display sleep without ever blocking it at idle.
+  useEffect(() => {
+    window.musicHost?.setPlaybackActive?.(isPlaying)?.catch?.(() => undefined);
+
+    return () => {
+      if (isPlaying) {
+        window.musicHost?.setPlaybackActive?.(false)?.catch?.(() => undefined);
+      }
+    };
+  }, [isPlaying]);
+
+  // Keep the OS Now Playing widget's scrubber in sync.
+  useEffect(() => {
+    if (!("mediaSession" in navigator) || typeof navigator.mediaSession.setPositionState !== "function") {
+      return;
+    }
+
+    try {
+      if (!currentTrack || !Number.isFinite(playbackDuration) || playbackDuration <= 0) {
+        navigator.mediaSession.setPositionState();
+        return;
+      }
+
+      navigator.mediaSession.setPositionState({
+        duration: playbackDuration,
+        playbackRate: audioRef.current?.playbackRate ?? 1,
+        position: Math.min(currentTime, playbackDuration)
+      });
+    } catch {
+      // Position state is best-effort.
+    }
+  }, [currentTime, currentTrack, playbackDuration]);
 
   function onLoadedMetadata() {
     const nextDuration = audioRef.current?.duration ?? 0;
@@ -3117,7 +4591,7 @@ function App() {
   }
 
   function onAudioPause() {
-    stopVisualizerFrame();
+    stopVisualizerFrame("freeze");
     setIsPlaying(false);
   }
 
@@ -3134,6 +4608,8 @@ function App() {
     seekPulse ? "is-seeking" : "",
     attract ? "is-attract" : "",
     shuttle ? "is-shuttling" : "",
+    isFindSweeping ? "is-findsweep" : "",
+    volume > 0.78 ? "is-hot" : "",
     isPlaying ? "is-playing" : "is-idle"
   ]
     .filter(Boolean)
@@ -3178,19 +4654,39 @@ function App() {
           setCurrentTime(time);
           registerPlayProgress(time);
         }}
-        onEnded={nextTrack}
+        onEnded={onTrackEnded}
       />
 
-      <section className="console-screen" aria-label="Cody Cartridge player">
+      <section className={`console-screen ${isDegaussing ? "is-degauss" : ""}`} aria-label="Cody Cartridge player">
         <header className="screen-header">
           <div className="screen-title">
             <span className="eyebrow">Cody Noir</span>
             <h1 className="sr-only">{currentTrack?.title ?? "No cartridge inserted"}</h1>
             <p>{currentTrack ? "Cover signal" : "No track loaded"}</p>
             <div className="system-header-line" title={diagnosticsTitle}>
-              <span className="import-status">{systemStatus}</span>
-              <span className={`system-message ${isPlaying ? "live" : hasTagGap(currentTrack) ? "warn" : ""}`}>
-                {systemMessage}
+              <span className="import-status">
+                {"CODY NOIR // LOCAL INDEX · "}
+                {/* C12: counters roll like split-flap digits when they change. */}
+                <span className="stat-roll" key={`files-${tracks.length}`}>
+                  {tracks.length.toString().padStart(2, "0")} FILES
+                </span>
+                {" · "}
+                <span className="stat-roll" key={`matched-${ytMatchCount}`}>
+                  {ytMatchCount.toString().padStart(2, "0")} MATCHED
+                </span>
+                {" · "}
+                <span className="stat-roll" key={`gaps-${tagIssueCount}`}>
+                  {tagIssueCount.toString().padStart(2, "0")} TAG GAPS
+                </span>
+                {" · "}
+                {activeShelfLabel.toUpperCase()}
+              </span>
+              <span
+                className={`system-message ${isPlaying ? "live" : hasTagGap(currentTrack) ? "warn" : ""} ${
+                  printedSystemMessage.length < systemMessage.length ? "is-printing" : ""
+                }`}
+              >
+                {printedSystemMessage}
               </span>
             </div>
           </div>
@@ -3240,8 +4736,34 @@ function App() {
           </div>
         ) : null}
 
-        <div className="deck">
+        {/* Item 14: interference visual layer — grain/scanlines/chromatic
+            fringe/tears scale with the mode; decorative only, never text. */}
+        <span className="interference-veil" aria-hidden="true" />
+
+        <div ref={deckRef} className={`deck ${heroDocked ? "hero-docked" : ""} shelf-${shelfSize}`}>
           <section className="deck-hero" aria-label="Now playing">
+            <button
+              type="button"
+              className="hero-dock-toggle"
+              aria-pressed={heroDocked}
+              title={heroDocked ? "Show the scope" : "Dock the scope for more shelf rows"}
+              onClick={() => {
+                setHeroDocked((docked) => !docked);
+                flashSystemMessage(heroDocked ? "SCOPE RAISED" : "SCOPE DOCKED", 760);
+              }}
+            >
+              {heroDocked ? "▴ SCOPE" : "▾ DOCK"}
+            </button>
+            {heroDocked || shelfSize === "expanded" ? (
+              <div className="hero-mini" aria-live="polite">
+                <span className="hero-mini-index">
+                  {currentTrackNumber ? currentTrackNumber.toString().padStart(2, "0") : "--"}
+                </span>
+                <strong className="hero-mini-title">{currentTrack?.title ?? "NO FILE"}</strong>
+                <span className="hero-mini-artist">{currentTrack?.artist ?? "No active artist"}</span>
+                <span className="hero-mini-quality">{currentQualityLine}</span>
+              </div>
+            ) : null}
             <div
               className={`cartridge-art ${isPlaying || storePosterMode ? "powered" : ""} ${currentTrack ? "has-track" : "is-empty"} ${
                 cartridgeSwap ? `is-${cartridgeSwap}` : ""
@@ -3250,8 +4772,14 @@ function App() {
               aria-label={currentTrack ? `Signal map for ${currentTrack.title} by ${currentTrack.artist}` : "Empty signal map"}
             >
               <div className="signal-map signal-scope-only" aria-hidden="true">
+                {heroBackdropUrl ? (
+                  <span className="hero-backdrop" style={{ backgroundImage: `url(${heroBackdropUrl})` }} />
+                ) : heroTextureUrl ? (
+                  <span className="hero-texture" style={{ backgroundImage: `url(${heroTextureUrl})` }} />
+                ) : null}
                 <span className="signal-vignette" />
                 <canvas ref={scopeCanvasRef} className="signal-scope" />
+                {attract && burnGhostTitle ? <span className="burn-ghost">{burnGhostTitle}</span> : null}
                 <span className="signal-frame signal-frame-bezel" />
                 {shuttle ? (
                   <span className="shuttle-indicator">
@@ -3262,7 +4790,25 @@ function App() {
 
               <div className="hero-overlay" aria-live="polite">
                 <div className="hero-np">
-                  <span className="module-label">NOW PLAYING</span>
+                  <span className="module-label">
+                    NOW PLAYING
+                    {currentTrack ? (
+                      <button
+                        type="button"
+                        className={`fav-toggle hero-fav ${currentTrack.favorite ? "is-fav" : ""}`}
+                        aria-pressed={currentTrack.favorite}
+                        aria-label={
+                          currentTrack.favorite
+                            ? `Remove ${currentTrack.title} from Crowned`
+                            : `Add ${currentTrack.title} to Crowned`
+                        }
+                        title={currentTrack.favorite ? "Remove from Crowned shelf" : "Add to Crowned shelf"}
+                        onClick={() => toggleFavorite(currentTrack.id)}
+                      >
+                        {currentTrack.favorite ? "♥" : "♡"}
+                      </button>
+                    ) : null}
+                  </span>
                   <strong className="hero-title">
                     {currentTrackNumber ? currentTrackNumber.toString().padStart(2, "0") : "--"} //{" "}
                     {currentTrack?.title ?? "NO FILE"}
@@ -3278,24 +4824,33 @@ function App() {
             </div>
 
             <div className="stage-path" aria-label="Track progress">
-              <span>{formatTime(currentTime)}</span>
+              <span className="stage-elapsed">
+                {formatTime(playbackDuration > 0 ? Math.min(currentTime, playbackDuration) : currentTime)}
+              </span>
               {seekPulse ? <span className="seek-pulse">{seekPulse}</span> : null}
-              <input
-                type="range"
-                min="0"
-                max={duration || currentTrack?.duration || 1}
-                value={Math.min(currentTime, duration || currentTrack?.duration || 1)}
-                disabled={!currentTrack}
-                onChange={(event) => {
-                  const nextTime = Number(event.target.value);
-                  pulseSeekLabel(nextTime, audioRef.current?.currentTime ?? currentTime);
-                  setCurrentTime(nextTime);
-                  if (audioRef.current) {
-                    audioRef.current.currentTime = nextTime;
-                  }
-                }}
-                aria-label="Seek"
-              />
+              <div
+                className={`seek-spine ${currentSpineAvailable ? "has-spine" : ""} ${
+                  isTracingCurrentTrack ? "is-tracing" : ""
+                }`}
+              >
+                <canvas ref={seekSpineCanvasRef} className="seek-spine-canvas" aria-hidden="true" />
+                <input
+                  type="range"
+                  min="0"
+                  max={duration || currentTrack?.duration || 1}
+                  value={Math.min(currentTime, duration || currentTrack?.duration || 1)}
+                  disabled={!currentTrack}
+                  onChange={(event) => {
+                    const nextTime = Number(event.target.value);
+                    pulseSeekLabel(nextTime, audioRef.current?.currentTime ?? currentTime);
+                    setCurrentTime(nextTime);
+                    if (audioRef.current) {
+                      audioRef.current.currentTime = nextTime;
+                    }
+                  }}
+                  aria-label="Seek"
+                />
+              </div>
               <span>{formatTime(duration || currentTrack?.duration || 0)}</span>
             </div>
 
@@ -3306,7 +4861,7 @@ function App() {
               aria-label="Selected local file inspection"
             >
               {isTakeoutMatched(currentTrack) ? <span className="match-stamp">MATCHED</span> : null}
-              <span>
+              <span className="inspector-source">
                 <span className="artifact-label">SOURCE</span> <strong>{fileSourcePath}</strong>
               </span>
               <span>
@@ -3319,25 +4874,77 @@ function App() {
                 {formatFileSize(currentTrack?.size)}
               </span>
               <span>
+                <span className="artifact-label">TRACE</span>{" "}
+                {currentSpine && currentSpineStats
+                  ? `ARCHIVED · DR ${currentSpineStats.dynamicRangeDb.toFixed(0)}dB · PEAK ${Math.round(
+                      currentSpineStats.peakAt * 100
+                    )}% · FILL ${Math.round(currentSpineStats.fill * 100)}%`
+                  : isTracingCurrentTrack
+                    ? "TRACING..."
+                    : currentTrack
+                      ? "NO TRACE"
+                      : "no file"}
+              </span>
+              <span>
                 <span className="artifact-label">ERRORS</span> {currentTagErrors}
               </span>
             </div>
           </section>
 
-          <section className="deck-catalog" aria-label="Local tracks">
-            <div className="bay-header">
-              <div>
-                <span className="eyebrow">Shelf</span>
-                <h2>{activeShelfLabel}</h2>
-              </div>
-              <div className="mini-stat">
-                <ListMusic size={16} />
-                <span>{filteredCards.length}</span>
-              </div>
-            </div>
+          <section className={`deck-catalog ${denseRows ? "rows-compact" : ""}`} aria-label="Local tracks">
+            <button
+              type="button"
+              className="shelf-resize-handle"
+              aria-label={`Resize shelf. Current: ${shelfSize}. Drag, click to cycle, or use arrow keys`}
+              title={`Shelf: ${shelfSize.toUpperCase()} — drag or click to resize`}
+              onPointerDown={onShelfHandlePointerDown}
+              onPointerMove={onShelfHandlePointerMove}
+              onPointerUp={onShelfHandlePointerUp}
+              onPointerCancel={onShelfHandlePointerUp}
+              onKeyDown={onShelfHandleKeyDown}
+            >
+              <span aria-hidden="true">▔▔▔</span>
+            </button>
 
             <div className="metadata-panel" aria-label="Track metadata">
-              <div className="catalog-toolbar">
+              <div className="shelf-bar">
+                <div className="shelf-id" title={diagnosticsTitle}>
+                  <span className="eyebrow">Shelf</span>
+                  <span className="shelf-id-line">
+                    <h2>{activeShelfLabel}</h2>
+                    <span className="shelf-count">
+                      {query
+                        ? `${filteredCards.length.toString().padStart(2, "0")}/${shelfCards.length
+                            .toString()
+                            .padStart(2, "0")}`
+                        : shelfCards.length.toString().padStart(2, "0")}{" "}
+                      FILES
+                    </span>
+                  </span>
+                </div>
+                {shelfTabs.length > 1 ? (
+                  <div className="shelf-tabs" aria-label="Shelf views">
+                    {shelfTabs.map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        className={activeShelf === tab.id ? "active" : ""}
+                        aria-pressed={activeShelf === tab.id}
+                        onClick={() => {
+                          if (activeShelf === tab.id) {
+                            return;
+                          }
+
+                          setActiveShelf(tab.id);
+                          triggerDegauss();
+                          flashSystemMessage(`SHELF ${tab.label}`, 760);
+                        }}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
                 <label className="catalog-search">
                   <span>FIND</span>
                   <input
@@ -3345,33 +4952,37 @@ function App() {
                     type="search"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="FIND / filter local files... artist:che missing:cover match:<80"
-                    title="Try artist:che, missing:cover, match:<80, type:flac, or tag:gap"
+                    placeholder="FIND / filter... artist:che missing:cover match:<80"
+                    title="Try artist:che, missing:cover, match:<80, type:flac, fav:yes, or tag:gap"
                     aria-label="Filter catalog"
                   />
-                </label>
-                <div className="catalog-filter-chips" aria-label="Fast filters">
-                  {[
-                    ["ALL", ""],
-                    ["YT MATCH", "status:matched"],
-                    ["LOCAL", "status:local"],
-                    ["NO COVER", "missing:cover"],
-                    ["TAG GAP", "tag:gap"]
-                  ].map(([label, nextQuery]) => (
+                  {query ? (
                     <button
-                      className={query === nextQuery ? "active" : ""}
-                      key={label}
                       type="button"
-                      onClick={() => setQuery(nextQuery)}
+                      className="find-clear"
+                      aria-label="Clear filter"
+                      title="Clear filter"
+                      onClick={() => setQuery("")}
                     >
-                      {label}
+                      ✕
                     </button>
-                  ))}
+                  ) : null}
+                </label>
+                <div className="catalog-tools">
+                  <span className="nav-hint" aria-hidden="true">J/K</span>
+                  <button
+                    type="button"
+                    className={`density-toggle ${denseRows ? "active" : ""}`}
+                    aria-pressed={denseRows}
+                    title={denseRows ? "Switch to roomy rows" : "Switch to compact rows"}
+                    onClick={() => {
+                      setDenseRows((dense) => !dense);
+                      flashSystemMessage(denseRows ? "SHELF ROOMY" : "SHELF DENSE", 760);
+                    }}
+                  >
+                    DENSE
+                  </button>
                 </div>
-              </div>
-              <div className="metadata-header" aria-hidden="true">
-                <span>Catalog</span>
-                <span>{filteredCards.length.toString().padStart(2, "0")} files</span>
               </div>
               <div className="metadata-columns" aria-hidden="true">
                 <span>#</span>
@@ -3384,6 +4995,32 @@ function App() {
                 <span>Status</span>
               </div>
               <div className="metadata-list">
+                {filteredCards.length === 0 ? (
+                  tracks.length === 0 && takeoutSongs.length === 0 ? (
+                    <div className="no-cartridge">
+                      <span className="no-cartridge-title">NO CARTRIDGE</span>
+                      <span className="no-cartridge-sub">INSERT MEDIA // IMPORT LOCAL AUDIO FILES</span>
+                      <div className="no-cartridge-actions">
+                        <button type="button" onClick={importAudioFiles}>
+                          IMPORT FILES
+                        </button>
+                        <button type="button" onClick={importAudioFolder}>
+                          IMPORT FOLDER
+                        </button>
+                      </div>
+                      <span className="no-cartridge-hint">or drop audio files anywhere on the deck</span>
+                    </div>
+                  ) : (
+                    <div className="no-cartridge no-trace-match">
+                      <span className="no-cartridge-title">NO TRACE MATCHES FIND</span>
+                      <div className="no-cartridge-actions">
+                        <button type="button" onClick={() => setQuery("")}>
+                          CLEAR FIND
+                        </button>
+                      </div>
+                    </div>
+                  )
+                ) : null}
                 {filteredCards.map((card, index) => {
                   const track = card.kind === "track" ? card.track : undefined;
                   const missingSong = card.kind === "missing" ? card.song : undefined;
@@ -3410,19 +5047,46 @@ function App() {
                   const isActiveRow = track?.id === currentTrack?.id;
                   const rowArtSource = card.kind === "track" ? card.track : card.artSource;
                   const rowHasCover = Boolean(track?.artworkUrl);
+                  const rowSpineImage = track ? getSpineRowImage(track) : undefined;
+                  const rowPressing = !rowHasCover && track ? getPressing(track) : undefined;
+                  // Item 3: the playing track's identity moves at its own
+                  // tempo — radial pulses for energetic program, slow liquid
+                  // drift for ambient.
+                  const rowIdentity = (() => {
+                    if (!isActiveRow || !isPlaying || !track || reducedMotion) {
+                      return undefined;
+                    }
+
+                    const rowSpine = getTrackSpine(track);
+                    return rowSpine && rowSpine.bpm > 0 ? spineIdentity(rowSpine) : undefined;
+                  })();
+                  // Item 4: scanner state comes from the REAL tracing queue —
+                  // no fake background scans.
+                  const isRowScanning = Boolean(track) && tracing?.trackId === track?.id;
+                  const isRowLockFlash = Boolean(track) && lockFlashId === track?.id;
+                  const rowHasNoLock = Boolean(track && spineFailedRef.current.has(track.id));
 
                   return (
                     <div
                       className={`metadata-row ${isActiveRow ? "active" : ""} ${
                         card.kind === "missing" ? "missing" : ""
-                      }`}
+                      } ${isRowScanning ? "is-scanning" : ""} ${isRowLockFlash ? "is-lock-flash" : ""}`}
                       key={`metadata-${card.id}`}
                       role={track ? "button" : undefined}
                       tabIndex={track ? 0 : undefined}
                       title={fullDetail}
+                      style={{ "--row-i": Math.min(index, 16) } as CSSProperties}
                       onClick={() => track && setCurrentId(track.id)}
                       onDoubleClick={() => track && playTrack(track.id)}
                       onKeyDown={(event) => {
+                        // Favorite toggles and row actions handle their own keys.
+                        if (
+                          event.target instanceof HTMLElement &&
+                          event.target.closest(".fav-toggle, .row-actions")
+                        ) {
+                          return;
+                        }
+
                         // Arrow keys move the catalog selection; Enter/Space plays.
                         if (event.key === "ArrowDown") {
                           event.preventDefault();
@@ -3444,6 +5108,27 @@ function App() {
                         playTrack(track.id);
                       }}
                     >
+                      {rowSpineImage ? (
+                        <img
+                          className="metadata-row-spine"
+                          src={rowSpineImage}
+                          alt=""
+                          aria-hidden="true"
+                          draggable={false}
+                        />
+                      ) : null}
+                      {rowSpineImage && isActiveRow && isPlaying ? (
+                        // The playing row's waveform illuminates left-to-right
+                        // with playback progress (clip driven by the shell's
+                        // --playback-progress var).
+                        <img
+                          className="metadata-row-spine metadata-row-spine-lit"
+                          src={rowSpineImage}
+                          alt=""
+                          aria-hidden="true"
+                          draggable={false}
+                        />
+                      ) : null}
                       <span className="metadata-index">
                         {String(index + 1).padStart(2, "0")}
                         <span className="metadata-play-marker">{isActiveRow && isPlaying ? "▶" : isActiveRow ? "//" : ""}</span>
@@ -3451,17 +5136,45 @@ function App() {
                       <span
                         className={`metadata-cover ${rowHasCover ? "has-cover" : "generated-cover"} ${
                           card.kind === "missing" ? "is-missing" : ""
-                        }`}
-                        style={albumGraphicStyle(rowArtSource, index)}
+                        } ${rowIdentity ? `identity-live identity-${rowIdentity.energetic ? "pulse" : "liquid"}` : ""}`}
+                        style={
+                          {
+                            ...albumGraphicStyle(rowArtSource, index),
+                            ...(rowIdentity ? { "--pulse-period": `${(60 / rowIdentity.bpm).toFixed(3)}s` } : {})
+                          } as CSSProperties
+                        }
                         aria-hidden="true"
                       >
                         {rowHasCover ? (
                           <img className="metadata-cover-img" src={track?.artworkUrl} alt="" draggable={false} />
+                        ) : rowPressing ? (
+                          <img
+                            className="metadata-cover-img metadata-cover-pressing"
+                            src={rowPressing}
+                            alt=""
+                            draggable={false}
+                          />
                         ) : (
                           <span className="metadata-cover-bands" />
                         )}
                       </span>
                       <span className="metadata-title">
+                        {track ? (
+                          <button
+                            type="button"
+                            className={`fav-toggle ${track.favorite ? "is-fav" : ""}`}
+                            aria-pressed={track.favorite}
+                            aria-label={track.favorite ? `Remove ${title} from Crowned` : `Add ${title} to Crowned`}
+                            title={track.favorite ? "Remove from Crowned shelf" : "Add to Crowned shelf"}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toggleFavorite(track.id);
+                            }}
+                            onDoubleClick={(event) => event.stopPropagation()}
+                          >
+                            {track.favorite ? "♥" : "♡"}
+                          </button>
+                        ) : null}
                         <strong data-scramble={scrambleLabel(title, `${card.id}-${index}`)}>{title}</strong>
                       </span>
                       <span className="metadata-artist">{artist}</span>
@@ -3478,29 +5191,145 @@ function App() {
                         </small>
                       </span>
                       <span className="metadata-status-chips">
-                        {statusChips.map((chip) => (
+                        {isRowScanning ? (
+                          <span className="status-chip scanning">SCANNING</span>
+                        ) : isRowLockFlash ? (
+                          <span className="status-chip trace-locked">TRACE LOCKED</span>
+                        ) : (
+                          <>
+                            {rowHasNoLock ? (
+                              <span className="status-chip alert no-lock" title="Trace failed — RETRACE to retry">
+                                NO LOCK
+                              </span>
+                            ) : null}
+                            {statusChips.map((chip) => (
+                              <button
+                                className={`status-chip ${chip.tone ?? ""}`}
+                                data-corrupt={
+                                  chip.label === "NO COVER"
+                                    ? "NO C0VER"
+                                    : chip.label === "TAG GAP"
+                                      ? "TAG G/P"
+                                      : chip.label === "LOW CONF"
+                                        ? "LOW C0NF"
+                                        : chip.label
+                                }
+                                key={`${card.id}-${chip.label}`}
+                                type="button"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  setQuery(chip.query);
+                                }}
+                              >
+                                {chip.label}
+                              </button>
+                            ))}
+                          </>
+                        )}
+                      </span>
+                      {track ? (
+                        <span
+                          className="row-actions"
+                          aria-label={`Actions for ${title}`}
+                          onClick={(event) => event.stopPropagation()}
+                          onDoubleClick={(event) => event.stopPropagation()}
+                        >
                           <button
-                            className={`status-chip ${chip.tone ?? ""}`}
-                            data-corrupt={
-                              chip.label === "NO COVER"
-                                ? "NO C0VER"
-                                : chip.label === "TAG GAP"
-                                  ? "TAG G/P"
-                                  : chip.label === "LOW CONF"
-                                    ? "LOW C0NF"
-                                    : chip.label
-                            }
-                            key={`${card.id}-${chip.label}`}
                             type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setQuery(chip.query);
+                            className={`row-action ${playNextId === track.id ? "engaged" : ""}`}
+                            aria-label={`Play ${title} next`}
+                            title="Cue this cartridge to play next"
+                            onClick={() => cueTrackNext(track)}
+                          >
+                            {playNextId === track.id ? "CUED" : "PLAY NEXT"}
+                          </button>
+                          <button
+                            type="button"
+                            className="row-action"
+                            aria-label={`Re-trace ${title}`}
+                            title="Re-run the fingerprint trace"
+                            disabled={isRowScanning}
+                            onClick={() => retraceTrack(track)}
+                          >
+                            TRACE
+                          </button>
+                          <button
+                            type="button"
+                            className="row-action"
+                            aria-label={`Find cover for ${title}`}
+                            title={
+                              track.artworkUrl
+                                ? "Cover present — generated pressing not used"
+                                : "Re-strike the generated pressing from the trace"
+                            }
+                            disabled={Boolean(track.artworkUrl)}
+                            onClick={() => restrikePressing(track)}
+                          >
+                            FIND COVER
+                          </button>
+                          <button
+                            type="button"
+                            className="row-action"
+                            aria-label={`Inspect tags for ${title}`}
+                            title="Open the inspector (archive is read-only; tag writes need a writable backend)"
+                            onClick={() => {
+                              setCurrentId(track.id);
+                              fileInspectorRef.current?.focus();
+                              fileInspectorRef.current?.scrollIntoView({
+                                behavior: reducedMotion ? "auto" : "smooth",
+                                block: "nearest"
+                              });
                             }}
                           >
-                            {chip.label}
+                            EDIT TAGS
                           </button>
-                        ))}
-                      </span>
+                          <button
+                            type="button"
+                            className="row-action row-menu-btn"
+                            aria-label={`More actions for ${title}`}
+                            aria-haspopup="menu"
+                            aria-expanded={rowMenuId === track.id}
+                            title="More"
+                            onClick={() => setRowMenuId(rowMenuId === track.id ? "" : track.id)}
+                          >
+                            ⋯
+                          </button>
+                          {rowMenuId === track.id ? (
+                            <span className="row-menu-pop" role="menu">
+                              <button
+                                type="button"
+                                role="menuitem"
+                                onClick={() => {
+                                  setQuery(`"${track.artist.toLowerCase()}"`);
+                                  setRowMenuId("");
+                                }}
+                              >
+                                FILTER ARTIST
+                              </button>
+                              <button
+                                type="button"
+                                role="menuitem"
+                                onClick={() => {
+                                  setQuery(`"${track.album.toLowerCase()}"`);
+                                  setRowMenuId("");
+                                }}
+                              >
+                                FILTER ALBUM
+                              </button>
+                              <button
+                                type="button"
+                                role="menuitem"
+                                onClick={() => {
+                                  toggleFavorite(track.id);
+                                  setRowMenuId("");
+                                }}
+                              >
+                                {track.favorite ? "UNCROWN" : "CROWN"}
+                              </button>
+                            </span>
+                          ) : null}
+                        </span>
+                      ) : null}
                     </div>
                   );
                 })}
@@ -3541,9 +5370,21 @@ function App() {
                   type="button"
                   title="Next"
                   disabled={!hasPlayableQueue}
-                  onClick={nextTrack}
+                  onClick={() => nextTrack()}
                 >
                   <SkipForward size={24} />
+                </button>
+              </div>
+              <div className="transport-pad">
+                <span>{repeatMode === "off" ? "REPEAT" : `RPT ${repeatMode.toUpperCase()}`}</span>
+                <button
+                  className={`icon-button repeat-button ${repeatMode !== "off" ? "engaged" : ""}`}
+                  type="button"
+                  title={`Repeat: ${repeatMode}`}
+                  aria-label={`Repeat mode: ${repeatMode}. Click to change`}
+                  onClick={cycleRepeatMode}
+                >
+                  {repeatMode === "one" ? <Repeat1 size={22} /> : <Repeat size={22} />}
                 </button>
               </div>
               <div className="volume-control">
@@ -3553,23 +5394,43 @@ function App() {
                   <VolumeKnob value={volume} onChange={setVolume} />
                 </div>
               </div>
+              <div className="react-control" aria-label="Meter sensitivity">
+                <span>REACT</span>
+                <div>
+                  {(["low", "med", "high"] as ReactLevel[]).map((level) => (
+                    <button
+                      key={level}
+                      type="button"
+                      className={reactLevel === level ? "active" : ""}
+                      aria-pressed={reactLevel === level}
+                      title={`Meter sensitivity: ${level}`}
+                      onClick={() => {
+                        setReactLevel(level);
+                        flashSystemMessage(`REACT ${level.toUpperCase()}`, 760);
+                      }}
+                    >
+                      {level.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="meter-bank">
               <div ref={visualizerRef} className="visualizer visualizer-crt-wave" aria-label="Audio visualizer">
                 {Array.from({ length: 24 }).map((_, index) => (
-                  <span
-                    key={index}
-                    style={
-                      {
-                        "--meter-height": "16px",
-                        animationDelay: `${index * 58}ms`
-                      } as CSSProperties
-                    }
-                  />
+                  <span key={index} style={{ "--meter-height": "3px" } as CSSProperties} />
                 ))}
               </div>
-              <VuMeter containerRef={vuMeterRef} />
+              <VuMeter
+                containerRef={vuMeterRef}
+                mode={meterMode}
+                onCycle={() => {
+                  const nextMode = meterModeOrder[(meterModeOrder.indexOf(meterMode) + 1) % meterModeOrder.length];
+                  setMeterMode(nextMode);
+                  flashSystemMessage(`METER ${meterModeTitles[nextMode]}`, 760);
+                }}
+              />
             </div>
 
             <div className="key-hints" aria-hidden="true">
@@ -3578,9 +5439,44 @@ function App() {
               <span>J/K TRACK</span>
               <span>F FIND</span>
               <span>I INSPECT</span>
+              <span>? LEGEND</span>
             </div>
           </section>
         </div>
+
+        {showKeyLegend ? (
+          <div
+            className="key-legend-overlay"
+            role="dialog"
+            aria-label="Keyboard controls"
+            onClick={() => setShowKeyLegend(false)}
+          >
+            <div className="key-legend-panel" onClick={(event) => event.stopPropagation()}>
+              <span className="key-legend-title">OPERATOR REFERENCE // FACEPLATE LEGEND</span>
+              <div className="key-legend-grid">
+                {[
+                  ["SPACE", "PLAY / HOLD"],
+                  ["← / →", "SEEK ±5S · HOLD = TAPE SHUTTLE"],
+                  ["J / K", "PREVIOUS / NEXT CARTRIDGE"],
+                  ["↑ / ↓", "MOVE SHELF SELECTION"],
+                  ["ENTER", "PLAY SELECTED CARTRIDGE"],
+                  ["F", "FOCUS FIND"],
+                  ["I", "FOCUS INSPECTOR"],
+                  ["?", "TOGGLE THIS LEGEND"],
+                  ["ESC", "CLOSE LEGEND / SKIP BOOT"]
+                ].map(([keys, action]) => (
+                  <React.Fragment key={keys}>
+                    <span className="key-legend-keys">{keys}</span>
+                    <span className="key-legend-action">{action}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+              <button type="button" className="key-legend-close" onClick={() => setShowKeyLegend(false)}>
+                CLOSE
+              </button>
+            </div>
+          </div>
+        ) : null}
       </section>
 
     </main>
