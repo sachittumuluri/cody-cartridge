@@ -3715,7 +3715,9 @@ function App() {
       context.beginPath();
 
       for (let index = 0; index <= points; index += 1) {
-        const center = Math.floor(index * stride);
+        // Clamp to the buffer: the final column used to sample past the end,
+        // decode as full deflection, and pin a spike to the right edge.
+        const center = Math.min(source.length - 1, Math.floor(index * stride));
         let sum = 0;
         let count = 0;
 
@@ -3728,7 +3730,7 @@ function App() {
           }
         }
 
-        const sample = (sum / Math.max(1, count) - 128) / 128;
+        const sample = count > 0 ? (sum / count - 128) / 128 : 0;
         const smear = shuttle > 0 ? (((index * 53) % 17) / 17 - 0.5) * shuttle * waveHeight * 0.5 : 0;
         // Interference instability: per-point vertical noise, trace only.
         const wobble = jitter > 0 ? (Math.random() - 0.5) * jitter * waveHeight : 0;

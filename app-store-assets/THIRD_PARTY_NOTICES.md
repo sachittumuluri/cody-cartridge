@@ -1,6 +1,6 @@
 # Cody Cartridge Third-Party Notices
 
-Last generated: 2026-06-20T20:01:09.526Z
+Last generated: 2026-07-12T20:43:26.667Z
 
 Cody Cartridge uses open-source packages for its local macOS player, build tooling, and release pipeline. This inventory is generated from `package-lock.json` and should be regenerated before App Store upload.
 
@@ -12,7 +12,7 @@ Cody Cartridge uses open-source packages for its local macOS player, build tooli
 
 ## Summary
 
-- Total packages in lockfile: 461
+- Total packages in lockfile: 463
 - Packages with unknown license metadata: 0
 
 ## License Counts
@@ -20,7 +20,7 @@ Cody Cartridge uses open-source packages for its local macOS player, build tooli
 - (MIT OR CC0-1.0): 1
 - (WTFPL OR MIT): 1
 - 0BSD: 1
-- Apache-2.0: 9
+- Apache-2.0: 11
 - BlueOak-1.0.0: 8
 - BSD-2-Clause: 6
 - BSD-3-Clause: 17
@@ -33,6 +33,7 @@ Cody Cartridge uses open-source packages for its local macOS player, build tooli
 
 ## Direct Runtime Dependencies
 
+- @paper-design/shaders-react 0.0.77 - Apache-2.0
 - lucide-react 0.468.0 - ISC
 - music-metadata 11.13.0 - MIT
 - react 18.3.1 - MIT
@@ -119,6 +120,8 @@ Cody Cartridge uses open-source packages for its local macOS player, build tooli
 - @malept/flatpak-bundler 0.4.0 - MIT - transitive development/build
 - @noble/hashes 1.8.0 - MIT - transitive development/build
 - @noble/hashes 1.8.0 - MIT - transitive development/build
+- @paper-design/shaders 0.0.77 - Apache-2.0 - transitive runtime
+- @paper-design/shaders-react 0.0.77 - Apache-2.0 - direct runtime
 - @peculiar/asn1-schema 2.8.0 - MIT - transitive development/build
 - @peculiar/json-schema 1.1.12 - MIT - transitive development/build
 - @peculiar/utils 2.0.3 - MIT - transitive development/build
@@ -168,7 +171,7 @@ Cody Cartridge uses open-source packages for its local macOS player, build tooli
 - @types/keyv 3.1.4 - MIT - transitive development/build
 - @types/ms 2.1.0 - MIT - transitive development/build
 - @types/node 24.13.2 - MIT - transitive development/build
-- @types/prop-types 15.7.15 - MIT - transitive development/build
+- @types/prop-types 15.7.15 - MIT - transitive runtime
 - @types/react 18.3.12 - MIT - direct development/build
 - @types/react-dom 18.3.1 - MIT - direct development/build
 - @types/responselike 1.0.3 - MIT - transitive development/build
@@ -236,7 +239,7 @@ Cody Cartridge uses open-source packages for its local macOS player, build tooli
 - core-util-is 1.0.3 - MIT - transitive development/build
 - cross-dirname 0.1.0 - MIT - transitive development/build
 - cross-spawn 7.0.6 - MIT - transitive development/build
-- csstype 3.2.3 - MIT - transitive development/build
+- csstype 3.2.3 - MIT - transitive runtime
 - debug 4.4.3 - MIT - transitive runtime
 - decompress-response 6.0.0 - MIT - transitive development/build
 - defer-to-connect 2.0.1 - MIT - transitive development/build

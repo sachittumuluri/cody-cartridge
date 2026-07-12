@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-06-20T20:01:09.526Z",
+  "generatedAt": "2026-07-12T20:43:26.667Z",
   "app": {
     "name": "Cody Cartridge",
     "bundleId": "com.sachittumuluri.codycartridge",
     "version": "0.1.0"
   },
   "summary": {
-    "totalPackages": 461,
+    "totalPackages": 463,
     "licenseCounts": {
       "MIT": 369,
       "BSD-2-Clause": 6,
       "BSD-3-Clause": 17,
       "ISC": 45,
-      "Apache-2.0": 9,
+      "Apache-2.0": 11,
       "Python-2.0": 1,
       "CC-BY-4.0": 1,
       "BlueOak-1.0.0": 8,
@@ -23,14 +23,23 @@
       "(WTFPL OR MIT)": 1
     },
     "relationshipCounts": {
-      "transitive development/build": 432,
-      "transitive runtime": 16,
-      "direct development/build": 9,
-      "direct runtime": 4
+      "transitive development/build": 430,
+      "transitive runtime": 19,
+      "direct runtime": 5,
+      "direct development/build": 9
     },
     "unknownLicenseCount": 0
   },
   "directRuntime": [
+    {
+      "name": "@paper-design/shaders-react",
+      "version": "0.0.77",
+      "license": "Apache-2.0",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/@paper-design/shaders-react",
+      "homepage": null,
+      "repository": null
+    },
     {
       "name": "lucide-react",
       "version": "0.468.0",
@@ -756,6 +765,24 @@
       "repository": "git+https://github.com/paulmillr/noble-hashes.git"
     },
     {
+      "name": "@paper-design/shaders",
+      "version": "0.0.77",
+      "license": "Apache-2.0",
+      "relationship": "transitive runtime",
+      "lockPath": "node_modules/@paper-design/shaders",
+      "homepage": null,
+      "repository": null
+    },
+    {
+      "name": "@paper-design/shaders-react",
+      "version": "0.0.77",
+      "license": "Apache-2.0",
+      "relationship": "direct runtime",
+      "lockPath": "node_modules/@paper-design/shaders-react",
+      "homepage": null,
+      "repository": null
+    },
+    {
       "name": "@peculiar/asn1-schema",
       "version": "2.8.0",
       "license": "MIT",
@@ -1200,7 +1227,7 @@
       "name": "@types/prop-types",
       "version": "15.7.15",
       "license": "MIT",
-      "relationship": "transitive development/build",
+      "relationship": "transitive runtime",
       "lockPath": "node_modules/@types/prop-types",
       "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/prop-types",
       "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
@@ -1812,7 +1839,7 @@
       "name": "csstype",
       "version": "3.2.3",
       "license": "MIT",
-      "relationship": "transitive development/build",
+      "relationship": "transitive runtime",
       "lockPath": "node_modules/csstype",
       "homepage": null,
       "repository": "https://github.com/frenic/csstype"
