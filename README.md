@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="build/icon.png" width="160" alt="Cody Cartridge — the pressing" />
+</p>
+
 # Cody Cartridge
 
 A local-first Mac music player styled as a noir hardware deck — a forensic

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import math
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFilter
 import subprocess
 
 
@@ -11,20 +12,6 @@ PNG_PATH = ROOT / "icon.png"
 ICNS_PATH = ROOT / "icon.icns"
 
 
-def load_font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
-    for candidate in (
-        "/System/Library/Fonts/SFNSMono.ttf",
-        "/System/Library/Fonts/Supplemental/Courier New Bold.ttf",
-        "/System/Library/Fonts/Menlo.ttc",
-    ):
-        try:
-            return ImageFont.truetype(candidate, size=size)
-        except OSError:
-            continue
-
-    return ImageFont.load_default()
-
-
 def rounded_mask(size: int, radius: int) -> Image.Image:
     mask = Image.new("L", (size, size), 0)
     draw = ImageDraw.Draw(mask)
@@ -32,98 +19,159 @@ def rounded_mask(size: int, radius: int) -> Image.Image:
     return mask
 
 
+def energy(t: float) -> float:
+    """Deterministic pseudo-spine: the groove/lane amplitude curve."""
+    value = (
+        0.55
+        + 0.30 * math.sin(t * math.pi * 2.3 + 0.7)
+        + 0.22 * math.sin(t * math.pi * 5.1 + 2.1)
+        + 0.12 * math.sin(t * math.pi * 11.0 + 4.2)
+    )
+    return max(0.08, min(1.0, value))
+
+
 def draw_icon(size: int) -> Image.Image:
-    scale = size / 1024
-    image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    mask = rounded_mask(size, int(188 * scale))
-    base = Image.new("RGBA", (size, size), "#07080a")
+    """The Pressing: the deck's signature object as the application mark —
+    a crimson groove disc with a tempo-glyph hub over the archive lane.
+    Every translucent element is drawn on its own layer and composited:
+    PIL's draw replaces pixels rather than blending."""
+    ss = 2  # supersample for crisp rings
+    S = size * ss
+    scale = S / 1024
+
+    def layer() -> tuple[Image.Image, ImageDraw.ImageDraw]:
+        surface = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        return surface, ImageDraw.Draw(surface)
+
+    base = Image.new("RGBA", (S, S), "#08070c")
     draw = ImageDraw.Draw(base)
 
-    for y in range(size):
-        tone = int(8 + (y / max(1, size - 1)) * 16)
-        draw.line((0, y, size, y), fill=(tone, tone, tone + 2, 255))
+    # Plate: subtle vertical gradient.
+    for y in range(S):
+        tone = int(9 + (y / max(1, S - 1)) * 10)
+        draw.line((0, y, S, y), fill=(tone, tone - 1, tone + 3, 255))
 
-    grid_step = max(12, int(54 * scale))
-    for x in range(0, size, grid_step):
-        draw.line((x, 0, x, size), fill=(92, 119, 130, 34), width=max(1, int(2 * scale)))
-    for y in range(0, size, grid_step):
-        draw.line((0, y, size, y), fill=(118, 18, 28, 30), width=max(1, int(2 * scale)))
+    # Blueprint grid, barely there.
+    grid, grid_draw = layer()
+    grid_step = max(16, int(88 * scale))
+    for x in range(0, S, grid_step):
+        grid_draw.line((x, 0, x, S), fill=(140, 170, 182, 22), width=max(1, int(2 * scale)))
+    for y in range(0, S, grid_step):
+        grid_draw.line((0, y, S, y), fill=(150, 40, 50, 18), width=max(1, int(2 * scale)))
+    base.alpha_composite(grid)
 
-    margin = int(108 * scale)
-    deck = (margin, margin, size - margin, size - margin)
-    draw.rounded_rectangle(deck, radius=int(46 * scale), outline=(222, 222, 212, 220), width=max(3, int(10 * scale)))
-    draw.rounded_rectangle(
-        (
-            margin + int(34 * scale),
-            margin + int(34 * scale),
-            size - margin - int(34 * scale),
-            size - margin - int(34 * scale),
-        ),
-        radius=int(24 * scale),
-        outline=(98, 126, 136, 150),
+    # Hardware bezel.
+    bezel, bezel_draw = layer()
+    margin = int(52 * scale)
+    bezel_draw.rounded_rectangle(
+        (margin, margin, S - margin, S - margin),
+        radius=int(120 * scale),
+        outline=(214, 205, 184, 52),
         width=max(2, int(4 * scale)),
     )
+    base.alpha_composite(bezel)
 
-    red = (139, 17, 27, 255)
-    glow = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    glow_draw = ImageDraw.Draw(glow)
-    node_box = (
-        int(405 * scale),
-        int(344 * scale),
-        int(619 * scale),
-        int(558 * scale),
-    )
-    glow_draw.rectangle(node_box, fill=(139, 17, 27, 150))
-    glow = glow.filter(ImageFilter.GaussianBlur(radius=max(8, int(48 * scale))))
+    cx, cy = S / 2, S * 0.455
+    outer = S * 0.335
+    inner = outer * 0.34
+
+    # Soft red glow behind the disc.
+    glow, glow_draw = layer()
+    glow_draw.ellipse((cx - outer, cy - outer, cx + outer, cy + outer), fill=(139, 17, 27, 92))
+    glow = glow.filter(ImageFilter.GaussianBlur(radius=max(10, int(70 * scale))))
     base.alpha_composite(glow)
 
-    draw = ImageDraw.Draw(base)
-    draw.rectangle(node_box, fill=red)
-    inset = int(62 * scale)
-    draw.rectangle(
-        (
-            node_box[0] + inset,
-            node_box[1] + inset,
-            node_box[2] - inset,
-            node_box[3] - inset,
-        ),
-        outline=(255, 218, 222, 180),
-        width=max(2, int(5 * scale)),
+    # Grooves: dark red rings whose weight and heat follow the pseudo-spine,
+    # with visible gaps between them.
+    disc, disc_draw = layer()
+    disc_draw.ellipse((cx - outer, cy - outer, cx + outer, cy + outer), fill=(24, 8, 11, 235))
+    rings = 26
+    for ring in range(rings):
+        t = ring / (rings - 1)
+        e = energy(t)
+        radius = inner + t * (outer - inner - 6 * scale)
+        width = max(1, int((1.6 + e * 5.2) * scale))
+        heat = int(52 + e * 118)
+        disc_draw.ellipse(
+            (cx - radius, cy - radius, cx + radius, cy + radius),
+            outline=(heat, int(12 + e * 26), int(16 + e * 26), int(150 + e * 105)),
+            width=width,
+        )
+    base.alpha_composite(disc)
+
+    finish, finish_draw = layer()
+    # Outer rim.
+    finish_draw.ellipse(
+        (cx - outer, cy - outer, cx + outer, cy + outer),
+        outline=(239, 231, 207, 44),
+        width=max(1, int(3 * scale)),
     )
-
-    play = [
-        (int(465 * scale), int(386 * scale)),
-        (int(465 * scale), int(518 * scale)),
-        (int(570 * scale), int(452 * scale)),
-    ]
-    draw.polygon(play, fill=(245, 242, 232, 235))
-
-    rail_y = int(708 * scale)
-    draw.rectangle((int(172 * scale), rail_y, int(852 * scale), rail_y + int(28 * scale)), fill=(12, 15, 16, 255))
-    draw.rectangle((int(172 * scale), rail_y, int(522 * scale), rail_y + int(28 * scale)), fill=(139, 17, 27, 220))
-    draw.rectangle(
-        (int(500 * scale), rail_y - int(22 * scale), int(560 * scale), rail_y + int(50 * scale)),
-        fill=(208, 208, 200, 255),
-        outline=(30, 30, 30, 255),
-        width=max(1, int(4 * scale)),
+    # Index line at 12 o'clock, hub to rim.
+    finish_draw.line(
+        (cx, cy - inner * 0.9, cx, cy - outer + 2 * scale),
+        fill=(239, 231, 207, 200),
+        width=max(2, int(7 * scale)),
     )
+    # Hub plate, tempo-glyph spokes, spindle.
+    hub = inner * 0.94
+    finish_draw.ellipse((cx - hub, cy - hub, cx + hub, cy + hub), fill=(20, 11, 14, 255))
+    finish_draw.ellipse((cx - hub, cy - hub, cx + hub, cy + hub), outline=(214, 205, 184, 64), width=max(1, int(3 * scale)))
+    spokes = 5
+    glyph_r = hub * 0.68
+    points = []
+    for spoke in range(spokes + 1):
+        angle = (spoke / spokes) * math.pi * 2 - math.pi / 2
+        points.append((cx + math.cos(angle) * glyph_r, cy + math.sin(angle) * glyph_r))
+    finish_draw.line(points, fill=(216, 199, 155, 205), width=max(2, int(7 * scale)), joint="curve")
+    spindle = S * 0.015
+    finish_draw.ellipse((cx - spindle, cy - spindle, cx + spindle, cy + spindle), fill=(5, 5, 6, 255))
+    base.alpha_composite(finish)
 
-    font = load_font(int(78 * scale))
-    small_font = load_font(int(31 * scale))
-    label = "CODY"
-    label_box = draw.textbbox((0, 0), label, font=font)
-    draw.text(
-        ((size - (label_box[2] - label_box[0])) / 2, int(780 * scale)),
-        label,
-        font=font,
-        fill=(239, 239, 231, 235),
+    # The archive lane: mirrored spine bars, played third red, road ahead in
+    # dimmed steel, cream playhead.
+    lane, lane_draw = layer()
+    lane_mid = int(S * 0.875)
+    lane_half = int(S * 0.058)
+    bar_count = 40
+    lane_left = int(S * 0.14)
+    lane_right = int(S * 0.86)
+    bar_pitch = (lane_right - lane_left) / bar_count
+    playhead = 0.34
+    lane_draw.line((lane_left, lane_mid, lane_right, lane_mid), fill=(214, 205, 184, 34), width=max(1, int(2 * scale)))
+    for bar in range(bar_count):
+        t = bar / (bar_count - 1)
+        e = energy(t * 0.9 + 0.05)
+        half = max(2 * scale, e * lane_half)
+        x0 = lane_left + bar * bar_pitch
+        x1 = x0 + bar_pitch * 0.6
+        if t <= playhead:
+            fill = (176, 38, 44, 215)
+        else:
+            fill = (154, 178, 190, 92)
+        lane_draw.rectangle((x0, lane_mid - half, x1, lane_mid + half), fill=fill)
+    ph_x = lane_left + playhead * (lane_right - lane_left)
+    lane_draw.rectangle(
+        (ph_x - 3 * scale, lane_mid - lane_half - 10 * scale, ph_x + 3 * scale, lane_mid + lane_half + 10 * scale),
+        fill=(239, 231, 207, 225),
     )
-    draw.text((int(178 * scale), int(196 * scale)), "LOCAL / SIGNAL", font=small_font, fill=(156, 199, 216, 170))
-    draw.text((int(646 * scale), int(196 * scale)), "DECK A", font=small_font, fill=(156, 199, 216, 150))
+    base.alpha_composite(lane)
 
-    image.alpha_composite(base)
-    image.putalpha(mask)
-    return image
+    # Edge vignette to seat everything in the tube.
+    vignette, vignette_draw = layer()
+    vignette_draw.rounded_rectangle(
+        (int(6 * scale), int(6 * scale), S - int(6 * scale), S - int(6 * scale)),
+        radius=int(200 * scale),
+        outline=(0, 0, 0, 140),
+        width=int(56 * scale),
+    )
+    vignette = vignette.filter(ImageFilter.GaussianBlur(radius=int(42 * scale)))
+    base.alpha_composite(vignette)
+
+    image = base.resize((size, size), Image.Resampling.LANCZOS)
+    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    out.paste(image, (0, 0))
+    out.putalpha(rounded_mask(size, int(188 * (size / 1024))))
+    return out
 
 
 def save_iconset(source: Image.Image) -> None:
