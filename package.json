@@ -190,6 +190,8 @@
     "mac": {
       "category": "public.app-category.music",
       "icon": "build/icon.icns",
+      "hardenedRuntime": true,
+      "notarize": true,
       "minimumSystemVersion": "12.0",
       "extendInfo": {
         "ITSAppUsesNonExemptEncryption": false,
