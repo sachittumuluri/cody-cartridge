@@ -9,6 +9,7 @@ import {
   Volume2
 } from "lucide-react";
 import {
+  SPINE_BANDS,
   SPINE_VERSION,
   SerializedSpine,
   SpinePalette,
@@ -18,6 +19,7 @@ import {
   deserializeSpine,
   drawSpineStrip,
   heroTextureDataUrl,
+  keyHue,
   serializeSpine,
   spineCoverDataUrl,
   spineIdentity,
@@ -29,18 +31,28 @@ type BadgeId = "heart" | "star" | "bolt" | "moon" | "flame" | "gem";
 type InterferenceMode = "off" | "low" | "med" | "max";
 type RepeatMode = "off" | "all" | "one";
 type ReactLevel = "low" | "med" | "high";
-type MeterMode = "vu" | "width" | "loud" | "spec";
+// The dials read the machine's memory, not audiophile trivia: per-song
+// character, archive health, the session odometer, operating temperature —
+// with classic VU kept as the fiction's anchor mode.
+type MeterMode = "track" | "archive" | "session" | "heat" | "vu";
 type ShelfSize = "collapsed" | "shelf" | "expanded";
 
 const shelfSizeOrder: ShelfSize[] = ["collapsed", "shelf", "expanded"];
 
-const meterModeOrder: MeterMode[] = ["vu", "width", "loud", "spec"];
-const meterModeTitles: Record<MeterMode, string> = { vu: "VU", width: "WIDTH", loud: "LOUD", spec: "SPEC" };
+const meterModeOrder: MeterMode[] = ["track", "archive", "session", "heat", "vu"];
+const meterModeTitles: Record<MeterMode, string> = {
+  track: "TRACK",
+  archive: "ARCHIVE",
+  session: "SESSION",
+  heat: "HEAT",
+  vu: "VU"
+};
 const meterModeChannels: Record<MeterMode, [string, string]> = {
-  vu: ["L", "R"],
-  width: ["WID", "BAL"],
-  loud: ["MOM", "AVG"],
-  spec: ["LOW", "HI"]
+  track: ["BRT", "DYN"],
+  archive: ["TRC", "MTC"],
+  session: ["HRS", "PLY"],
+  heat: ["TMP", "MAX"],
+  vu: ["L", "R"]
 };
 type MicroGlitchKind = "header" | "map" | "row" | "shelf";
 type SaveSlotId = "save-01" | "save-02" | "save-03";
@@ -1500,7 +1512,7 @@ function App() {
   const [heroDocked, setHeroDocked] = useState(() => initialState.heroDock === true);
   const [denseRows, setDenseRows] = useState(() => initialState.denseRows === true);
   const [meterMode, setMeterMode] = useState<MeterMode>(() =>
-    meterModeOrder.includes(initialState.meter as MeterMode) ? (initialState.meter as MeterMode) : "vu"
+    meterModeOrder.includes(initialState.meter as MeterMode) ? (initialState.meter as MeterMode) : "track"
   );
   const [shelfSize, setShelfSize] = useState<ShelfSize>(() =>
     shelfSizeOrder.includes(initialState.shelfSize as ShelfSize) ? (initialState.shelfSize as ShelfSize) : "shelf"
@@ -1511,9 +1523,29 @@ function App() {
   const lockFlashTimerRef = useRef<number | null>(null);
   const deckRef = useRef<HTMLDivElement | null>(null);
   const shelfDragRef = useRef<{ startY: number; pointerId: number; moved: boolean } | null>(null);
-  const meterModeRef = useRef<MeterMode>("vu");
+  const meterModeRef = useRef<MeterMode>("track");
   const interferenceRef = useRef<InterferenceMode>("low");
-  const loudnessRef = useRef({ momentary: 0, average: 0 });
+  // Scope-scene state shared with the long-lived tick closure.
+  const currentSpineTickRef = useRef<{
+    profile: Float32Array | null;
+    onsets: Uint16Array | null;
+    hue: number;
+    duration: number;
+  }>({ profile: null, onsets: null, hue: 202, duration: 0 });
+  const deltaLevelEmaRef = useRef(0);
+  const heatRef = useRef({ level: 0, peak: 0 });
+  const sessionRef = useRef({ seconds: 0, plays: 0 });
+  const needleSourceRef = useRef({ l: 0, r: 0 });
+  const attractTickRef = useRef(false);
+  const drawScopeStructureRef = useRef<() => void>(() => undefined);
+  const wasPlayingRef = useRef(false);
+  const constellationRef = useRef<Array<{
+    x: number;
+    y: number;
+    bpm: number;
+    hue: number;
+    active: boolean;
+  }> | null>(null);
   const meterDecayRafRef = useRef<number | null>(null);
   const tapeWindRef = useRef<{ startedAt: number } | null>(null);
   const skipWindRef = useRef(false);
@@ -1771,6 +1803,65 @@ function App() {
     interferenceRef.current = interference;
   }, [interference, meterMode, reactLevel]);
 
+  // Feed the scope scenes: the current track's spectral profile (Delta Scope
+  // reference), onset list (rain), and key hue (phosphor tint).
+  useEffect(() => {
+    const target = currentSpineTickRef.current;
+
+    if (!currentSpine) {
+      target.profile = null;
+      target.onsets = null;
+      target.hue = 202;
+      target.duration = 0;
+      deltaLevelEmaRef.current = 0;
+      return;
+    }
+
+    const profile = new Float32Array(SPINE_BANDS);
+
+    for (let band = 0; band < SPINE_BANDS; band += 1) {
+      profile[band] = (currentSpine.bandShape[band] - 128) / 127;
+    }
+
+    target.profile = profile;
+    target.onsets = currentSpine.onsets;
+    target.hue = keyHue(currentSpine.key);
+    target.duration = currentSpine.duration;
+    deltaLevelEmaRef.current = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSpine, currentTrack?.id, spineRevision]);
+
+  // Constellation data for attract mode: the library plotted BPM × brightness.
+  useEffect(() => {
+    attractTickRef.current = attract;
+
+    if (!attract) {
+      constellationRef.current = null;
+      return;
+    }
+
+    const stars: NonNullable<typeof constellationRef.current> = [];
+
+    for (const track of tracks) {
+      const spine = spinesRef.current.get(track.id);
+
+      if (!spine || spine.bpm <= 0) {
+        continue;
+      }
+
+      stars.push({
+        x: Math.min(1, Math.max(0, (spine.bpm - 55) / 135)),
+        y: 1 - Math.min(1, Math.max(0.02, spine.bright / 255)),
+        bpm: spine.bpm,
+        hue: keyHue(spine.key),
+        active: track.id === currentTrack?.id
+      });
+    }
+
+    constellationRef.current = stars;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attract, spineRevision, tracks, currentTrack?.id]);
+
   useEffect(() => {
     // When the Web Audio graph is live, volume + warmth run through the amp
     // stage so meters/scope/VU react to the knob; otherwise fall back to the
@@ -1904,7 +1995,7 @@ function App() {
     setReactLevel("med");
     setHeroDocked(false);
     setDenseRows(false);
-    setMeterMode("vu");
+    setMeterMode("track");
     setShelfSize("shelf");
     setPlayNextId("");
     setLockFlashId("");
@@ -2372,6 +2463,72 @@ function App() {
     };
   }, [rowMenuId]);
 
+  // Non-VU dial modes read the machine's memory. While paused this effect
+  // drives the needles directly; while playing the tick eases toward the
+  // same source so there's exactly one writer at a time.
+  useEffect(() => {
+    if (meterMode === "vu") {
+      return undefined;
+    }
+
+    const updateNeedles = () => {
+      let left = 0;
+      let right = 0;
+
+      if (meterMode === "track") {
+        left = currentSpine ? currentSpine.bright / 255 : 0;
+        right = currentSpineStats ? Math.min(1, currentSpineStats.dynamicRangeDb / 14) : 0;
+      } else if (meterMode === "archive") {
+        const localTracks = tracks.filter((track) => isLocalPlaybackUrl(track.url));
+        left = localTracks.length ? Math.min(1, spinesRef.current.size / localTracks.length) : 0;
+        right = tracks.length
+          ? tracks.filter((track) => Boolean(track.youtubeVideoId)).length / tracks.length
+          : 0;
+      } else if (meterMode === "session") {
+        left = (sessionRef.current.seconds % 3600) / 3600;
+        right = Math.min(1, sessionRef.current.plays / 20);
+      } else {
+        left = Math.min(1, heatRef.current.level);
+        right = Math.min(1, heatRef.current.peak);
+      }
+
+      needleSourceRef.current = { l: left, r: right };
+
+      if (!isPlaying) {
+        const vu = vuStateRef.current;
+        vu.l = left;
+        vu.r = right;
+        writeVuNeedles();
+      }
+    };
+
+    updateNeedles();
+    const interval = window.setInterval(
+      updateNeedles,
+      meterMode === "session" || meterMode === "heat" ? 1500 : 5000
+    );
+
+    return () => window.clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meterMode, isPlaying, currentSpine, currentSpineStats, tracks, spineRevision]);
+
+  // The deck cools while paused, whatever the dials are showing.
+  useEffect(() => {
+    if (isPlaying) {
+      return undefined;
+    }
+
+    const interval = window.setInterval(() => {
+      heatRef.current.level *= 0.982;
+
+      if (heatRef.current.level < 0.002) {
+        heatRef.current.level = 0;
+      }
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, [isPlaying]);
+
   // C8 find radar sweep: every FIND change sweeps a scanline down the shelf
   // and lets the surviving rows resolve in its wake.
   useEffect(() => {
@@ -2400,6 +2557,27 @@ function App() {
       window.cancelAnimationFrame(restartFrame);
     };
   }, [query, reducedMotion, storeDemoMode]);
+
+  // Pause = study the tape. The frozen live trace holds for a beat (the
+  // freeze decay), then the structure map lands; seeks or trace arrivals
+  // while paused redraw it immediately.
+  useEffect(() => {
+    if (isPlaying) {
+      wasPlayingRef.current = true;
+      return undefined;
+    }
+
+    if (bootMode) {
+      return undefined;
+    }
+
+    const delay = wasPlayingRef.current && !reducedMotion ? 650 : 40;
+    wasPlayingRef.current = false;
+    const timer = window.setTimeout(() => drawScopeStructureRef.current(), delay);
+
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, bootMode, currentTime, currentSpine, spineRevision, currentTrack?.id, reducedMotion]);
 
   // C7 idle twitch: while paused the machine stays subtly alive — a needle
   // twitch and a single heartbeat blip on the scope every 9-15 seconds.
@@ -2444,13 +2622,8 @@ function App() {
             return;
           }
 
-          // Let the phosphor persistence fade the blip back to baseline.
-          if (elapsed < 760) {
-            drawScopeTrace(null, 0, 0);
-            idleTwitchRafRef.current = window.requestAnimationFrame(animate);
-            return;
-          }
-
+          // Hand the tube back to the structure map after the blip.
+          drawScopeStructureRef.current();
           idleTwitchRafRef.current = null;
           schedule();
         };
@@ -3234,7 +3407,7 @@ function App() {
     shell.style.setProperty("--beat-pulse", beat.toFixed(3));
   }
 
-  function writeMeterLevels(levels: number[] | undefined) {
+  function writeMeterLevels(levels?: number[], dirs?: number[]) {
     const spans = visualizerRef.current?.children;
 
     if (!spans) {
@@ -3242,7 +3415,15 @@ function App() {
     }
 
     for (let index = 0; index < spans.length; index += 1) {
-      (spans[index] as HTMLElement).style.setProperty("--meter-height", `${levels?.[index] ?? 3}px`);
+      const span = spans[index] as HTMLElement;
+      span.style.setProperty("--meter-height", `${levels?.[index] ?? 3}px`);
+
+      if (dirs) {
+        span.classList.toggle("d-up", (dirs[index] ?? -1) < 0);
+        span.classList.toggle("d-down", (dirs[index] ?? -1) > 0);
+      } else if (span.classList.contains("d-up") || span.classList.contains("d-down")) {
+        span.classList.remove("d-up", "d-down");
+      }
     }
   }
 
@@ -3339,17 +3520,21 @@ function App() {
 
     context.globalCompositeOperation = "lighter";
 
+    // Key tint: the phosphor hue follows the song's detected key around the
+    // circle of fifths (C keeps the stock cool blue).
+    const phosphorHue = currentSpineTickRef.current.hue;
+
     // Pass 1 — soft glow.
     context.lineWidth = (2.6 + bass * 3.4) * pixelRatio;
-    context.strokeStyle = `rgba(120, 178, 204, ${(0.1 + bass * 0.16).toFixed(3)})`;
-    context.shadowColor = "rgba(120, 178, 204, 0.9)";
+    context.strokeStyle = `hsla(${phosphorHue}, 44%, 64%, ${(0.1 + bass * 0.16).toFixed(3)})`;
+    context.shadowColor = `hsla(${phosphorHue}, 44%, 64%, 0.9)`;
     context.shadowBlur = (6 + bass * 20 + shuttle * 14) * pixelRatio;
     tracePath();
 
     // Pass 2 — bright core, brightens on the beat.
     context.lineWidth = Math.max(1, 1.15 * pixelRatio);
-    context.strokeStyle = `rgba(224, 244, 255, ${(0.68 + beat * 0.32).toFixed(3)})`;
-    context.shadowColor = "rgba(180, 220, 240, 0.95)";
+    context.strokeStyle = `hsla(${phosphorHue}, 72%, 94%, ${(0.68 + beat * 0.32).toFixed(3)})`;
+    context.shadowColor = `hsla(${phosphorHue}, 60%, 82%, 0.95)`;
     context.shadowBlur = (2 + beat * 6) * pixelRatio;
     tracePath();
 
@@ -3377,6 +3562,209 @@ function App() {
     context.globalCompositeOperation = "source-over";
     context.shadowBlur = 0;
   }
+
+  // Onset rain: upcoming transients (from the archived trace) fall toward an
+  // impact line and flash exactly on the beat they mark — rhythm as tracer
+  // fire on the tube. Runs after the trace each frame.
+  function drawOnsetRain() {
+    const resolved = resolveScopeContext();
+    const scene = currentSpineTickRef.current;
+    const audio = audioRef.current;
+
+    if (!resolved || !scene.onsets || scene.onsets.length === 0 || !audio) {
+      return;
+    }
+
+    const { context, width, height, pixelRatio } = resolved;
+    const now = audio.currentTime;
+    const lookahead = 2.6;
+    const impactY = height * 0.86;
+    const hue = scene.hue;
+
+    context.globalCompositeOperation = "lighter";
+    context.fillStyle = `hsla(${hue}, 45%, 64%, 0.1)`;
+    context.fillRect(0, impactY, width, 1);
+
+    const startFrame = Math.floor(now * 30) - 6;
+    const endFrame = Math.ceil((now + lookahead) * 30);
+    const onsets = scene.onsets;
+    let lo = 0;
+    let hi = onsets.length;
+
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+
+      if (onsets[mid] < startFrame) {
+        lo = mid + 1;
+      } else {
+        hi = mid;
+      }
+    }
+
+    for (let index = lo; index < onsets.length && onsets[index] <= endFrame; index += 1) {
+      const onsetTime = onsets[index] / 30;
+      const remain = onsetTime - now;
+      const x = (((onsets[index] * 2654435761) >>> 0) % 997) / 997 * (width * 0.92) + width * 0.04;
+
+      if (remain <= 0) {
+        const since = -remain;
+
+        if (since < 0.18) {
+          const fade = 1 - since / 0.18;
+          context.fillStyle = `hsla(${hue}, 62%, 80%, ${(0.5 * fade).toFixed(3)})`;
+          context.beginPath();
+          context.arc(x, impactY, (2 + (1 - fade) * 7) * pixelRatio, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        continue;
+      }
+
+      const progress = 1 - remain / lookahead;
+      context.fillStyle = `hsla(${hue}, 50%, 70%, ${(0.12 + progress * 0.4).toFixed(3)})`;
+      context.fillRect(x - pixelRatio, progress * impactY - 3 * pixelRatio, 2 * pixelRatio, 3 * pixelRatio);
+    }
+
+    context.globalCompositeOperation = "source-over";
+  }
+
+  // The constellation: the library plotted tempo × brightness, every star
+  // pulsing at its own BPM, the playing cartridge burning red.
+  function drawConstellation(timestamp: number) {
+    const resolved = resolveScopeContext();
+    const stars = constellationRef.current;
+
+    if (!resolved || !stars) {
+      return;
+    }
+
+    const { context, width, height, pixelRatio } = resolved;
+
+    context.globalCompositeOperation = "source-over";
+    context.fillStyle = "rgba(3, 3, 4, 0.32)";
+    context.fillRect(0, 0, width, height);
+    context.globalCompositeOperation = "lighter";
+
+    for (const star of stars) {
+      const phase = (timestamp / 1000) * (star.bpm / 60) * Math.PI * 2;
+      const pulse = 0.55 + Math.sin(phase) * 0.45;
+      const x = width * (0.06 + star.x * 0.88);
+      const y = height * (0.08 + star.y * 0.8);
+
+      if (star.active) {
+        context.fillStyle = `rgba(214, 60, 60, ${(0.5 + pulse * 0.5).toFixed(3)})`;
+        context.beginPath();
+        context.arc(x, y, (2.4 + pulse * 2.4) * pixelRatio, 0, Math.PI * 2);
+        context.fill();
+        context.strokeStyle = "rgba(214, 60, 60, 0.35)";
+        context.lineWidth = pixelRatio;
+        context.beginPath();
+        context.arc(x, y, (6 + pulse * 3) * pixelRatio, 0, Math.PI * 2);
+        context.stroke();
+      } else {
+        context.fillStyle = `hsla(${star.hue}, 45%, 66%, ${(0.1 + pulse * 0.26).toFixed(3)})`;
+        context.beginPath();
+        context.arc(x, y, (1 + pulse * 1.3) * pixelRatio, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+
+    context.globalCompositeOperation = "source-over";
+    context.fillStyle = "rgba(156, 199, 216, 0.18)";
+    context.font = `${9 * pixelRatio}px "Courier New", monospace`;
+    context.textAlign = "left";
+    context.fillText("SLOW", 8 * pixelRatio, height - 6 * pixelRatio);
+    context.fillText("BRIGHT", 8 * pixelRatio, 12 * pixelRatio);
+    context.textAlign = "right";
+    context.fillText("FAST", width - 8 * pixelRatio, height - 6 * pixelRatio);
+    context.textAlign = "left";
+  }
+
+  // Pause = study the tape: the scope renders the song's full structure map —
+  // the archived energy silhouette with detected section boundaries and the
+  // playhead position, burned in the song's key phosphor.
+  function drawScopeStructure() {
+    const resolved = resolveScopeContext();
+
+    if (!resolved) {
+      return;
+    }
+
+    const { context, width, height, pixelRatio } = resolved;
+    const spine = getTrackSpine(currentTrack);
+
+    context.globalCompositeOperation = "source-over";
+    context.fillStyle = "#030304";
+    context.fillRect(0, 0, width, height);
+
+    if (!spine) {
+      drawScopeBaseline(context, width, height, pixelRatio);
+      return;
+    }
+
+    const hue = keyHue(spine.key);
+    const middle = height / 2;
+    const columnWidth = width / spine.cols;
+
+    context.globalCompositeOperation = "lighter";
+
+    for (let column = 0; column < spine.cols; column += 1) {
+      const energyLevel = spine.energy[column] / 255;
+      const half = Math.max(1, energyLevel * height * 0.4);
+      const barWidth = Math.max(1, columnWidth * 0.8);
+      context.fillStyle = `hsla(${hue}, 45%, 60%, 0.15)`;
+      context.fillRect(column * columnWidth, middle - half, barWidth, half * 2);
+      context.fillStyle = `hsla(${hue}, 52%, 76%, 0.4)`;
+      context.fillRect(column * columnWidth, middle - half, barWidth, 1.2 * pixelRatio);
+    }
+
+    // Section boundaries: spikes in the smoothed energy derivative.
+    const smoothed: number[] = [];
+
+    for (let column = 0; column < spine.cols; column += 1) {
+      let sum = 0;
+      let count = 0;
+
+      for (let k = -3; k <= 3; k += 1) {
+        const index = column + k;
+
+        if (index >= 0 && index < spine.cols) {
+          sum += spine.energy[index];
+          count += 1;
+        }
+      }
+
+      smoothed.push(sum / count / 255);
+    }
+
+    const derivative = smoothed.map((value, index) => (index === 0 ? 0 : Math.abs(value - smoothed[index - 1])));
+    const meanDerivative = derivative.reduce((total, value) => total + value, 0) / derivative.length;
+
+    context.globalCompositeOperation = "source-over";
+    context.strokeStyle = `hsla(${hue}, 30%, 80%, 0.38)`;
+    context.setLineDash([4 * pixelRatio, 5 * pixelRatio]);
+    context.lineWidth = pixelRatio;
+    let lastBoundary = -20;
+
+    for (let column = 4; column < spine.cols - 4; column += 1) {
+      if (derivative[column] > Math.max(0.035, meanDerivative * 2.6) && column - lastBoundary >= 18) {
+        lastBoundary = column;
+        context.beginPath();
+        context.moveTo(column * columnWidth, height * 0.08);
+        context.lineTo(column * columnWidth, height * 0.92);
+        context.stroke();
+      }
+    }
+
+    context.setLineDash([]);
+
+    const total = audioRef.current?.duration || spine.duration || 0;
+    const position = total > 0 ? Math.min(1, (audioRef.current?.currentTime ?? 0) / total) : 0;
+    context.fillStyle = "rgba(202, 48, 48, 0.9)";
+    context.fillRect(position * width - pixelRatio, 0, 2 * pixelRatio, height);
+  }
+
+  drawScopeStructureRef.current = drawScopeStructure;
 
   function writeVuNeedles() {
     const container = vuMeterRef.current;
@@ -3444,6 +3832,7 @@ function App() {
     if (mode === "freeze") {
       if (reducedMotion) {
         settle();
+        drawScopeStructureRef.current();
         return;
       }
 
@@ -3482,6 +3871,8 @@ function App() {
 
         meterDecayRafRef.current = null;
         settle();
+        // The frozen trace has had its moment; settle into the structure map.
+        drawScopeStructureRef.current();
       };
 
       meterDecayRafRef.current = window.requestAnimationFrame(decay);
@@ -3570,13 +3961,10 @@ function App() {
 
           const average = sum / (end - start);
           analyserSignal += average;
-          // Analyser bytes are linear-in-dB across the configured window, so
-          // this is a dB mapping with floor/ceiling headroom, plus a treble
-          // tilt so the energy-heavy low bands don't own the whole bank.
-          // Result is NORMALIZED 0..1; ballistics + pixel fit happen below.
-          const dbNorm = Math.min(1, Math.max(0, (average / 255 - 0.14) / 0.78));
-          const tilt = 0.66 + (index / 23) * 0.62;
-          return Math.min(1, dbNorm * tilt);
+          // Analyser bytes are linear-in-dB across the configured window;
+          // keep the RAW dB-normalized value here — the Delta/absolute split
+          // (tilt, song-profile comparison, ballistics) happens downstream.
+          return Math.min(1, Math.max(0, (average / 255 - 0.14) / 0.78));
         });
       }
 
@@ -3788,42 +4176,34 @@ function App() {
 
         const rawL = readChannelLevel(analyserLRef.current, vuBufferL);
         const rawR = readChannelLevel(analyserRRef.current, vuBufferR);
-        // Item 13: the glass face has four readouts. Every mode derives from
-        // real channel data; the needles keep true VU ballistics either way.
         const meterFace = meterModeRef.current;
+        const monoLevel = (rawL + rawR) / 2;
+
+        // The session odometer and heat physics run regardless of the face:
+        // listening time accrues, temperature integrates energy and cools
+        // slowly even at full tilt.
+        sessionRef.current.seconds += (dtFrames * 33.33) / 1000;
+        const heat = heatRef.current;
+        heat.level = Math.min(1, heat.level * Math.pow(0.99985, dtFrames) + monoLevel * dtFrames * 0.0011);
+        heat.peak = Math.max(heat.peak, heat.level);
+
+        // The dials read the machine's memory. VU keeps true 300ms meter
+        // ballistics; memory modes get a statelier ~600ms swing toward the
+        // values the mode effect computed.
         let targetL = rawL;
         let targetR = rawR;
+        let vuCoefOverride: number | null = null;
 
-        if (meterFace === "width") {
-          // Left needle: stereo width (channel difference); right: balance,
-          // centered at half-scale.
-          targetL = Math.min(1, Math.abs(rawL - rawR) * 3.4);
-          targetR = Math.min(1, Math.max(0, 0.5 + (rawR - rawL) * 1.8));
-        } else if (meterFace === "loud") {
-          const mono = (rawL + rawR) / 2;
-          const loudness = loudnessRef.current;
-          loudness.momentary += (mono - loudness.momentary) * (1 - Math.exp(-(dtFrames * 33.33) / 400));
-          loudness.average += (mono - loudness.average) * (1 - Math.exp(-(dtFrames * 33.33) / 3000));
-          targetL = Math.min(1, loudness.momentary * 1.15);
-          targetR = Math.min(1, loudness.average * 1.3);
-        } else if (meterFace === "spec") {
-          const highBandCount = 8;
-          let highSum = 0;
-
-          if (nextLevels) {
-            for (let index = 24 - highBandCount; index < 24; index += 1) {
-              highSum += nextLevels[index] ?? 0;
-            }
-          }
-
-          targetL = Math.min(1, shapedBass);
-          targetR = Math.min(1, (highSum / highBandCount) * 1.5);
+        if (meterFace === "heat") {
+          targetL = heat.level;
+          targetR = heat.peak;
+        } else if (meterFace !== "vu") {
+          targetL = needleSourceRef.current.l;
+          targetR = needleSourceRef.current.r;
+          vuCoefOverride = 1 - Math.exp(-(dtFrames * 33.33) / 600);
         }
 
-        // True VU ballistics: symmetric ~300ms integration (99% of a step in
-        // 300ms → τ ≈ 100ms), so the needle averages program level like a
-        // real meter movement instead of snapping.
-        const vuCoef = 1 - Math.exp(-(dtFrames * 33.33) / 100);
+        const vuCoef = vuCoefOverride ?? 1 - Math.exp(-(dtFrames * 33.33) / 100);
 
         vu.l += (targetL - vu.l) * vuCoef;
         vu.r += (targetR - vu.r) * vuCoef;
@@ -3845,20 +4225,15 @@ function App() {
 
       // C5 motor spool-up: from a standing start the meter bank lights bar by
       // bar and the needles rise with one analog overshoot before tracking.
+      let spoolProgress = 1;
+
       if (spoolStartRef.current) {
         const spoolElapsed = timestamp - spoolStartRef.current;
 
         if (spoolElapsed >= 700) {
           spoolStartRef.current = 0;
         } else {
-          const spoolProgress = spoolElapsed / 700;
-
-          if (nextLevels) {
-            nextLevels = nextLevels.map((value, index) => {
-              const gate = Math.max(0, Math.min(1, (spoolProgress * 1.7 - (index / 24) * 0.7) * 3));
-              return value * gate;
-            });
-          }
+          spoolProgress = spoolElapsed / 700;
 
           const overshoot =
             spoolProgress < 0.55
@@ -3869,31 +4244,79 @@ function App() {
         }
       }
 
-      // Meter ballistics: fast attack (~2 frames), slow release (~250ms),
-      // then a pixel fit into the bank's REAL inner height (~37px). The old
-      // 10-88px mapping overshot the cabinet, pinning every bar at the top.
+      const spoolGateFor = (index: number) =>
+        spoolProgress >= 1 ? 1 : Math.max(0, Math.min(1, (spoolProgress * 1.7 - (index / 24) * 0.7) * 3));
+
+      // Delta Scope: with the song's spectral profile archived and a real
+      // live spectrum (not the offline envelope fallback), each bar shows
+      // deviation from THIS SONG's own norm around a center line — timbre
+      // shape difference plus a self-calibrating loudness swing. Without a
+      // profile, the classic absolute bank (treble tilt) applies.
       const meters = meterBallisticsRef.current;
       const reactGain = reactGainRef.current;
+      const songProfile = currentSpineTickRef.current.profile;
+      const deltaActive = Boolean(songProfile && liveSignal && nextLevels);
+      const meterDirs: number[] = new Array(24).fill(-1);
+      const meterHeights: number[] = new Array(24).fill(2);
 
-      for (let index = 0; index < meters.length; index += 1) {
-        const target = Math.min(1, (nextLevels?.[index] ?? 0) * reactGain);
-        const coef = target > meters[index] ? 1 - Math.pow(0.3, dtFrames) : 1 - Math.pow(0.87, dtFrames);
-        meters[index] += (target - meters[index]) * coef;
+      if (deltaActive && nextLevels && songProfile) {
+        let liveMean = 0;
+
+        for (let index = 0; index < 24; index += 1) {
+          liveMean += nextLevels[index] ?? 0;
+        }
+
+        liveMean /= 24;
+
+        if (deltaLevelEmaRef.current === 0) {
+          deltaLevelEmaRef.current = liveMean;
+        }
+
+        deltaLevelEmaRef.current +=
+          (liveMean - deltaLevelEmaRef.current) * (1 - Math.exp(-(dtFrames * 33.33) / 15000));
+        const levelDelta = Math.max(-1, Math.min(1, ((liveMean - deltaLevelEmaRef.current) * 68) / 10));
+
+        for (let index = 0; index < 24; index += 1) {
+          const liveShape = Math.max(-1, Math.min(1, (((nextLevels[index] ?? 0) - liveMean) * 68) / 24));
+          const target =
+            Math.max(-1, Math.min(1, ((liveShape - songProfile[index]) * 0.6 + levelDelta * 0.85) * reactGain)) *
+            spoolGateFor(index);
+          const coef =
+            Math.abs(target) > Math.abs(meters[index]) ? 1 - Math.pow(0.3, dtFrames) : 1 - Math.pow(0.87, dtFrames);
+          meters[index] += (target - meters[index]) * coef;
+          meterDirs[index] = meters[index] >= 0 ? -1 : 1;
+          meterHeights[index] = Math.round(2 + Math.abs(meters[index]) * 15);
+        }
+      } else {
+        for (let index = 0; index < 24; index += 1) {
+          const tilt = 0.66 + (index / 23) * 0.62;
+          const target = Math.min(1, (nextLevels?.[index] ?? 0) * tilt * reactGain) * spoolGateFor(index);
+          const coef = target > meters[index] ? 1 - Math.pow(0.3, dtFrames) : 1 - Math.pow(0.87, dtFrames);
+          meters[index] += (target - meters[index]) * coef;
+          meterHeights[index] = Math.round(3 + Math.max(0, meters[index]) * 29);
+        }
       }
 
-      const meterHeights = Array.from(meters, (level) => Math.round(3 + level * 29));
-
       writeBassVars(bassLevelRef.current, beat.pulse);
-      writeMeterLevels(meterHeights);
+      writeMeterLevels(meterHeights, deltaActive ? meterDirs : undefined);
       writeSignalColumns(bassLevelRef.current);
       writeVuNeedles();
-      drawScopeTrace(
-        wave,
-        bassLevelRef.current,
-        beat.pulse,
-        shuttleRateRef.current > 0 || windActive ? 1 : 0,
-        scopeJitter
-      );
+
+      // Scope scenes: the constellation owns the tube during attract mode;
+      // otherwise the live trace plus onset rain.
+      if (attractTickRef.current && constellationRef.current && constellationRef.current.length > 0) {
+        drawConstellation(timestamp);
+      } else {
+        drawScopeTrace(
+          wave,
+          bassLevelRef.current,
+          beat.pulse,
+          shuttleRateRef.current > 0 || windActive ? 1 : 0,
+          scopeJitter
+        );
+        drawOnsetRain();
+      }
+
       paintSeekSpineRef.current();
       animationFrameRef.current = window.requestAnimationFrame(tick);
     };
@@ -4239,6 +4662,7 @@ function App() {
 
     if (time >= threshold && threshold > 0) {
       countedPlayForRef.current = track.id;
+      sessionRef.current.plays += 1;
       setTracks((existing) =>
         existing.map((item) =>
           item.id === track.id
@@ -4876,9 +5300,13 @@ function App() {
               <span>
                 <span className="artifact-label">TRACE</span>{" "}
                 {currentSpine && currentSpineStats
-                  ? `ARCHIVED · DR ${currentSpineStats.dynamicRangeDb.toFixed(0)}dB · PEAK ${Math.round(
+                  ? `ARCHIVED · ${currentSpine.bpm > 0 ? `${currentSpine.bpm}BPM · ` : ""}${
+                      currentSpine.key >= 0
+                        ? `KEY ${["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"][currentSpine.key]} · `
+                        : ""
+                    }DR ${currentSpineStats.dynamicRangeDb.toFixed(0)}dB · PEAK ${Math.round(
                       currentSpineStats.peakAt * 100
-                    )}% · FILL ${Math.round(currentSpineStats.fill * 100)}%`
+                    )}%`
                   : isTracingCurrentTrack
                     ? "TRACING..."
                     : currentTrack
@@ -5417,7 +5845,16 @@ function App() {
             </div>
 
             <div className="meter-bank">
-              <div ref={visualizerRef} className="visualizer visualizer-crt-wave" aria-label="Audio visualizer">
+              <div
+                ref={visualizerRef}
+                className={`visualizer visualizer-crt-wave ${currentSpineAvailable ? "visualizer-delta" : ""}`}
+                aria-label={currentSpineAvailable ? "Delta scope: deviation from this song's norm" : "Audio visualizer"}
+                title={
+                  currentSpineAvailable
+                    ? "DELTA SCOPE — bars show how unusual this moment is for this song"
+                    : undefined
+                }
+              >
                 {Array.from({ length: 24 }).map((_, index) => (
                   <span key={index} style={{ "--meter-height": "3px" } as CSSProperties} />
                 ))}

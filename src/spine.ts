@@ -5,9 +5,11 @@
 // signature reads consistently across the whole deck.
 
 export const SPINE_COLS = 240;
-// v2 adds the signal-identity features (bpm, brightness); v1 archives are
-// rejected on load and simply re-traced by the background queue.
-export const SPINE_VERSION = 2;
+export const SPINE_BANDS = 24;
+// v3 added the spectral profile (Delta Scope), key chroma (phosphor tint),
+// and onset times (rain); v4/v5 fix chroma resolution and weighting. Older
+// archives are rejected on load and simply re-traced by the background queue.
+export const SPINE_VERSION = 5;
 
 export type TrackSpine = {
   v: typeof SPINE_VERSION;
@@ -17,10 +19,19 @@ export type TrackSpine = {
   bpm: number;
   /** Spectral brightness 0..255: high-band vs low-band energy balance. */
   bright: number;
+  /** Rough key as a pitch class 0-11 (C..B); -1 = no confident lock. */
+  key: number;
   energy: Uint8Array;
   low: Uint8Array;
   mid: Uint8Array;
   high: Uint8Array;
+  /**
+   * Song-average spectral shape across the 24 live meter bands, stored as a
+   * zero-mean dB profile: byte 128 = the song's mean band level, ±127 ≈ ±24dB.
+   */
+  bandShape: Uint8Array;
+  /** Onset times as 30fps frame indices (bass-envelope transients). */
+  onsets: Uint16Array;
 };
 
 export type SerializedSpine = {
@@ -29,7 +40,10 @@ export type SerializedSpine = {
   duration: number;
   bpm: number;
   bright: number;
+  key: number;
   data: string;
+  shape: string;
+  onsets: string;
 };
 
 export type SpinePalette = {
@@ -57,6 +71,258 @@ function spinePercentile(values: number[], ratio: number) {
 
 function onePoleAlpha(cutoffHz: number, sampleRate: number) {
   return 1 - Math.exp((-2 * Math.PI * cutoffHz) / sampleRate);
+}
+
+// In-place iterative radix-2 FFT (real input in `real`, zeroed `imag`).
+// 2048 points is plenty for 24 log bands and chroma folding.
+function fftInPlace(real: Float64Array, imag: Float64Array) {
+  const n = real.length;
+
+  for (let i = 1, j = 0; i < n; i += 1) {
+    let bit = n >> 1;
+
+    for (; j & bit; bit >>= 1) {
+      j ^= bit;
+    }
+
+    j ^= bit;
+
+    if (i < j) {
+      const tr = real[i];
+      real[i] = real[j];
+      real[j] = tr;
+      const ti = imag[i];
+      imag[i] = imag[j];
+      imag[j] = ti;
+    }
+  }
+
+  for (let len = 2; len <= n; len <<= 1) {
+    const angle = (-2 * Math.PI) / len;
+    const wr = Math.cos(angle);
+    const wi = Math.sin(angle);
+
+    for (let i = 0; i < n; i += len) {
+      let curR = 1;
+      let curI = 0;
+
+      for (let k = 0; k < len / 2; k += 1) {
+        const evenR = real[i + k];
+        const evenI = imag[i + k];
+        const oddR = real[i + k + len / 2] * curR - imag[i + k + len / 2] * curI;
+        const oddI = real[i + k + len / 2] * curI + imag[i + k + len / 2] * curR;
+        real[i + k] = evenR + oddR;
+        imag[i + k] = evenI + oddI;
+        real[i + k + len / 2] = evenR - oddR;
+        imag[i + k + len / 2] = evenI - oddI;
+        const nextR = curR * wr - curI * wi;
+        curI = curR * wi + curI * wr;
+        curR = nextR;
+      }
+    }
+  }
+}
+
+// One sparse spectral sweep over the mixed-down song: ~2 windows per second.
+// Yields the average 24-band shape (Delta Scope reference) and a folded
+// chroma histogram (rough key).
+function analyzeSpectrum(mixed: Float32Array, sampleRate: number) {
+  const fftSize = 2048;
+  const hop = Math.max(fftSize, Math.floor(sampleRate / 2));
+  const real = new Float64Array(fftSize);
+  const imag = new Float64Array(fftSize);
+  const window = new Float64Array(fftSize);
+
+  for (let i = 0; i < fftSize; i += 1) {
+    window[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (fftSize - 1));
+  }
+
+  // Same log band edges the live meter bank uses.
+  const binHz = sampleRate / fftSize;
+  const minHz = 36;
+  const maxHz = Math.min(15600, sampleRate / 2);
+  const edges: number[] = [];
+
+  for (let index = 0; index <= SPINE_BANDS; index += 1) {
+    const hz = minHz * Math.pow(maxHz / minHz, index / SPINE_BANDS);
+    edges.push(Math.min(fftSize / 2 - 1, Math.max(1, Math.round(hz / binHz))));
+  }
+
+  const bandSum = new Float64Array(SPINE_BANDS);
+  const chroma = new Float64Array(12);
+  let frames = 0;
+
+  for (let start = 0; start + fftSize <= mixed.length; start += hop) {
+    let frameEnergy = 0;
+
+    for (let i = 0; i < fftSize; i += 1) {
+      const sample = mixed[start + i];
+      real[i] = sample * window[i];
+      imag[i] = 0;
+      frameEnergy += sample * sample;
+    }
+
+    // Skip near-silence so intros/outros don't drag the reference down.
+    if (frameEnergy / fftSize < 1e-6) {
+      continue;
+    }
+
+    fftInPlace(real, imag);
+    frames += 1;
+
+    for (let band = 0; band < SPINE_BANDS; band += 1) {
+      const from = edges[band];
+      const to = Math.max(from + 1, edges[band + 1]);
+      let sum = 0;
+
+      for (let bin = from; bin < to; bin += 1) {
+        sum += Math.hypot(real[bin], imag[bin]);
+      }
+
+      bandSum[band] += sum / (to - from);
+    }
+
+  }
+
+  const bandShape = new Uint8Array(SPINE_BANDS).fill(128);
+
+  if (frames > 0) {
+    const bandDb = Array.from(bandSum, (sum) => 20 * Math.log10(sum / frames + 1e-9));
+    const meanDb = bandDb.reduce((total, db) => total + db, 0) / SPINE_BANDS;
+
+    for (let band = 0; band < SPINE_BANDS; band += 1) {
+      bandShape[band] = Math.round(Math.min(255, Math.max(0, ((bandDb[band] - meanDb) / 24) * 127 + 128)));
+    }
+  }
+
+  return { bandShape, key: estimateKey(mixed, sampleRate, chroma) };
+}
+
+// Dedicated chroma pass: 2048-point bins at 44.1kHz are ~21.5Hz wide — far
+// too coarse to separate semitones in the bass/mid register, which drags
+// every song toward the same pitch class. Decimate 4× (≈11kHz) and use a
+// 4096-point FFT (~2.7Hz bins), log-compress magnitudes so a single loud
+// partial can't own the histogram, and only claim a key on a clear lead.
+function estimateKey(mixed: Float32Array, sampleRate: number, chroma: Float64Array) {
+  chroma.fill(0);
+  const decimation = 4;
+  const decimatedRate = sampleRate / decimation;
+  const decimatedLength = Math.floor(mixed.length / decimation);
+
+  if (decimatedLength < 1) {
+    return -1;
+  }
+
+  const decimated = new Float32Array(decimatedLength);
+
+  for (let index = 0; index < decimatedLength; index += 1) {
+    const base = index * decimation;
+    decimated[index] =
+      (mixed[base] + (mixed[base + 1] ?? 0) + (mixed[base + 2] ?? 0) + (mixed[base + 3] ?? 0)) / decimation;
+  }
+
+  const fftSize = 4096;
+  const hop = Math.max(fftSize, Math.floor(decimatedRate / 2));
+  const real = new Float64Array(fftSize);
+  const imag = new Float64Array(fftSize);
+  const window = new Float64Array(fftSize);
+
+  for (let index = 0; index < fftSize; index += 1) {
+    window[index] = 0.5 - 0.5 * Math.cos((2 * Math.PI * index) / (fftSize - 1));
+  }
+
+  const binHz = decimatedRate / fftSize;
+  const pcPower = new Float64Array(12);
+
+  for (let start = 0; start + fftSize <= decimated.length; start += hop) {
+    let frameEnergy = 0;
+
+    for (let index = 0; index < fftSize; index += 1) {
+      const sample = decimated[start + index];
+      real[index] = sample * window[index];
+      imag[index] = 0;
+      frameEnergy += sample * sample;
+    }
+
+    if (frameEnergy / fftSize < 1e-6) {
+      continue;
+    }
+
+    fftInPlace(real, imag);
+    pcPower.fill(0);
+
+    for (let bin = 1; bin < fftSize / 2; bin += 1) {
+      const hz = bin * binHz;
+
+      // Fundamentals register only: bass/mid where keys actually live.
+      if (hz < 65 || hz > 520) {
+        continue;
+      }
+
+      const midi = 12 * Math.log2(hz / 440) + 69;
+      const nearest = Math.round(midi);
+
+      if (Math.abs(midi - nearest) > 0.4) {
+        continue;
+      }
+
+      // Normalize by the semitone's bandwidth in bins so high notes (wide
+      // bands) don't outvote low notes purely on bin count.
+      const semitoneBins = Math.max(1, (hz * 0.0578) / binHz);
+      pcPower[((nearest % 12) + 12) % 12] += (real[bin] * real[bin] + imag[bin] * imag[bin]) / semitoneBins;
+    }
+
+    // Compress ONCE per pitch class per frame — tonal peaks count, the
+    // accumulated noise floor doesn't.
+    for (let pc = 0; pc < 12; pc += 1) {
+      chroma[pc] += Math.log1p(pcPower[pc] * 5e-3);
+    }
+  }
+
+  let best = 0;
+  let runnerUp = 0;
+
+  for (let pc = 1; pc < 12; pc += 1) {
+    if (chroma[pc] > chroma[best]) {
+      runnerUp = best;
+      best = pc;
+    } else if (chroma[pc] > chroma[runnerUp] || runnerUp === best) {
+      runnerUp = pc;
+    }
+  }
+
+  if (chroma[best] <= 0 || chroma[best] < chroma[runnerUp] * 1.05) {
+    return -1;
+  }
+
+  return best;
+}
+
+// Bass-envelope transients → onset frame indices (30fps). Positive-derivative
+// spikes above an adaptive threshold, with a short refractory window.
+function detectOnsets(envelope: Float64Array) {
+  const onsets: number[] = [];
+  let positiveDeltaAvg = 0.001;
+  let lastOnset = -10;
+
+  for (let frame = 2; frame < envelope.length; frame += 1) {
+    const delta = envelope[frame] - envelope[frame - 2];
+
+    if (delta > 0) {
+      positiveDeltaAvg += (delta - positiveDeltaAvg) * 0.02;
+    }
+
+    if (delta > Math.max(0.012, positiveDeltaAvg * 2.1) && frame - lastOnset >= 5) {
+      onsets.push(frame);
+      lastOnset = frame;
+
+      if (onsets.length >= 1600) {
+        break;
+      }
+    }
+  }
+
+  return Uint16Array.from(onsets.slice(0, 1600).map((frame) => Math.min(65535, frame)));
 }
 
 // Tempo from the 30fps bass envelope: normalized autocorrelation over the
@@ -151,6 +417,8 @@ export function spineFromAudioBuffer(buffer: AudioBuffer): TrackSpine {
   let midState = 0;
   let lowTotal = 0;
   let highTotal = 0;
+  // Mono mixdown retained for the sparse FFT sweep (bandShape + chroma).
+  const monoMix = new Float32Array(length);
 
   for (let cursor = 0; cursor < length; cursor += 1) {
     let mixed = 0;
@@ -160,6 +428,7 @@ export function spineFromAudioBuffer(buffer: AudioBuffer): TrackSpine {
     }
 
     mixed /= channelCount;
+    monoMix[cursor] = mixed;
     lowState += lowAlpha * (mixed - lowState);
     midState += midAlpha * (mixed - midState);
 
@@ -222,16 +491,21 @@ export function spineFromAudioBuffer(buffer: AudioBuffer): TrackSpine {
     Math.min(1, Math.sqrt(highTotal) / Math.max(1e-9, Math.sqrt(highTotal) + Math.sqrt(lowTotal))) * 255
   );
 
+  const spectrum = analyzeSpectrum(monoMix, buffer.sampleRate);
+
   return {
     v: SPINE_VERSION,
     cols,
     duration: buffer.duration,
     bpm: estimateBpm(bassEnvelope, envelopeFps),
     bright,
+    key: spectrum.key,
     energy,
     low,
     mid,
-    high
+    high,
+    bandShape: spectrum.bandShape,
+    onsets: detectOnsets(bassEnvelope)
   };
 }
 
@@ -289,13 +563,23 @@ export function serializeSpine(spine: TrackSpine): SerializedSpine {
   packed.set(spine.mid, spine.cols * 2);
   packed.set(spine.high, spine.cols * 3);
 
+  const onsetBytes = new Uint8Array(spine.onsets.length * 2);
+
+  for (let index = 0; index < spine.onsets.length; index += 1) {
+    onsetBytes[index * 2] = spine.onsets[index] & 0xff;
+    onsetBytes[index * 2 + 1] = spine.onsets[index] >> 8;
+  }
+
   return {
     v: spine.v,
     cols: spine.cols,
     duration: Math.round(spine.duration * 100) / 100,
     bpm: spine.bpm,
     bright: spine.bright,
-    data: bytesToBase64(packed)
+    key: spine.key,
+    data: bytesToBase64(packed),
+    shape: bytesToBase64(spine.bandShape),
+    onsets: bytesToBase64(onsetBytes)
   };
 }
 
@@ -312,16 +596,26 @@ export function deserializeSpine(raw: unknown): TrackSpine | undefined {
     candidate.cols <= 0 ||
     candidate.cols > 2048 ||
     typeof candidate.duration !== "number" ||
-    typeof candidate.data !== "string"
+    typeof candidate.data !== "string" ||
+    typeof candidate.shape !== "string" ||
+    typeof candidate.onsets !== "string"
   ) {
     return undefined;
   }
 
   try {
     const packed = base64ToBytes(candidate.data);
+    const bandShape = base64ToBytes(candidate.shape);
+    const onsetBytes = base64ToBytes(candidate.onsets);
 
-    if (packed.length !== candidate.cols * 4) {
+    if (packed.length !== candidate.cols * 4 || bandShape.length !== SPINE_BANDS || onsetBytes.length % 2 !== 0) {
       return undefined;
+    }
+
+    const onsets = new Uint16Array(onsetBytes.length / 2);
+
+    for (let index = 0; index < onsets.length; index += 1) {
+      onsets[index] = onsetBytes[index * 2] | (onsetBytes[index * 2 + 1] << 8);
     }
 
     return {
@@ -330,10 +624,13 @@ export function deserializeSpine(raw: unknown): TrackSpine | undefined {
       duration: candidate.duration,
       bpm: typeof candidate.bpm === "number" ? candidate.bpm : 0,
       bright: typeof candidate.bright === "number" ? candidate.bright : 128,
+      key: typeof candidate.key === "number" ? candidate.key : -1,
       energy: packed.slice(0, candidate.cols),
       low: packed.slice(candidate.cols, candidate.cols * 2),
       mid: packed.slice(candidate.cols * 2, candidate.cols * 3),
-      high: packed.slice(candidate.cols * 3, candidate.cols * 4)
+      high: packed.slice(candidate.cols * 3, candidate.cols * 4),
+      bandShape,
+      onsets
     };
   } catch {
     return undefined;
@@ -384,16 +681,35 @@ export function syntheticSpine(seedText: string, duration = 214): TrackSpine {
     high[column] = Math.round(Math.min(1, value * (0.3 + random() * 0.34)) * 255);
   }
 
+  const syntheticBpm = 92 + Math.floor(random() * 62);
+  const bandShape = new Uint8Array(SPINE_BANDS);
+
+  for (let band = 0; band < SPINE_BANDS; band += 1) {
+    // Plausible program curve: strong lows rolling off with a presence bump.
+    const tiltDb = 10 - (band / (SPINE_BANDS - 1)) * 20 + Math.sin(band * 0.9) * 3 + (random() - 0.5) * 2;
+    bandShape[band] = Math.round(Math.min(255, Math.max(0, (tiltDb / 24) * 127 + 128)));
+  }
+
+  const beatFrames = Math.round((30 * 60) / syntheticBpm);
+  const onsetList: number[] = [];
+
+  for (let frame = beatFrames; frame < duration * 30 && onsetList.length < 1200; frame += beatFrames) {
+    onsetList.push(frame);
+  }
+
   return {
     v: SPINE_VERSION,
     cols,
     duration,
-    bpm: 92 + Math.floor(random() * 62),
+    bpm: syntheticBpm,
     bright: 96 + Math.floor(random() * 96),
+    key: Math.floor(random() * 12),
     energy,
     low,
     mid,
-    high
+    high,
+    bandShape,
+    onsets: Uint16Array.from(onsetList)
   };
 }
 
@@ -635,6 +951,12 @@ export function heroTextureDataUrl(seedText: string, hue: number, spine?: TrackS
   context.fillText(plateCode, width - 14, height - 12);
 
   return canvas.toDataURL("image/png");
+}
+
+// Circle-of-fifths hue for a pitch class: musically adjacent keys land on
+// adjacent hues, anchored so C keeps the stock cool phosphor.
+export function keyHue(pitchClass: number) {
+  return pitchClass < 0 ? 202 : (202 + ((pitchClass * 7) % 12) * 30) % 360;
 }
 
 // Signal-identity features derived from a spine — the shared vocabulary for
