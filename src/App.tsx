@@ -182,7 +182,9 @@ function isLocalPlaybackUrl(value: string | undefined) {
     return /^data:audio\//i.test(value ?? "");
   }
 
-  return parsed.origin === window.location.origin && parsed.pathname.startsWith("/__cody_music__/");
+  // Same-origin bundled-library media only. The prefix may sit under a
+  // subpath when the web build is hosted off-root (e.g. GitHub Pages).
+  return parsed.origin === window.location.origin && parsed.pathname.includes("/__cody_music__/");
 }
 
 function sanitizeStoredState(state: StoredState): StoredState {
@@ -761,7 +763,10 @@ function enhanceHostTracks(hostTracks: CodyFileTrack[]) {
 
 async function loadPreviewDefaultLibrary() {
   try {
-    const response = await fetch("/__cody_music__/library");
+    // Relative so it resolves under a subpath host (GitHub Pages) as well as
+    // the dev server root; the packaged shell 404s here and falls through to
+    // the host bridge.
+    const response = await fetch("__cody_music__/library");
 
     if (!response.ok) {
       return [];
@@ -1038,8 +1043,14 @@ function isTakeoutMatched(track: Track | undefined) {
   return Boolean(track?.metadataSource?.includes("Takeout"));
 }
 
+function isBundledDemo(track: Track | undefined) {
+  return track?.metadataSource === "Bundled demo pressing";
+}
+
 function hasTagGap(track: Track | undefined) {
-  return Boolean(track) && (!isTakeoutMatched(track) || !track?.artworkUrl);
+  // Bundled demo pressings are complete by construction — a missing Takeout
+  // match is not a gap for them.
+  return Boolean(track) && !isBundledDemo(track) && (!isTakeoutMatched(track) || !track?.artworkUrl);
 }
 
 function getStatusChips(track: Track | undefined, missingSong?: TakeoutSong): StatusChip[] {
@@ -1056,6 +1067,8 @@ function getStatusChips(track: Track | undefined, missingSong?: TakeoutSong): St
     chips.push({ label: "YT MATCH", query: "status:matched", tone: "match" });
   } else if (isTakeoutMatched(track)) {
     chips.push({ label: "YT AMBIG", query: "status:ambiguous", tone: "muted" });
+  } else if (isBundledDemo(track)) {
+    chips.push({ label: "DEMO", query: "artist:cody", tone: "muted" });
   } else {
     chips.push({ label: "LOCAL ONLY", query: "status:local", tone: "muted" });
   }
@@ -1068,7 +1081,7 @@ function getStatusChips(track: Track | undefined, missingSong?: TakeoutSong): St
     chips.push({ label: "NO COVER", query: "missing:cover", tone: "alert" });
   }
 
-  if (!isTakeoutMatched(track)) {
+  if (!isTakeoutMatched(track) && !isBundledDemo(track)) {
     chips.push({ label: "TAG GAP", query: "tag:gap", tone: "alert" });
   }
 
@@ -1708,7 +1721,7 @@ function App() {
   const matchConfidence = formatMatchConfidence(currentTrack);
   const ytMatchCount = tracks.filter((track) => track.youtubeVideoId).length;
   const takeoutMetadataCount = tracks.filter((track) => track.metadataSource?.includes("Takeout")).length;
-  const tagIssueCount = tracks.filter((track) => !track.metadataSource?.includes("Takeout")).length;
+  const tagIssueCount = tracks.filter((track) => !track.metadataSource?.includes("Takeout") && !isBundledDemo(track)).length;
   const coverMissingCount = tracks.filter((track) => !track.artworkUrl).length;
   const currentSourceLabel = formatSourceLabel(currentTrack);
   const currentQualityLine = currentTrack
@@ -1719,13 +1732,13 @@ function App() {
   const fileSourcePath = currentTrack?.filePath ?? currentTrack?.fileName ?? "no local file";
   const currentTagSummary = currentTrack
     ? `${currentTrack.artworkUrl ? "cover locked" : "cover missing"} · ${
-        isTakeoutMatched(currentTrack) ? "takeout tags" : "partial tags"
+        isTakeoutMatched(currentTrack) ? "takeout tags" : isBundledDemo(currentTrack) ? "bundled tags" : "partial tags"
       }`
     : "waiting for file";
   const currentTagErrors = currentTrack
     ? [
         currentTrack.artworkUrl ? "" : "cover missing",
-        isTakeoutMatched(currentTrack) ? "" : "metadata gap",
+        isTakeoutMatched(currentTrack) || isBundledDemo(currentTrack) ? "" : "metadata gap",
         currentTrack.metadataSource?.toLowerCase().includes("ambiguous") ||
         currentTrack.album.toLowerCase().includes("takeout matches")
           ? "duplicate metadata"

@@ -8,6 +8,11 @@ A local-first Mac music player styled as a noir hardware deck — a forensic
 audio terminal for people with large local libraries and no interest in the
 cloud. Electron + React + TypeScript.
 
+**Live demo:** <https://sachittumuluri.github.io/cody-cartridge/> — ships with
+the SIGNAL TEST pack, five original synthesized studies (house, build/drop,
+drum-and-bass, half-time sub, beatless drone) that exercise every instrument
+on the deck. Import your own files to go further; nothing leaves the browser.
+
 **The deck remembers.** Every song you load gets a *body*: the app decodes the
 audio once and traces a "spectral spine" — the full track reduced to a 240-column
 energy/band signature with estimated BPM and brightness. That trace becomes the
