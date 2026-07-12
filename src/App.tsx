@@ -8,6 +8,7 @@ import {
   SkipForward,
   Volume2
 } from "lucide-react";
+import { SmokeRing } from "@paper-design/shaders-react";
 import {
   SPINE_BANDS,
   SPINE_VERSION,
@@ -1435,7 +1436,6 @@ function App() {
   const systemMessageTimerRef = useRef<number | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const shellRef = useRef<HTMLElement | null>(null);
-  const visualizerRef = useRef<HTMLDivElement | null>(null);
   const signalColumnsRef = useRef<HTMLDivElement | null>(null);
   const scopeCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const bassLevelRef = useRef(0);
@@ -1506,8 +1506,10 @@ function App() {
   const [reactLevel, setReactLevel] = useState<ReactLevel>(() =>
     initialState.react === "low" || initialState.react === "high" ? initialState.react : "med"
   );
-  const reactGainRef = useRef(1);
-  const meterBallisticsRef = useRef(new Float32Array(24));
+  // SCAN control: seconds of terrain visible across the Approach Lane.
+  const scanWindowRef = useRef(30);
+  const approachCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const paintApproachLaneRef = useRef<() => void>(() => undefined);
   const heroTexturesRef = useRef<Map<string, string>>(new Map());
   const [heroDocked, setHeroDocked] = useState(() => initialState.heroDock === true);
   const [denseRows, setDenseRows] = useState(() => initialState.denseRows === true);
@@ -1532,7 +1534,6 @@ function App() {
     hue: number;
     duration: number;
   }>({ profile: null, onsets: null, hue: 202, duration: 0 });
-  const deltaLevelEmaRef = useRef(0);
   const heatRef = useRef({ level: 0, peak: 0 });
   const sessionRef = useRef({ seconds: 0, plays: 0 });
   const needleSourceRef = useRef({ l: 0, r: 0 });
@@ -1797,10 +1798,11 @@ function App() {
         ];
   useEffect(() => {
     // The tick loop reads these through refs so the long-lived rAF closure
-    // never goes stale.
-    reactGainRef.current = reactLevel === "low" ? 0.6 : reactLevel === "high" ? 1.55 : 1;
+    // never goes stale. SCAN sets the lane's lookahead window.
+    scanWindowRef.current = reactLevel === "low" ? 45 : reactLevel === "high" ? 15 : 30;
     meterModeRef.current = meterMode;
     interferenceRef.current = interference;
+    paintApproachLaneRef.current();
   }, [interference, meterMode, reactLevel]);
 
   // Feed the scope scenes: the current track's spectral profile (Delta Scope
@@ -1813,7 +1815,6 @@ function App() {
       target.onsets = null;
       target.hue = 202;
       target.duration = 0;
-      deltaLevelEmaRef.current = 0;
       return;
     }
 
@@ -1827,7 +1828,6 @@ function App() {
     target.onsets = currentSpine.onsets;
     target.hue = keyHue(currentSpine.key);
     target.duration = currentSpine.duration;
-    deltaLevelEmaRef.current = 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSpine, currentTrack?.id, spineRevision]);
 
@@ -2215,11 +2215,8 @@ function App() {
       previousTrackIdRef.current = currentId;
       triggerRelock(hasTagGap(currentTrack) ? "TRACE FOUND / TAG GAP" : "TRACE FOUND");
 
-      // Bug-2: re-arm the meter bank at zero for the new cartridge so stale
-      // heights never carry across a track swap; bars only rise again once
-      // real FFT data flows.
-      meterBallisticsRef.current.fill(0);
-      writeMeterLevels(undefined);
+      // The lane belongs to the new cartridge immediately.
+      paintApproachLaneRef.current();
 
       // The clock belongs to the new cartridge: elapsed restarts at 0:00 and
       // the total comes from the track record until real metadata loads —
@@ -2321,9 +2318,7 @@ function App() {
       vu.peakHoldL = 0.82;
       vu.peakHoldR = 0.72;
       writeVuNeedles();
-      writeMeterLevels(
-        Array.from({ length: 24 }, (_, index) => 20 + Math.round(58 * Math.abs(Math.sin(index * 0.5 + 1.2))))
-      );
+      paintApproachLaneRef.current();
 
       frame += 1;
       if (frame < 34) {
@@ -2925,10 +2920,12 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrack?.id, currentSpineAvailable, reducedMotion, storeDemoMode]);
 
-  // Keep the seek spine painted outside the visualizer loop too (paused,
-  // seeking, spine arrival) — cheap, and the tick loop covers 60fps playback.
+  // Keep the seek spine and approach lane painted outside the visualizer
+  // loop too (paused, seeking, spine arrival) — cheap, and the tick loop
+  // covers 60fps playback.
   useEffect(() => {
     paintSeekSpineRef.current();
+    paintApproachLaneRef.current();
   });
 
   function mergeTracks(nextTracks: Track[]) {
@@ -3389,6 +3386,165 @@ function App() {
 
   paintSeekSpineRef.current = paintSeekSpine;
 
+  // The Approach Lane: the song's archived terrain feeds through a fixed
+  // playhead at constant velocity — seismograph paper, not a bouncing meter.
+  // SCAN (LOW/MED/HIGH) sets how many seconds cross the lane.
+  function paintApproachLane() {
+    const canvas = approachCanvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    if (!canvas || !context) {
+      return;
+    }
+
+    const pixelRatio = Math.min(2, window.devicePixelRatio || 1);
+    const width = Math.round(canvas.clientWidth * pixelRatio);
+    const height = Math.round(canvas.clientHeight * pixelRatio);
+
+    if (!width || !height) {
+      return;
+    }
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    context.clearRect(0, 0, width, height);
+
+    const spine = getTrackSpine(currentTrack);
+    const middle = height / 2;
+
+    if (!spine) {
+      context.fillStyle = "rgba(156, 199, 216, 0.22)";
+      context.fillRect(0, middle, width, 1);
+      return;
+    }
+
+    const scanSeconds = scanWindowRef.current;
+    const now = audioRef.current?.currentTime ?? currentTime;
+    const total = audioRef.current?.duration || spine.duration || 1;
+    const playheadX = width * 0.18;
+    const secondsPerPx = scanSeconds / width;
+    const hue = keyHue(spine.key);
+
+    // Second-marks every 5s: the lane reads as calibrated tape.
+    const windowStart = now - playheadX * secondsPerPx;
+    context.fillStyle = "rgba(156, 199, 216, 0.07)";
+
+    for (let mark = Math.ceil(windowStart / 5) * 5; ; mark += 5) {
+      const x = playheadX + (mark - now) / secondsPerPx;
+
+      if (x > width) {
+        break;
+      }
+
+      if (x >= 0 && mark >= 0 && mark <= total) {
+        context.fillRect(x, 0, 1, height);
+      }
+    }
+
+    // Terrain: mirrored energy with a low-band core, red behind the
+    // playhead, key-tinted phosphor ahead.
+    const step = 2 * pixelRatio;
+
+    for (let x = 0; x < width; x += step) {
+      const t = now + (x - playheadX) * secondsPerPx;
+
+      if (t < 0 || t > total) {
+        continue;
+      }
+
+      const column = Math.min(spine.cols - 1, Math.max(0, Math.floor((t / total) * spine.cols)));
+      const energyLevel = spine.energy[column] / 255;
+      const lowLevel = spine.low[column] / 255;
+      const half = Math.max(1, energyLevel * height * 0.44);
+      const played = x < playheadX;
+      const barWidth = Math.max(1, step - pixelRatio * 0.6);
+
+      context.fillStyle = played ? "rgba(139, 17, 27, 0.42)" : `hsla(${hue}, 40%, 62%, 0.3)`;
+      context.fillRect(x, middle - half, barWidth, half * 2);
+
+      const core = Math.max(1, lowLevel * height * 0.2);
+      context.fillStyle = played ? "rgba(139, 17, 27, 0.68)" : `hsla(${hue}, 46%, 70%, 0.46)`;
+      context.fillRect(x, middle - core, barWidth, core * 2);
+    }
+
+    // Section boundaries ahead: dashed verticals where the song turns.
+    const smoothed: number[] = [];
+
+    for (let column = 0; column < spine.cols; column += 1) {
+      let sum = 0;
+      let count = 0;
+
+      for (let k = -3; k <= 3; k += 1) {
+        const index = column + k;
+
+        if (index >= 0 && index < spine.cols) {
+          sum += spine.energy[index];
+          count += 1;
+        }
+      }
+
+      smoothed.push(sum / count / 255);
+    }
+
+    const derivative = smoothed.map((value, index) => (index === 0 ? 0 : Math.abs(value - smoothed[index - 1])));
+    const meanDerivative = derivative.reduce((totalD, value) => totalD + value, 0) / derivative.length;
+    context.strokeStyle = "rgba(239, 239, 231, 0.3)";
+    context.setLineDash([3 * pixelRatio, 4 * pixelRatio]);
+    context.lineWidth = pixelRatio;
+    let lastBoundary = -20;
+
+    for (let column = 4; column < spine.cols - 4; column += 1) {
+      if (derivative[column] > Math.max(0.035, meanDerivative * 2.6) && column - lastBoundary >= 18) {
+        lastBoundary = column;
+        const boundaryTime = (column / spine.cols) * total;
+        const x = playheadX + (boundaryTime - now) / secondsPerPx;
+
+        if (x >= 0 && x <= width) {
+          context.beginPath();
+          context.moveTo(x, height * 0.12);
+          context.lineTo(x, height * 0.88);
+          context.stroke();
+        }
+      }
+    }
+
+    context.setLineDash([]);
+
+    // Onset notches on the lane floor.
+    if (spine.onsets.length > 0) {
+      context.fillStyle = "rgba(239, 239, 231, 0.38)";
+      const startFrame = Math.max(0, Math.floor(windowStart * 30));
+      const endFrame = Math.ceil((now + (width - playheadX) * secondsPerPx) * 30);
+      const onsets = spine.onsets;
+      let lo = 0;
+      let hi = onsets.length;
+
+      while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+
+        if (onsets[mid] < startFrame) {
+          lo = mid + 1;
+        } else {
+          hi = mid;
+        }
+      }
+
+      for (let index = lo; index < onsets.length && onsets[index] <= endFrame; index += 1) {
+        const x = playheadX + (onsets[index] / 30 - now) / secondsPerPx;
+        context.fillRect(x, height - 4 * pixelRatio, pixelRatio, 3 * pixelRatio);
+      }
+    }
+
+    // Fixed playhead.
+    context.fillStyle = "rgba(239, 239, 231, 0.85)";
+    context.fillRect(playheadX - pixelRatio, 0, 2 * pixelRatio, height);
+  }
+
+  paintApproachLaneRef.current = paintApproachLane;
+
   function writeBassVars(bass: number, beat: number) {
     const shell = shellRef.current;
 
@@ -3405,26 +3561,6 @@ function App() {
     shell.style.setProperty("--bass-offset", `${Math.round(bass * -20)}px`);
     shell.style.setProperty("--bass-node-scale", (0.9 + bass * 0.34 + beat * 0.12).toFixed(3));
     shell.style.setProperty("--beat-pulse", beat.toFixed(3));
-  }
-
-  function writeMeterLevels(levels?: number[], dirs?: number[]) {
-    const spans = visualizerRef.current?.children;
-
-    if (!spans) {
-      return;
-    }
-
-    for (let index = 0; index < spans.length; index += 1) {
-      const span = spans[index] as HTMLElement;
-      span.style.setProperty("--meter-height", `${levels?.[index] ?? 3}px`);
-
-      if (dirs) {
-        span.classList.toggle("d-up", (dirs[index] ?? -1) < 0);
-        span.classList.toggle("d-down", (dirs[index] ?? -1) > 0);
-      } else if (span.classList.contains("d-up") || span.classList.contains("d-down")) {
-        span.classList.remove("d-up", "d-down");
-      }
-    }
   }
 
   function writeSignalColumns(bass: number) {
@@ -3479,8 +3615,9 @@ function App() {
     const middle = height / 2;
 
     // Persistence: fade the previous frame toward black instead of clearing.
+    // Short tails — a clean instrument line, not a hairball.
     context.globalCompositeOperation = "source-over";
-    context.fillStyle = "rgba(3, 3, 4, 0.18)";
+    context.fillStyle = "rgba(3, 3, 4, 0.34)";
     context.fillRect(0, 0, width, height);
 
     if (!wave) {
@@ -3489,7 +3626,8 @@ function App() {
     }
 
     const points = 140;
-    const waveHeight = height * (0.4 + bass * 0.12);
+    // Fixed geometry: brightness may ride the audio, the shape may not.
+    const waveHeight = height * 0.42;
     const stride = wave.length / points;
     const path: Array<[number, number]> = [];
 
@@ -3524,8 +3662,8 @@ function App() {
     // circle of fifths (C keeps the stock cool blue).
     const phosphorHue = currentSpineTickRef.current.hue;
 
-    // Pass 1 — soft glow.
-    context.lineWidth = (2.6 + bass * 3.4) * pixelRatio;
+    // Pass 1 — soft glow (constant width; alpha carries the reaction).
+    context.lineWidth = 3.2 * pixelRatio;
     context.strokeStyle = `hsla(${phosphorHue}, 44%, 64%, ${(0.1 + bass * 0.16).toFixed(3)})`;
     context.shadowColor = `hsla(${phosphorHue}, 44%, 64%, 0.9)`;
     context.shadowBlur = (6 + bass * 20 + shuttle * 14) * pixelRatio;
@@ -3821,12 +3959,11 @@ function App() {
 
     const settle = () => {
       bassLevelRef.current = 0;
-      meterBallisticsRef.current.fill(0);
       vuStateRef.current = { l: 0, r: 0, peakL: 0, peakR: 0, peakHoldL: 0, peakHoldR: 0, lampL: 0, lampR: 0 };
       writeBassVars(0, 0);
-      writeMeterLevels(undefined);
       writeSignalColumns(0);
       writeVuNeedles();
+      paintApproachLaneRef.current();
     };
 
     if (mode === "freeze") {
@@ -3837,19 +3974,12 @@ function App() {
       }
 
       const startedAt = performance.now();
-      const metersAtPause = Float32Array.from(meterBallisticsRef.current);
       const vuAtPause = { ...vuStateRef.current };
       const bassAtPause = bassLevelRef.current;
 
       const decay = () => {
         const progress = Math.min(1, (performance.now() - startedAt) / 480);
         const keep = Math.pow(1 - progress, 1.7);
-        const meters = meterBallisticsRef.current;
-
-        for (let index = 0; index < meters.length; index += 1) {
-          meters[index] = metersAtPause[index] * keep;
-        }
-
         const vu = vuStateRef.current;
         vu.l = vuAtPause.l * keep;
         vu.r = vuAtPause.r * keep;
@@ -3859,7 +3989,6 @@ function App() {
         vu.lampR = vuAtPause.lampR * keep;
         bassLevelRef.current = bassAtPause * keep;
 
-        writeMeterLevels(Array.from(meters, (level) => Math.round(3 + level * 29)));
         writeVuNeedles();
         writeBassVars(bassLevelRef.current, 0);
         writeSignalColumns(bassLevelRef.current);
@@ -4129,7 +4258,7 @@ function App() {
       }
 
       const scopeJitter =
-        interferenceNow === "max" ? 0.15 : interferenceNow === "med" ? 0.07 : interferenceNow === "low" ? 0.02 : 0;
+        interferenceNow === "max" ? 0.15 : interferenceNow === "med" ? 0.07 : interferenceNow === "low" ? 0.012 : 0;
 
       if (!liveSignal) {
         const fallbackFrame = getAnalysisFrame(
@@ -4244,63 +4373,12 @@ function App() {
         }
       }
 
-      const spoolGateFor = (index: number) =>
-        spoolProgress >= 1 ? 1 : Math.max(0, Math.min(1, (spoolProgress * 1.7 - (index / 24) * 0.7) * 3));
-
-      // Delta Scope: with the song's spectral profile archived and a real
-      // live spectrum (not the offline envelope fallback), each bar shows
-      // deviation from THIS SONG's own norm around a center line — timbre
-      // shape difference plus a self-calibrating loudness swing. Without a
-      // profile, the classic absolute bank (treble tilt) applies.
-      const meters = meterBallisticsRef.current;
-      const reactGain = reactGainRef.current;
-      const songProfile = currentSpineTickRef.current.profile;
-      const deltaActive = Boolean(songProfile && liveSignal && nextLevels);
-      const meterDirs: number[] = new Array(24).fill(-1);
-      const meterHeights: number[] = new Array(24).fill(2);
-
-      if (deltaActive && nextLevels && songProfile) {
-        let liveMean = 0;
-
-        for (let index = 0; index < 24; index += 1) {
-          liveMean += nextLevels[index] ?? 0;
-        }
-
-        liveMean /= 24;
-
-        if (deltaLevelEmaRef.current === 0) {
-          deltaLevelEmaRef.current = liveMean;
-        }
-
-        deltaLevelEmaRef.current +=
-          (liveMean - deltaLevelEmaRef.current) * (1 - Math.exp(-(dtFrames * 33.33) / 15000));
-        const levelDelta = Math.max(-1, Math.min(1, ((liveMean - deltaLevelEmaRef.current) * 68) / 10));
-
-        for (let index = 0; index < 24; index += 1) {
-          const liveShape = Math.max(-1, Math.min(1, (((nextLevels[index] ?? 0) - liveMean) * 68) / 24));
-          const target =
-            Math.max(-1, Math.min(1, ((liveShape - songProfile[index]) * 0.6 + levelDelta * 0.85) * reactGain)) *
-            spoolGateFor(index);
-          const coef =
-            Math.abs(target) > Math.abs(meters[index]) ? 1 - Math.pow(0.3, dtFrames) : 1 - Math.pow(0.87, dtFrames);
-          meters[index] += (target - meters[index]) * coef;
-          meterDirs[index] = meters[index] >= 0 ? -1 : 1;
-          meterHeights[index] = Math.round(2 + Math.abs(meters[index]) * 15);
-        }
-      } else {
-        for (let index = 0; index < 24; index += 1) {
-          const tilt = 0.66 + (index / 23) * 0.62;
-          const target = Math.min(1, (nextLevels?.[index] ?? 0) * tilt * reactGain) * spoolGateFor(index);
-          const coef = target > meters[index] ? 1 - Math.pow(0.3, dtFrames) : 1 - Math.pow(0.87, dtFrames);
-          meters[index] += (target - meters[index]) * coef;
-          meterHeights[index] = Math.round(3 + Math.max(0, meters[index]) * 29);
-        }
-      }
-
       writeBassVars(bassLevelRef.current, beat.pulse);
-      writeMeterLevels(meterHeights, deltaActive ? meterDirs : undefined);
       writeSignalColumns(bassLevelRef.current);
       writeVuNeedles();
+      // The Approach Lane replaces the meter bank: constant-velocity terrain
+      // repainted from the archive every frame — nothing bounces.
+      paintApproachLaneRef.current();
 
       // Scope scenes: the constellation owns the tube during attract mode;
       // otherwise the live trace plus onset rain.
@@ -5196,6 +5274,22 @@ function App() {
               aria-label={currentTrack ? `Signal map for ${currentTrack.title} by ${currentTrack.artist}` : "Empty signal map"}
             >
               <div className="signal-map signal-scope-only" aria-hidden="true">
+                {/* Idle tube: with no cartridge loaded, crimson smoke curls
+                    in the empty glass. The scope canvas blends screen, so
+                    its black field lets the smoke show through. */}
+                {!currentTrack && !bootMode && !reducedMotion ? (
+                  <span className="tube-smoke">
+                    <SmokeRing
+                      colorBack="#00000000"
+                      colors={["#8b111b", "#41100f", "#d8c79b"]}
+                      noiseScale={1.6}
+                      thickness={0.55}
+                      radius={0.42}
+                      speed={0.35}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </span>
+                ) : null}
                 {heroBackdropUrl ? (
                   <span className="hero-backdrop" style={{ backgroundImage: `url(${heroBackdropUrl})` }} />
                 ) : heroTextureUrl ? (
@@ -5426,6 +5520,26 @@ function App() {
                 {filteredCards.length === 0 ? (
                   tracks.length === 0 && takeoutSongs.length === 0 ? (
                     <div className="no-cartridge">
+                      {/* The missing object made literal: a wireframe
+                          cartridge slab slowly rotating over its own
+                          reflection, faces carrying the deck's spec text. */}
+                      <div className="cartridge-cube-stage" aria-hidden="true">
+                        {["", "reflection"].map((variant) => (
+                          <div key={variant || "main"} className={`cartridge-cube-wrap ${variant}`}>
+                            <div className="cartridge-cube">
+                              <span className="cube-face cube-front">
+                                CODY NOIR
+                                <em>NO CARTRIDGE</em>
+                              </span>
+                              <span className="cube-face cube-back">LOCAL-ONLY ARCHIVE</span>
+                              <span className="cube-face cube-left">TRACE ENGINE v5</span>
+                              <span className="cube-face cube-right">SOURCE: USER-SELECTED AUDIO</span>
+                              <span className="cube-face cube-top" />
+                              <span className="cube-face cube-bottom" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                       <span className="no-cartridge-title">NO CARTRIDGE</span>
                       <span className="no-cartridge-sub">INSERT MEDIA // IMPORT LOCAL AUDIO FILES</span>
                       <div className="no-cartridge-actions">
@@ -5822,22 +5936,28 @@ function App() {
                   <VolumeKnob value={volume} onChange={setVolume} />
                 </div>
               </div>
-              <div className="react-control" aria-label="Meter sensitivity">
-                <span>REACT</span>
+              <div className="react-control" aria-label="Approach lane scan window">
+                <span>SCAN</span>
                 <div>
-                  {(["low", "med", "high"] as ReactLevel[]).map((level) => (
+                  {(
+                    [
+                      ["low", "45S"],
+                      ["med", "30S"],
+                      ["high", "15S"]
+                    ] as Array<[ReactLevel, string]>
+                  ).map(([level, label]) => (
                     <button
                       key={level}
                       type="button"
                       className={reactLevel === level ? "active" : ""}
                       aria-pressed={reactLevel === level}
-                      title={`Meter sensitivity: ${level}`}
+                      title={`Lane lookahead: ${label.toLowerCase()}econds across the lane`}
                       onClick={() => {
                         setReactLevel(level);
-                        flashSystemMessage(`REACT ${level.toUpperCase()}`, 760);
+                        flashSystemMessage(`SCAN ${label}`, 760);
                       }}
                     >
-                      {level.toUpperCase()}
+                      {label}
                     </button>
                   ))}
                 </div>
@@ -5846,18 +5966,17 @@ function App() {
 
             <div className="meter-bank">
               <div
-                ref={visualizerRef}
-                className={`visualizer visualizer-crt-wave ${currentSpineAvailable ? "visualizer-delta" : ""}`}
-                aria-label={currentSpineAvailable ? "Delta scope: deviation from this song's norm" : "Audio visualizer"}
-                title={
-                  currentSpineAvailable
-                    ? "DELTA SCOPE — bars show how unusual this moment is for this song"
-                    : undefined
-                }
+                className="visualizer approach-lane-wrap"
+                role="img"
+                aria-label="Approach lane: the song's upcoming terrain scrolls into a fixed playhead"
+                title="APPROACH LANE — the archived terrain ahead; SCAN sets the window"
               >
-                {Array.from({ length: 24 }).map((_, index) => (
-                  <span key={index} style={{ "--meter-height": "3px" } as CSSProperties} />
-                ))}
+                <canvas ref={approachCanvasRef} className="approach-lane" aria-hidden="true" />
+                {!currentSpineAvailable ? (
+                  <span className="lane-tag" aria-hidden="true">
+                    NO TRACE
+                  </span>
+                ) : null}
               </div>
               <VuMeter
                 containerRef={vuMeterRef}

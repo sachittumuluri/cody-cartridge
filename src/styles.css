@@ -9553,3 +9553,173 @@ button:disabled {
     inset 0 -10px 16px rgba(120, 96, 40, 0.42),
     inset 0 0 22px rgba(224, 82, 74, calc(var(--vu-l, 0) * 0.4));
 }
+
+/* ============================================================
+   Calm Instruments pass: nothing bounces. Information moves at
+   constant velocity; brightness may react, geometry may not.
+   ============================================================ */
+
+/* --- De-bounce the main panel: kill audio-reactive transforms, keep glow --- */
+.app-shell.is-playing .cartridge-art.powered,
+.app-shell.is-playing .album-graphic-large,
+.app-shell.is-playing .crt-window::before {
+  transform: none !important;
+}
+
+.signal-scope-only .signal-vignette {
+  transform: none !important;
+  transition: none;
+}
+
+.app-shell.is-hot.is-playing .deck-controls {
+  transform: none;
+}
+
+/* --- Approach Lane: replaces the meter bank bars --- */
+.visualizer.approach-lane-wrap {
+  display: block;
+  position: relative;
+  padding: 6px 10px;
+}
+
+.approach-lane {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lane-tag {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(156, 199, 216, 0.4);
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+/* --- SmokeRing idle tube --- */
+.tube-smoke {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+/* --- NO CARTRIDGE cartridge cube --- */
+.cartridge-cube-stage {
+  position: relative;
+  height: 132px;
+  margin-bottom: 4px;
+  perspective: 700px;
+}
+
+.cartridge-cube-wrap {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 150px;
+  height: 92px;
+  margin-left: -75px;
+  transform-style: preserve-3d;
+}
+
+.cartridge-cube-wrap.reflection {
+  top: 112px;
+  transform: scaleY(-1);
+  opacity: 0.35;
+  -webkit-mask: linear-gradient(180deg, transparent 30%, #000 100%);
+  mask: linear-gradient(180deg, transparent 30%, #000 100%);
+}
+
+.cartridge-cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: cartridgeSpin 14s linear infinite;
+}
+
+@keyframes cartridgeSpin {
+  from {
+    transform: rotateX(-12deg) rotateY(0deg);
+  }
+
+  to {
+    transform: rotateX(-12deg) rotateY(360deg);
+  }
+}
+
+.cube-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  width: 150px;
+  height: 92px;
+  border: 1px solid rgba(156, 199, 216, 0.34);
+  background: rgba(5, 5, 6, 0.72);
+  color: rgba(156, 199, 216, 0.7);
+  font-family: "Courier New", monospace;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-align: center;
+  backface-visibility: visible;
+}
+
+.cube-face em {
+  color: rgba(239, 239, 231, 0.85);
+  font-size: 0.66rem;
+  font-style: normal;
+  letter-spacing: 0.2em;
+}
+
+.cube-front {
+  transform: translate(-50%, -50%) translateZ(21px);
+}
+
+.cube-back {
+  transform: translate(-50%, -50%) rotateY(180deg) translateZ(21px);
+}
+
+.cube-left,
+.cube-right {
+  width: 42px;
+  padding: 0 4px;
+  font-size: 0.42rem;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+}
+
+.cube-left {
+  transform: translate(-50%, -50%) rotateY(-90deg) translateZ(75px);
+}
+
+.cube-right {
+  transform: translate(-50%, -50%) rotateY(90deg) translateZ(75px);
+}
+
+.cube-top,
+.cube-bottom {
+  height: 42px;
+  border-color: rgba(156, 199, 216, 0.18);
+}
+
+.cube-top {
+  transform: translate(-50%, -50%) rotateX(90deg) translateZ(46px);
+}
+
+.cube-bottom {
+  transform: translate(-50%, -50%) rotateX(-90deg) translateZ(46px);
+}
+
+/* Reduced motion: static three-quarter pose, no spin. */
+.app-shell.reduced-motion .cartridge-cube {
+  animation: none !important;
+  transform: rotateX(-12deg) rotateY(-32deg);
+}
