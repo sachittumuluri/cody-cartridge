@@ -1252,14 +1252,15 @@ function useTeletype(text: string, enabled: boolean) {
 
     setPrinted("");
     let index = 0;
+    // 3 chars per 36ms: same print feel, ~half the React re-renders.
     const interval = window.setInterval(() => {
-      index += 2;
+      index += 3;
       setPrinted(text.slice(0, index));
 
       if (index >= text.length) {
         window.clearInterval(interval);
       }
-    }, 24);
+    }, 36);
 
     return () => window.clearInterval(interval);
   }, [text, enabled]);
@@ -1485,6 +1486,8 @@ function App() {
   // frames) keeps the spine correct even when a hidden window starves rAF.
   const seekRevealStartRef = useRef(0);
   const seekRevealRafRef = useRef<number | null>(null);
+  // Skip-unchanged gate: the seek spine only repaints when its pixels move.
+  const seekPaintKeyRef = useRef("");
   const paintSeekSpineRef = useRef<() => void>(() => undefined);
   const tracksQueueRef = useRef<Track[]>([]);
   const currentIdQueueRef = useRef("");
@@ -3422,6 +3425,17 @@ function App() {
     const total = audioRef.current?.duration || playbackDuration || spine.duration || 0;
     const time = audioRef.current?.currentTime ?? currentTime;
     const progress = total > 0 ? Math.min(1, Math.max(0, time / total)) : 0;
+
+    // Smoothness: at ~4px/sec of playhead motion most frames are pixel-
+    // identical — skip them unless an animation (reveal/loop) is running.
+    const animating = seekRevealStartRef.current > 0 || seekLoopRef.current > 0;
+    const paintKey = `${currentTrack?.id ?? ""}|${width}x${height}|${Math.round(progress * width)}|${spineRevision}`;
+
+    if (!animating && paintKey === seekPaintKeyRef.current) {
+      return;
+    }
+
+    seekPaintKeyRef.current = animating ? "" : paintKey;
     let reveal = 1;
 
     if (seekRevealStartRef.current > 0) {
@@ -3755,12 +3769,13 @@ function App() {
       { lag: 3, smooth: 1, offset: -3, hueShift: -8, alpha: 0.3, width: 1.6 }
     ];
 
-    context.shadowBlur = 3 * pixelRatio;
+    // No per-strand shadows: canvas shadowBlur is the classic scope-render
+    // cost; the additive overlap of the strands supplies the glow instead.
+    context.shadowBlur = 0;
 
     for (const strand of strands) {
       context.lineWidth = strand.width * pixelRatio;
       context.strokeStyle = `hsla(${phosphorHue + strand.hueShift}, 52%, 68%, ${(strand.alpha * (0.8 + bass * 0.5)).toFixed(3)})`;
-      context.shadowColor = `hsla(${phosphorHue + strand.hueShift}, 52%, 68%, 0.7)`;
       strokeWave(frameAt(strand.lag), strand.smooth, strand.offset * pixelRatio);
     }
 
@@ -4513,8 +4528,21 @@ function App() {
       writeBassVars(bassLevelRef.current, beat.pulse);
       writeSignalColumns(bassLevelRef.current);
       writeVuNeedles();
-      // The Approach Lane replaces the meter bank: constant-velocity terrain
-      // repainted from the archive every frame — nothing bounces.
+
+      // Smoothness: playback progress rides an imperative CSS var at 60fps
+      // (row illumination, fallback seek rail) while React ticks at 1Hz.
+      const progressAudio = audioRef.current;
+
+      if (progressAudio && shellRef.current) {
+        const totalTime = progressAudio.duration || 0;
+
+        if (Number.isFinite(totalTime) && totalTime > 0) {
+          const progressPct = Math.min(100, (progressAudio.currentTime / totalTime) * 100);
+          shellRef.current.style.setProperty("--playback-progress", `${progressPct.toFixed(2)}%`);
+          shellRef.current.style.setProperty("--playback-ratio", (progressPct / 100).toFixed(4));
+        }
+      }
+
       paintGrooveLatticeRef.current();
 
       // Scope scenes: the constellation owns the tube during attract mode;
@@ -5290,8 +5318,13 @@ function App() {
         onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={() => {
           const time = audioRef.current?.currentTime ?? 0;
-          setCurrentTime(time);
           registerPlayProgress(time);
+
+          // Smoothness: every canvas reads the element clock directly at
+          // 60fps; React only re-renders when the printed second changes.
+          if (Math.floor(time) !== Math.floor(currentTime)) {
+            setCurrentTime(time);
+          }
         }}
         onEnded={onTrackEnded}
       />
