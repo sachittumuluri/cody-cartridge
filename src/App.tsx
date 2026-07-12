@@ -1531,10 +1531,13 @@ function App() {
   const [reactLevel, setReactLevel] = useState<ReactLevel>(() =>
     initialState.react === "low" || initialState.react === "high" ? initialState.react : "med"
   );
-  // SCAN control: seconds of terrain visible across the Approach Lane.
-  const scanWindowRef = useRef(30);
-  const approachCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const paintApproachLaneRef = useRef<() => void>(() => undefined);
+  const latticeCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const paintGrooveLatticeRef = useRef<() => void>(() => undefined);
+  // Groove Lattice: live onsets measured against the archived beat grid.
+  const grooveHitsRef = useRef<Array<{ time: number; err: number }>>([]);
+  const lastBeatPulseRef = useRef(0);
+  // Filament loom: recent displayed waves feed the lagged strands.
+  const waveHistoryRef = useRef<{ frames: Uint8Array[]; cursor: number }>({ frames: [], cursor: 0 });
   const heroTexturesRef = useRef<Map<string, string>>(new Map());
   const [heroDocked, setHeroDocked] = useState(() => initialState.heroDock === true);
   const [denseRows, setDenseRows] = useState(() => initialState.denseRows === true);
@@ -1558,7 +1561,10 @@ function App() {
     onsets: Uint16Array | null;
     hue: number;
     duration: number;
-  }>({ profile: null, onsets: null, hue: 202, duration: 0 });
+    bpm: number;
+    /** Beat-grid phase offset in seconds (grid beats land at phase + k·period). */
+    gridPhase: number;
+  }>({ profile: null, onsets: null, hue: 202, duration: 0, bpm: 0, gridPhase: 0 });
   const heatRef = useRef({ level: 0, peak: 0 });
   const sessionRef = useRef({ seconds: 0, plays: 0 });
   const needleSourceRef = useRef({ l: 0, r: 0 });
@@ -1823,12 +1829,10 @@ function App() {
         ];
   useEffect(() => {
     // The tick loop reads these through refs so the long-lived rAF closure
-    // never goes stale. SCAN sets the lane's lookahead window.
-    scanWindowRef.current = reactLevel === "low" ? 45 : reactLevel === "high" ? 15 : 30;
+    // never goes stale.
     meterModeRef.current = meterMode;
     interferenceRef.current = interference;
-    paintApproachLaneRef.current();
-  }, [interference, meterMode, reactLevel]);
+  }, [interference, meterMode]);
 
   // Feed the scope scenes: the current track's spectral profile (Delta Scope
   // reference), onset list (rain), and key hue (phosphor tint).
@@ -1840,6 +1844,9 @@ function App() {
       target.onsets = null;
       target.hue = 202;
       target.duration = 0;
+      target.bpm = 0;
+      target.gridPhase = 0;
+      grooveHitsRef.current = [];
       return;
     }
 
@@ -1853,6 +1860,44 @@ function App() {
     target.onsets = currentSpine.onsets;
     target.hue = keyHue(currentSpine.key);
     target.duration = currentSpine.duration;
+    target.bpm = currentSpine.bpm;
+
+    // Beat-grid phase: circular histogram of the archived onsets modulo the
+    // beat period — the densest bin anchors where grid beats land.
+    if (currentSpine.bpm > 0 && currentSpine.onsets.length > 4) {
+      const period = 60 / currentSpine.bpm;
+      const bins = new Float32Array(24);
+
+      for (let index = 0; index < Math.min(120, currentSpine.onsets.length); index += 1) {
+        const onsetTime = currentSpine.onsets[index] / 30;
+        bins[Math.floor(((onsetTime % period) / period) * 24) % 24] += 1;
+      }
+
+      let bestBin = 0;
+
+      for (let bin = 1; bin < 24; bin += 1) {
+        if (bins[bin] > bins[bestBin]) {
+          bestBin = bin;
+        }
+      }
+
+      target.gridPhase = ((bestBin + 0.5) / 24) * period;
+    } else {
+      target.gridPhase = 0;
+    }
+
+    grooveHitsRef.current = [];
+
+    // Store surfaces never run the live detector: seed a plausible hit set
+    // so screenshots show the lattice working.
+    if ((storeDemoMode || storePosterMode) && target.bpm > 0) {
+      const demoPeriod = 60 / target.bpm;
+      const demoErrs = [0.012, -0.018, 0.045, 0.005, 0.11, -0.03];
+      grooveHitsRef.current = demoErrs.map((err, index) => ({
+        time: target.gridPhase + (index - 6.5) * demoPeriod + err,
+        err
+      }));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSpine, currentTrack?.id, spineRevision]);
 
@@ -2241,7 +2286,7 @@ function App() {
       triggerRelock(hasTagGap(currentTrack) ? "TRACE FOUND / TAG GAP" : "TRACE FOUND");
 
       // The lane belongs to the new cartridge immediately.
-      paintApproachLaneRef.current();
+      paintGrooveLatticeRef.current();
 
       // The clock belongs to the new cartridge: elapsed restarts at 0:00 and
       // the total comes from the track record until real metadata loads —
@@ -2343,7 +2388,7 @@ function App() {
       vu.peakHoldL = 0.82;
       vu.peakHoldR = 0.72;
       writeVuNeedles();
-      paintApproachLaneRef.current();
+      paintGrooveLatticeRef.current();
 
       frame += 1;
       if (frame < 34) {
@@ -2950,7 +2995,7 @@ function App() {
   // covers 60fps playback.
   useEffect(() => {
     paintSeekSpineRef.current();
-    paintApproachLaneRef.current();
+    paintGrooveLatticeRef.current();
   });
 
   function mergeTracks(nextTracks: Track[]) {
@@ -3411,11 +3456,11 @@ function App() {
 
   paintSeekSpineRef.current = paintSeekSpine;
 
-  // The Approach Lane: the song's archived terrain feeds through a fixed
-  // playhead at constant velocity — seismograph paper, not a bouncing meter.
-  // SCAN (LOW/MED/HIGH) sets how many seconds cross the lane.
-  function paintApproachLane() {
-    const canvas = approachCanvasRef.current;
+  // The Groove Lattice: live onsets measured against the song's archived
+  // beat grid. Gridlines scroll through a fixed strike line at constant
+  // velocity; hits are ticks colored by tightness; LOCK% reads the last 12.
+  function paintGrooveLattice() {
+    const canvas = latticeCanvasRef.current;
     const context = canvas?.getContext("2d");
 
     if (!canvas || !context) {
@@ -3437,138 +3482,114 @@ function App() {
 
     context.clearRect(0, 0, width, height);
 
-    const spine = getTrackSpine(currentTrack);
+    const scene = currentSpineTickRef.current;
+    const monoFont = `900 ${Math.round(8 * pixelRatio)}px "Courier New", monospace`;
     const middle = height / 2;
 
-    if (!spine) {
-      context.fillStyle = "rgba(156, 199, 216, 0.22)";
-      context.fillRect(0, middle, width, 1);
+    // Rail.
+    context.fillStyle = "rgba(156, 199, 216, 0.14)";
+    context.fillRect(0, middle, width, 1);
+
+    if (!getTrackSpine(currentTrack)) {
+      context.fillStyle = "rgba(156, 199, 216, 0.4)";
+      context.font = monoFont;
+      context.textAlign = "center";
+      context.fillText("NO TRACE", width / 2, middle - 6 * pixelRatio);
+      context.textAlign = "left";
       return;
     }
 
-    const scanSeconds = scanWindowRef.current;
     const now = audioRef.current?.currentTime ?? currentTime;
-    const total = audioRef.current?.duration || spine.duration || 1;
-    const playheadX = width * 0.18;
-    const secondsPerPx = scanSeconds / width;
-    const hue = keyHue(spine.key);
+    const strikeX = width * 0.66;
+    const hits = grooveHitsRef.current;
 
-    // Second-marks every 5s: the lane reads as calibrated tape.
-    const windowStart = now - playheadX * secondsPerPx;
-    context.fillStyle = "rgba(156, 199, 216, 0.07)";
+    if (scene.bpm <= 0) {
+      context.fillStyle = "rgba(255, 189, 79, 0.5)";
+      context.font = monoFont;
+      context.textAlign = "center";
+      context.fillText("NO TEMPO LOCK", width / 2, middle - 6 * pixelRatio);
+      context.textAlign = "left";
+    }
 
-    for (let mark = Math.ceil(windowStart / 5) * 5; ; mark += 5) {
-      const x = playheadX + (mark - now) / secondsPerPx;
+    const period = scene.bpm > 0 ? 60 / scene.bpm : 0.5;
+    const windowSeconds = period * 6;
+    const secondsPerPx = windowSeconds / width;
+    const hue = scene.hue;
 
-      if (x > width) {
-        break;
-      }
+    // Gridlines at integer beats, every 4th emphasized (4/4 assumption).
+    if (scene.bpm > 0) {
+      const windowStart = now - strikeX * secondsPerPx;
+      const firstBeat = Math.ceil((windowStart - scene.gridPhase) / period);
 
-      if (x >= 0 && mark >= 0 && mark <= total) {
-        context.fillRect(x, 0, 1, height);
+      for (let beat = firstBeat; ; beat += 1) {
+        const beatTime = scene.gridPhase + beat * period;
+        const x = strikeX + (beatTime - now) / secondsPerPx;
+
+        if (x > width) {
+          break;
+        }
+
+        if (x < 0 || beatTime < 0) {
+          continue;
+        }
+
+        const downbeat = ((beat % 4) + 4) % 4 === 0;
+        context.fillStyle = downbeat ? `hsla(${hue}, 45%, 66%, 0.4)` : `hsla(${hue}, 40%, 60%, 0.16)`;
+        context.fillRect(x, height * (downbeat ? 0.12 : 0.24), 1, height * (downbeat ? 0.76 : 0.52));
       }
     }
 
-    // Terrain: mirrored energy with a low-band core, red behind the
-    // playhead, key-tinted phosphor ahead.
-    const step = 2 * pixelRatio;
+    // Live hits: ticks at their absolute times, colored by tightness; fresh
+    // hits flash brighter.
+    const tight = Math.min(0.06, period * 0.12);
+    const loose = Math.min(0.11, period * 0.24);
 
-    for (let x = 0; x < width; x += step) {
-      const t = now + (x - playheadX) * secondsPerPx;
+    for (const hit of hits) {
+      const x = strikeX + (hit.time - now) / secondsPerPx;
 
-      if (t < 0 || t > total) {
+      if (x < -4 || x > width) {
         continue;
       }
 
-      const column = Math.min(spine.cols - 1, Math.max(0, Math.floor((t / total) * spine.cols)));
-      const energyLevel = spine.energy[column] / 255;
-      const lowLevel = spine.low[column] / 255;
-      const half = Math.max(1, energyLevel * height * 0.44);
-      const played = x < playheadX;
-      const barWidth = Math.max(1, step - pixelRatio * 0.6);
-
-      context.fillStyle = played ? "rgba(139, 17, 27, 0.42)" : `hsla(${hue}, 40%, 62%, 0.3)`;
-      context.fillRect(x, middle - half, barWidth, half * 2);
-
-      const core = Math.max(1, lowLevel * height * 0.2);
-      context.fillStyle = played ? "rgba(139, 17, 27, 0.68)" : `hsla(${hue}, 46%, 70%, 0.46)`;
-      context.fillRect(x, middle - core, barWidth, core * 2);
+      const absErr = Math.abs(hit.err);
+      const age = now - hit.time;
+      const flash = age < 0.25 ? 1.6 - age * 2.4 : 1;
+      const color =
+        absErr <= tight
+          ? `rgba(239, 239, 231, ${Math.min(1, 0.6 * flash).toFixed(3)})`
+          : absErr <= loose
+            ? `rgba(255, 189, 79, ${Math.min(1, 0.55 * flash).toFixed(3)})`
+            : `rgba(202, 48, 48, ${Math.min(1, 0.6 * flash).toFixed(3)})`;
+      context.fillStyle = color;
+      context.fillRect(x - pixelRatio, middle - height * 0.2, 2 * pixelRatio, height * 0.4);
     }
 
-    // Section boundaries ahead: dashed verticals where the song turns.
-    const smoothed: number[] = [];
+    // Strike line.
+    context.fillStyle = "rgba(239, 239, 231, 0.8)";
+    context.fillRect(strikeX - pixelRatio, height * 0.08, 2 * pixelRatio, height * 0.84);
 
-    for (let column = 0; column < spine.cols; column += 1) {
-      let sum = 0;
-      let count = 0;
+    // LOCK%: how many of the last 12 hits landed tight.
+    if (scene.bpm > 0) {
+      const recent = hits.slice(-12);
+      context.font = monoFont;
+      context.textAlign = "right";
 
-      for (let k = -3; k <= 3; k += 1) {
-        const index = column + k;
-
-        if (index >= 0 && index < spine.cols) {
-          sum += spine.energy[index];
-          count += 1;
-        }
+      if (recent.length >= 3) {
+        const locked = recent.filter((hit) => Math.abs(hit.err) <= tight).length;
+        const lockPct = Math.round((locked / recent.length) * 100);
+        context.fillStyle =
+          lockPct >= 70 ? "rgba(239, 239, 231, 0.75)" : lockPct >= 40 ? "rgba(255, 189, 79, 0.7)" : "rgba(202, 48, 48, 0.75)";
+        context.fillText(`LOCK ${lockPct}%`, width - 6 * pixelRatio, 11 * pixelRatio);
+      } else {
+        context.fillStyle = "rgba(156, 199, 216, 0.4)";
+        context.fillText(`${scene.bpm}BPM GRID`, width - 6 * pixelRatio, 11 * pixelRatio);
       }
 
-      smoothed.push(sum / count / 255);
+      context.textAlign = "left";
     }
-
-    const derivative = smoothed.map((value, index) => (index === 0 ? 0 : Math.abs(value - smoothed[index - 1])));
-    const meanDerivative = derivative.reduce((totalD, value) => totalD + value, 0) / derivative.length;
-    context.strokeStyle = "rgba(239, 239, 231, 0.3)";
-    context.setLineDash([3 * pixelRatio, 4 * pixelRatio]);
-    context.lineWidth = pixelRatio;
-    let lastBoundary = -20;
-
-    for (let column = 4; column < spine.cols - 4; column += 1) {
-      if (derivative[column] > Math.max(0.035, meanDerivative * 2.6) && column - lastBoundary >= 18) {
-        lastBoundary = column;
-        const boundaryTime = (column / spine.cols) * total;
-        const x = playheadX + (boundaryTime - now) / secondsPerPx;
-
-        if (x >= 0 && x <= width) {
-          context.beginPath();
-          context.moveTo(x, height * 0.12);
-          context.lineTo(x, height * 0.88);
-          context.stroke();
-        }
-      }
-    }
-
-    context.setLineDash([]);
-
-    // Onset notches on the lane floor.
-    if (spine.onsets.length > 0) {
-      context.fillStyle = "rgba(239, 239, 231, 0.38)";
-      const startFrame = Math.max(0, Math.floor(windowStart * 30));
-      const endFrame = Math.ceil((now + (width - playheadX) * secondsPerPx) * 30);
-      const onsets = spine.onsets;
-      let lo = 0;
-      let hi = onsets.length;
-
-      while (lo < hi) {
-        const mid = (lo + hi) >> 1;
-
-        if (onsets[mid] < startFrame) {
-          lo = mid + 1;
-        } else {
-          hi = mid;
-        }
-      }
-
-      for (let index = lo; index < onsets.length && onsets[index] <= endFrame; index += 1) {
-        const x = playheadX + (onsets[index] / 30 - now) / secondsPerPx;
-        context.fillRect(x, height - 4 * pixelRatio, pixelRatio, 3 * pixelRatio);
-      }
-    }
-
-    // Fixed playhead.
-    context.fillStyle = "rgba(239, 239, 231, 0.85)";
-    context.fillRect(playheadX - pixelRatio, 0, 2 * pixelRatio, height);
   }
 
-  paintApproachLaneRef.current = paintApproachLane;
+  paintGrooveLatticeRef.current = paintGrooveLattice;
 
   function writeBassVars(bass: number, beat: number) {
     const shell = shellRef.current;
@@ -3654,26 +3675,57 @@ function App() {
     // Fixed geometry: brightness may ride the audio, the shape may not.
     const waveHeight = height * 0.42;
     const stride = wave.length / points;
-    const path: Array<[number, number]> = [];
 
-    for (let index = 0; index <= points; index += 1) {
-      const sample = ((wave[Math.floor(index * stride)] ?? 128) - 128) / 128;
-      const smear = shuttle > 0 ? (((index * 53) % 17) / 17 - 0.5) * shuttle * waveHeight * 0.5 : 0;
-      // Interference instability: per-point vertical noise on the trace only.
-      const wobble = jitter > 0 ? (Math.random() - 0.5) * jitter * waveHeight : 0;
-      const x = (index / points) * width;
-      const y = middle + sample * waveHeight + smear + wobble;
-      path.push([x, y]);
+    // Filament loom: keep a short ring of recent displayed waves so the
+    // strands can lag behind the live signal.
+    const history = waveHistoryRef.current;
+
+    if (history.frames.length < 13) {
+      history.frames.push(Uint8Array.from(wave));
+      history.cursor = history.frames.length - 1;
+    } else {
+      history.cursor = (history.cursor + 1) % 13;
+      history.frames[history.cursor].set(wave);
     }
 
-    const tracePath = () => {
-      context.beginPath();
-      context.moveTo(path[0][0], path[0][1]);
+    const frameAt = (lag: number) => {
+      if (history.frames.length === 0) {
+        return wave;
+      }
 
-      for (let index = 1; index < path.length - 1; index += 1) {
-        const [x0, y0] = path[index];
-        const [x1, y1] = path[index + 1];
-        context.quadraticCurveTo(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+      const index = (history.cursor - Math.min(lag, history.frames.length - 1) + 13 * 4) % history.frames.length;
+      return history.frames[index] ?? wave;
+    };
+
+    const strokeWave = (source: Uint8Array, smooth: number, offsetY: number) => {
+      context.beginPath();
+
+      for (let index = 0; index <= points; index += 1) {
+        const center = Math.floor(index * stride);
+        let sum = 0;
+        let count = 0;
+
+        for (let k = -smooth; k <= smooth; k += 1) {
+          const at = center + k * 6;
+
+          if (at >= 0 && at < source.length) {
+            sum += source[at];
+            count += 1;
+          }
+        }
+
+        const sample = (sum / Math.max(1, count) - 128) / 128;
+        const smear = shuttle > 0 ? (((index * 53) % 17) / 17 - 0.5) * shuttle * waveHeight * 0.5 : 0;
+        // Interference instability: per-point vertical noise, trace only.
+        const wobble = jitter > 0 ? (Math.random() - 0.5) * jitter * waveHeight : 0;
+        const x = (index / points) * width;
+        const y = middle + sample * waveHeight + smear + wobble + offsetY;
+
+        if (index === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
       }
 
       context.lineCap = "round";
@@ -3687,19 +3739,56 @@ function App() {
     // circle of fifths (C keeps the stock cool blue).
     const phosphorHue = currentSpineTickRef.current.hue;
 
-    // Pass 1 — soft glow (constant width; alpha carries the reaction).
+    // Under-glow: one soft constant-width stroke beneath the bundle.
     context.lineWidth = 3.2 * pixelRatio;
-    context.strokeStyle = `hsla(${phosphorHue}, 44%, 64%, ${(0.1 + bass * 0.16).toFixed(3)})`;
+    context.strokeStyle = `hsla(${phosphorHue}, 44%, 64%, ${(0.08 + bass * 0.12).toFixed(3)})`;
     context.shadowColor = `hsla(${phosphorHue}, 44%, 64%, 0.9)`;
-    context.shadowBlur = (6 + bass * 20 + shuttle * 14) * pixelRatio;
-    tracePath();
+    context.shadowBlur = (6 + bass * 18 + shuttle * 14) * pixelRatio;
+    strokeWave(wave, 0, 0);
 
-    // Pass 2 — bright core, brightens on the beat.
+    // Lagged strands, faintest first: progressively smoothed copies of the
+    // recent signal with small constant offsets and a hue spread — the loom.
+    const strands: Array<{ lag: number; smooth: number; offset: number; hueShift: number; alpha: number; width: number }> = [
+      { lag: 12, smooth: 4, offset: 7, hueShift: 16, alpha: 0.08, width: 2.6 },
+      { lag: 9, smooth: 3, offset: -6, hueShift: -16, alpha: 0.12, width: 2.2 },
+      { lag: 6, smooth: 2, offset: 4, hueShift: 10, alpha: 0.18, width: 1.9 },
+      { lag: 3, smooth: 1, offset: -3, hueShift: -8, alpha: 0.3, width: 1.6 }
+    ];
+
+    context.shadowBlur = 3 * pixelRatio;
+
+    for (const strand of strands) {
+      context.lineWidth = strand.width * pixelRatio;
+      context.strokeStyle = `hsla(${phosphorHue + strand.hueShift}, 52%, 68%, ${(strand.alpha * (0.8 + bass * 0.5)).toFixed(3)})`;
+      context.shadowColor = `hsla(${phosphorHue + strand.hueShift}, 52%, 68%, 0.7)`;
+      strokeWave(frameAt(strand.lag), strand.smooth, strand.offset * pixelRatio);
+    }
+
+    // Core strand — the live wire, brightening on the beat.
     context.lineWidth = Math.max(1, 1.15 * pixelRatio);
     context.strokeStyle = `hsla(${phosphorHue}, 72%, 94%, ${(0.68 + beat * 0.32).toFixed(3)})`;
     context.shadowColor = `hsla(${phosphorHue}, 60%, 82%, 0.95)`;
     context.shadowBlur = (2 + beat * 6) * pixelRatio;
-    tracePath();
+    strokeWave(wave, 0, 0);
+
+    // Node sparks: on a fresh beat, bright dots where the filaments touch.
+    if (beat > 0.55) {
+      const sparkSeed = Math.floor(performance.now() / 380);
+
+      for (let spark = 0; spark < 3; spark += 1) {
+        const fraction = (((sparkSeed + spark * 97) * 2654435761) >>> 0) % 89 / 89;
+        const sampleIndex = Math.floor(fraction * (wave.length - 1));
+        const sample = ((wave[sampleIndex] ?? 128) - 128) / 128;
+        const x = fraction * width;
+        const y = middle + sample * waveHeight;
+        context.fillStyle = `hsla(${phosphorHue}, 80%, 92%, ${(beat * 0.7).toFixed(3)})`;
+        context.shadowColor = `hsla(${phosphorHue}, 80%, 88%, 0.95)`;
+        context.shadowBlur = 8 * pixelRatio;
+        context.beginPath();
+        context.arc(x, y, (1.4 + beat * 1.6) * pixelRatio, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
 
     context.globalCompositeOperation = "source-over";
     context.shadowBlur = 0;
@@ -3988,7 +4077,7 @@ function App() {
       writeBassVars(0, 0);
       writeSignalColumns(0);
       writeVuNeedles();
-      paintApproachLaneRef.current();
+      paintGrooveLatticeRef.current();
     };
 
     if (mode === "freeze") {
@@ -4313,6 +4402,29 @@ function App() {
         beat.threshold = Math.min(0.6, onsetStrength * 0.55 + beat.threshold * 0.45);
       }
 
+      // Groove Lattice: record each fresh live onset against the archived
+      // beat grid (signed error to the nearest grid beat).
+      if (beat.pulse === 1 && lastBeatPulseRef.current < 1) {
+        const grooveScene = currentSpineTickRef.current;
+        const hitTime = audioRef.current?.currentTime ?? 0;
+        let gridError = 0;
+
+        if (grooveScene.bpm > 0) {
+          const gridPeriod = 60 / grooveScene.bpm;
+          const offset = (((hitTime - grooveScene.gridPhase) % gridPeriod) + gridPeriod) % gridPeriod;
+          gridError = offset > gridPeriod / 2 ? offset - gridPeriod : offset;
+        }
+
+        const hits = grooveHitsRef.current;
+        hits.push({ time: hitTime, err: gridError });
+
+        if (hits.length > 24) {
+          hits.shift();
+        }
+      }
+
+      lastBeatPulseRef.current = beat.pulse;
+
       const level = bassLevelRef.current;
       const mix = shapedBass > level ? 1 - Math.pow(0.04, dtFrames) : 1 - Math.pow(0.74, dtFrames);
       bassLevelRef.current = level + (shapedBass - level) * mix;
@@ -4403,7 +4515,7 @@ function App() {
       writeVuNeedles();
       // The Approach Lane replaces the meter bank: constant-velocity terrain
       // repainted from the archive every frame — nothing bounces.
-      paintApproachLaneRef.current();
+      paintGrooveLatticeRef.current();
 
       // Scope scenes: the constellation owns the tube during attract mode;
       // otherwise the live trace plus onset rain.
@@ -5945,47 +6057,16 @@ function App() {
                   <VolumeKnob value={volume} onChange={setVolume} />
                 </div>
               </div>
-              <div className="react-control" aria-label="Approach lane scan window">
-                <span>SCAN</span>
-                <div>
-                  {(
-                    [
-                      ["low", "45S"],
-                      ["med", "30S"],
-                      ["high", "15S"]
-                    ] as Array<[ReactLevel, string]>
-                  ).map(([level, label]) => (
-                    <button
-                      key={level}
-                      type="button"
-                      className={reactLevel === level ? "active" : ""}
-                      aria-pressed={reactLevel === level}
-                      title={`Lane lookahead: ${label.toLowerCase()}econds across the lane`}
-                      onClick={() => {
-                        setReactLevel(level);
-                        flashSystemMessage(`SCAN ${label}`, 760);
-                      }}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
 
             <div className="meter-bank">
               <div
-                className="visualizer approach-lane-wrap"
+                className="visualizer groove-lattice-wrap"
                 role="img"
-                aria-label="Approach lane: the song's upcoming terrain scrolls into a fixed playhead"
-                title="APPROACH LANE — the archived terrain ahead; SCAN sets the window"
+                aria-label="Groove lattice: live onsets measured against the song's beat grid"
+                title="GROOVE LATTICE — live hits vs the archived beat grid; LOCK% reads tightness"
               >
-                <canvas ref={approachCanvasRef} className="approach-lane" aria-hidden="true" />
-                {!currentSpineAvailable ? (
-                  <span className="lane-tag" aria-hidden="true">
-                    NO TRACE
-                  </span>
-                ) : null}
+                <canvas ref={latticeCanvasRef} className="groove-lattice" aria-hidden="true" />
               </div>
               <VuMeter
                 containerRef={vuMeterRef}

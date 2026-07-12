@@ -9737,3 +9737,20 @@ button:disabled {
   transform-origin: center top;
   margin-bottom: -14px;
 }
+
+/* ============================================================
+   Groove Lattice: live onsets vs the archived beat grid in the
+   meter-bank slot (replaces the Approach Lane terrain).
+   ============================================================ */
+
+.visualizer.groove-lattice-wrap {
+  display: block;
+  position: relative;
+  padding: 6px 10px;
+}
+
+.groove-lattice {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
