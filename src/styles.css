@@ -9723,3 +9723,17 @@ button:disabled {
   animation: none !important;
   transform: rotateX(-12deg) rotateY(-32deg);
 }
+
+/* Pilot-light smoke: dim beneath the structure map while paused with a
+   cartridge; full-strength only in a truly empty tube. */
+.tube-smoke.is-pilot {
+  opacity: 0.26;
+}
+
+/* Compact cube for the no-matches state. */
+.cartridge-cube-stage.compact {
+  height: 96px;
+  transform: scale(0.72);
+  transform-origin: center top;
+  margin-bottom: -14px;
+}

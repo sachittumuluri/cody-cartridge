@@ -1213,6 +1213,31 @@ function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
   });
 }
 
+// The missing object made literal: a wireframe cartridge slab rotating over
+// its own reflection, faces carrying the deck's spec text. Shown wherever the
+// shelf comes up empty (no library, or a FIND with no matches).
+function CartridgeCube({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={`cartridge-cube-stage ${compact ? "compact" : ""}`} aria-hidden="true">
+      {["", "reflection"].map((variant) => (
+        <div key={variant || "main"} className={`cartridge-cube-wrap ${variant}`}>
+          <div className="cartridge-cube">
+            <span className="cube-face cube-front">
+              CODY NOIR
+              <em>NO CARTRIDGE</em>
+            </span>
+            <span className="cube-face cube-back">LOCAL-ONLY ARCHIVE</span>
+            <span className="cube-face cube-left">TRACE ENGINE v5</span>
+            <span className="cube-face cube-right">SOURCE: USER-SELECTED AUDIO</span>
+            <span className="cube-face cube-top" />
+            <span className="cube-face cube-bottom" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // C11 teletype: system messages print character-by-character like a dot-matrix
 // head instead of swapping instantly. Disabled for reduced motion and store
 // captures, where the full text lands immediately.
@@ -5274,11 +5299,13 @@ function App() {
               aria-label={currentTrack ? `Signal map for ${currentTrack.title} by ${currentTrack.artist}` : "Empty signal map"}
             >
               <div className="signal-map signal-scope-only" aria-hidden="true">
-                {/* Idle tube: with no cartridge loaded, crimson smoke curls
-                    in the empty glass. The scope canvas blends screen, so
-                    its black field lets the smoke show through. */}
-                {!currentTrack && !bootMode && !reducedMotion ? (
-                  <span className="tube-smoke">
+                {/* The pilot light: crimson smoke curls in the glass whenever
+                    the deck idles — dim beneath the structure map while a
+                    cartridge is paused, full-strength in an empty tube. The
+                    scope canvas blends screen, so its black field lets the
+                    smoke show through. */}
+                {(!currentTrack || !isPlaying) && !bootMode && !reducedMotion ? (
+                  <span className={`tube-smoke ${currentTrack ? "is-pilot" : ""}`}>
                     <SmokeRing
                       colorBack="#00000000"
                       colors={["#8b111b", "#41100f", "#d8c79b"]}
@@ -5520,26 +5547,7 @@ function App() {
                 {filteredCards.length === 0 ? (
                   tracks.length === 0 && takeoutSongs.length === 0 ? (
                     <div className="no-cartridge">
-                      {/* The missing object made literal: a wireframe
-                          cartridge slab slowly rotating over its own
-                          reflection, faces carrying the deck's spec text. */}
-                      <div className="cartridge-cube-stage" aria-hidden="true">
-                        {["", "reflection"].map((variant) => (
-                          <div key={variant || "main"} className={`cartridge-cube-wrap ${variant}`}>
-                            <div className="cartridge-cube">
-                              <span className="cube-face cube-front">
-                                CODY NOIR
-                                <em>NO CARTRIDGE</em>
-                              </span>
-                              <span className="cube-face cube-back">LOCAL-ONLY ARCHIVE</span>
-                              <span className="cube-face cube-left">TRACE ENGINE v5</span>
-                              <span className="cube-face cube-right">SOURCE: USER-SELECTED AUDIO</span>
-                              <span className="cube-face cube-top" />
-                              <span className="cube-face cube-bottom" />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      <CartridgeCube />
                       <span className="no-cartridge-title">NO CARTRIDGE</span>
                       <span className="no-cartridge-sub">INSERT MEDIA // IMPORT LOCAL AUDIO FILES</span>
                       <div className="no-cartridge-actions">
@@ -5554,6 +5562,7 @@ function App() {
                     </div>
                   ) : (
                     <div className="no-cartridge no-trace-match">
+                      <CartridgeCube compact />
                       <span className="no-cartridge-title">NO TRACE MATCHES FIND</span>
                       <div className="no-cartridge-actions">
                         <button type="button" onClick={() => setQuery("")}>
