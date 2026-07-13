@@ -88,118 +88,6 @@ button:disabled {
   border: 0;
 }
 
-.theme-pocket-gray {
-  --bg: #cad1a8;
-  --shell: #72816f;
-  --shell-2: #93a480;
-  --screen: #1f341f;
-  --panel: rgba(31, 52, 31, 0.18);
-  --panel-strong: rgba(31, 52, 31, 0.28);
-  --line: rgba(31, 52, 31, 0.35);
-  --text: #182518;
-  --muted: rgba(24, 37, 24, 0.72);
-  --faint: rgba(24, 37, 24, 0.48);
-  --accent: #e1e877;
-  --accent-2: #335b36;
-  --accent-3: #7d4d55;
-}
-
-.theme-arcade-neon {
-  --bg: #100b1e;
-  --shell: #201331;
-  --shell-2: #312044;
-  --screen: #080817;
-  --panel: rgba(72, 218, 216, 0.08);
-  --panel-strong: rgba(255, 78, 173, 0.12);
-  --line: rgba(101, 224, 255, 0.24);
-  --text: #f8f0ff;
-  --muted: rgba(248, 240, 255, 0.66);
-  --faint: rgba(248, 240, 255, 0.4);
-  --accent: #ff4ead;
-  --accent-2: #45e3ff;
-  --accent-3: #ffe45f;
-}
-
-.theme-sunset-16 {
-  --bg: #191828;
-  --shell: #2e2540;
-  --shell-2: #4b2f4b;
-  --screen: #141728;
-  --panel: rgba(255, 204, 101, 0.08);
-  --panel-strong: rgba(77, 210, 178, 0.12);
-  --line: rgba(255, 224, 171, 0.18);
-  --text: #fff1cf;
-  --muted: rgba(255, 241, 207, 0.66);
-  --faint: rgba(255, 241, 207, 0.42);
-  --accent: #ffb24f;
-  --accent-2: #4ed0bb;
-  --accent-3: #f56b6b;
-}
-
-.theme-transparent-purple {
-  --bg: #171326;
-  --shell: rgba(91, 62, 129, 0.82);
-  --shell-2: rgba(145, 101, 179, 0.5);
-  --screen: #171329;
-  --panel: rgba(220, 205, 255, 0.1);
-  --panel-strong: rgba(112, 228, 198, 0.14);
-  --line: rgba(221, 204, 255, 0.24);
-  --text: #f8efff;
-  --muted: rgba(248, 239, 255, 0.68);
-  --faint: rgba(248, 239, 255, 0.42);
-  --accent: #b88dff;
-  --accent-2: #61e0c0;
-  --accent-3: #ff8b78;
-}
-
-.theme-crt-terminal {
-  --bg: #07150e;
-  --shell: #132318;
-  --shell-2: #1c3422;
-  --screen: #031009;
-  --panel: rgba(112, 255, 154, 0.07);
-  --panel-strong: rgba(112, 255, 154, 0.12);
-  --line: rgba(112, 255, 154, 0.2);
-  --text: #b9ffc7;
-  --muted: rgba(185, 255, 199, 0.66);
-  --faint: rgba(185, 255, 199, 0.42);
-  --accent: #70ff9a;
-  --accent-2: #d7ff73;
-  --accent-3: #ff806e;
-}
-
-.theme-memory-card {
-  --bg: #10182c;
-  --shell: #20365d;
-  --shell-2: #365d93;
-  --screen: #0c1931;
-  --panel: rgba(188, 222, 255, 0.08);
-  --panel-strong: rgba(255, 255, 255, 0.12);
-  --line: rgba(188, 222, 255, 0.22);
-  --text: #e5f1ff;
-  --muted: rgba(229, 241, 255, 0.68);
-  --faint: rgba(229, 241, 255, 0.42);
-  --accent: #7fb3ff;
-  --accent-2: #ffcb63;
-  --accent-3: #70e0be;
-}
-
-.theme-mixtape-dungeon {
-  --bg: #1b1720;
-  --shell: #34283b;
-  --shell-2: #4a384f;
-  --screen: #14121a;
-  --panel: rgba(255, 192, 99, 0.08);
-  --panel-strong: rgba(167, 222, 130, 0.12);
-  --line: rgba(255, 223, 176, 0.18);
-  --text: #fff0d9;
-  --muted: rgba(255, 240, 217, 0.66);
-  --faint: rgba(255, 240, 217, 0.42);
-  --accent: #f2a64d;
-  --accent-2: #a7de82;
-  --accent-3: #dd6a73;
-}
-
 .app-shell {
   display: grid;
   grid-template-columns: 202px minmax(0, 1fr);
@@ -307,72 +195,6 @@ button:disabled {
   background: var(--panel);
 }
 
-.primary-action,
-.secondary-action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 44px;
-  border-radius: 7px;
-  font-weight: 900;
-}
-
-.primary-action {
-  color: #15151d;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent) 82%, #ffffff), var(--accent)),
-    var(--accent);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.45), 0 10px 24px var(--shadow);
-}
-
-.secondary-action {
-  color: var(--text);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
-    var(--panel);
-}
-
-.save-slots {
-  display: grid;
-  gap: 8px;
-}
-
-.save-slot {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-  min-height: 40px;
-  padding: 0 10px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  color: inherit;
-  text-align: left;
-  background: rgba(0, 0, 0, 0.12);
-}
-
-.save-slot span {
-  color: var(--faint);
-  font-family: "Courier New", monospace;
-  font-size: 0.74rem;
-  font-weight: 900;
-}
-
-.save-slot strong {
-  overflow: hidden;
-  color: var(--muted);
-  font-size: 0.82rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.save-slot.loaded {
-  border-color: color-mix(in srgb, var(--accent-2) 62%, transparent);
-  background: color-mix(in srgb, var(--accent-2) 12%, transparent);
-}
-
 .local-badge {
   display: none;
   align-items: center;
@@ -409,28 +231,6 @@ button:disabled {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-top: 0;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  width: 100%;
-  min-height: 42px;
-  padding: 0;
-  border-radius: 7px;
-  color: var(--muted);
-}
-
-.nav-item span {
-  display: none;
-}
-
-.nav-item.active {
-  color: var(--text);
-  border-color: color-mix(in srgb, var(--accent) 64%, transparent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .console-screen {
@@ -502,33 +302,6 @@ button:disabled {
   text-transform: uppercase;
 }
 
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 300px;
-  min-width: 220px;
-  height: 42px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  color: var(--muted);
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.search-box input {
-  width: 100%;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  color: var(--text);
-  background: transparent;
-}
-
-.search-box input::placeholder {
-  color: var(--faint);
-}
-
 .cabinet-grid {
   position: relative;
   z-index: 1;
@@ -546,25 +319,6 @@ button:disabled {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 32%),
     rgba(0, 0, 0, 0.18);
-}
-
-.now-playing-bay {
-  display: grid;
-  grid-template-rows: minmax(380px, 1fr) auto auto;
-  overflow: hidden;
-}
-
-.crt-window {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto minmax(220px, 1fr) 92px;
-  gap: 14px;
-  min-height: 0;
-  padding: 16px;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 42%),
-    var(--screen);
 }
 
 .screen-status {
@@ -718,16 +472,6 @@ button:disabled {
   background: rgba(0, 0, 0, 0.2);
 }
 
-.visualizer span {
-  display: block;
-  height: var(--meter-height, 16px);
-  min-height: 8px;
-  border-radius: 3px 3px 1px 1px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
-  opacity: 0.78;
-  transition: height 80ms linear, opacity 80ms linear;
-}
-
 .visualizer-crt-wave span {
   border-radius: 999px;
   background: var(--accent-2);
@@ -856,77 +600,9 @@ button:disabled {
   font-weight: 900;
 }
 
-.track-list {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  min-height: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 42px 26px;
-  scroll-padding-inline: 28px;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  overscroll-behavior: contain;
-}
-
 .app-shell.reduced-motion .track-list,
 .app-shell.reduced-motion .metadata-list {
   scroll-behavior: auto;
-}
-
-.song-card {
-  position: relative;
-  display: grid;
-  flex: 0 0 auto;
-  width: 168px;
-  min-height: 190px;
-  place-items: center;
-  padding: 8px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  color: var(--muted);
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.055), transparent),
-    rgba(0, 0, 0, 0.14);
-  transform: translate(var(--path-x), var(--path-y)) rotate(var(--tilt));
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-  animation: songCardIn 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--card-delay);
-}
-
-.song-card.selected {
-  color: var(--text);
-  border-color: color-mix(in srgb, var(--accent) 72%, transparent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-}
-
-.song-card:hover,
-.song-card:focus-visible {
-  transform: translate(var(--path-x), calc(var(--path-y) - 10px)) rotate(calc(var(--tilt) * -0.35)) scale(1.03);
-}
-
-.favorite-badge {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  color: var(--faint);
-  background: rgba(0, 0, 0, 0.12);
-}
-
-.favorite-badge.loved {
-  color: #17151e;
-  border-color: var(--accent);
-  background: var(--accent);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 52%, transparent);
 }
 
 .empty-state {
@@ -981,83 +657,6 @@ button:disabled {
   text-transform: uppercase;
 }
 
-.theme-grid {
-  display: grid;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.theme-chip {
-  display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  column-gap: 10px;
-  align-items: center;
-  min-height: 54px;
-  padding: 8px;
-  border-radius: 7px;
-  text-align: left;
-}
-
-.theme-chip.active {
-  border-color: color-mix(in srgb, var(--accent) 72%, transparent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-}
-
-.theme-chip strong,
-.theme-chip small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.theme-chip strong {
-  color: var(--text);
-  font-size: 0.86rem;
-}
-
-.theme-chip small {
-  grid-column: 2;
-  color: var(--faint);
-  font-size: 0.72rem;
-}
-
-.swatch {
-  grid-row: span 2;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-}
-
-.swatch-pocket-gray {
-  background: linear-gradient(135deg, #e1e877, #335b36);
-}
-
-.swatch-arcade-neon {
-  background: linear-gradient(135deg, #ff4ead, #45e3ff);
-}
-
-.swatch-sunset-16 {
-  background: linear-gradient(135deg, #ffb24f, #4ed0bb);
-}
-
-.swatch-transparent-purple {
-  background: linear-gradient(135deg, #b88dff, #61e0c0);
-}
-
-.swatch-crt-terminal {
-  background: linear-gradient(135deg, #70ff9a, #1c3422);
-}
-
-.swatch-memory-card {
-  background: linear-gradient(135deg, #7fb3ff, #ffcb63);
-}
-
-.swatch-mixtape-dungeon {
-  background: linear-gradient(135deg, #f2a64d, #a7de82);
-}
-
 .badge-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1088,44 +687,6 @@ button:disabled {
   color: var(--muted);
   font-size: 0.86rem;
   line-height: 1.4;
-}
-
-.save-actions {
-  display: grid;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.active-save-readout {
-  display: grid;
-  grid-template-columns: 20px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
-  min-height: 38px;
-  padding: 0 9px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  color: var(--accent-2);
-  background: rgba(0, 0, 0, 0.14);
-}
-
-.active-save-readout span,
-.active-save-readout strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.active-save-readout span {
-  color: var(--faint);
-  font-size: 0.76rem;
-  font-weight: 800;
-}
-
-.active-save-readout strong {
-  color: var(--text);
-  font-family: "Courier New", monospace;
-  font-size: 0.8rem;
 }
 
 .slot-action-button {
@@ -1278,10 +839,6 @@ button:disabled {
   display: none;
 }
 
-.mode-visualizer .crt-window {
-  min-height: 620px;
-}
-
 .mode-visualizer .visualizer {
   height: 170px;
 }
@@ -1289,9 +846,13 @@ button:disabled {
 .reduced-motion *,
 .reduced-motion *::before,
 .reduced-motion *::after {
+  /* Zero the delays too: 1ms animations that still wait 260-560ms to start
+     left the reduced-motion boot sitting on a blank overlay. */
+  animation-delay: 0ms !important;
   animation-duration: 1ms !important;
   animation-iteration-count: 1 !important;
   scroll-behavior: auto !important;
+  transition-delay: 0ms !important;
   transition-duration: 1ms !important;
 }
 
@@ -1303,17 +864,6 @@ button:disabled {
   100% {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes meterBounce {
-  0% {
-    height: 10px;
-    opacity: 0.48;
-  }
-  100% {
-    height: var(--meter-height);
-    opacity: 0.95;
   }
 }
 
@@ -1546,13 +1096,6 @@ button:disabled {
 }
 
 .primary-action,
-.secondary-action {
-  min-height: 36px;
-  padding: 0 7px;
-  font-size: 0.74rem;
-}
-
-.primary-action,
 .secondary-action,
 .save-slot,
 .nav-item,
@@ -1592,43 +1135,8 @@ button:disabled {
   box-shadow: 2px 2px 0 #000, inset 1px 1px 0 rgba(255, 216, 216, 0.34), inset -1px -1px 0 #230407;
 }
 
-.save-slots {
-  gap: 6px;
-}
-
-.save-slot {
-  grid-template-columns: 48px minmax(0, 1fr);
-  min-height: 33px;
-  padding: 0 7px;
-}
-
-.save-slot span {
-  font-size: 0.63rem;
-}
-
-.save-slot strong {
-  font-size: 0.74rem;
-}
-
 .nav-stack {
   gap: 6px;
-}
-
-.nav-item {
-  min-height: 34px;
-}
-
-.search-box {
-  width: min(260px, 32vw);
-  height: 38px;
-  background: #08090d;
-  color: #9cc7d8;
-  box-shadow: 2px 2px 0 #000, inset 1px 1px 0 #3e4045, inset -1px -1px 0 #020203;
-}
-
-.search-box input {
-  color: #efefe7;
-  font-size: 0.82rem;
 }
 
 .screen-header p,
@@ -1679,18 +1187,6 @@ button:disabled {
   overflow: hidden;
   padding-top: 24px;
   grid-template-rows: auto minmax(220px, 0.78fr) 34px minmax(230px, 0.86fr);
-}
-
-.crt-window {
-  background:
-    linear-gradient(90deg, rgba(156, 199, 216, 0.035) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(0deg, rgba(139, 17, 27, 0.05) 1px, transparent 1px) 0 0 / 24px 24px,
-    #030304;
-}
-
-.now-playing-bay {
-  grid-template-rows: minmax(0, 1fr) auto auto;
-  padding-top: 14px;
 }
 
 .screen-status {
@@ -1832,136 +1328,6 @@ button:disabled {
   mix-blend-mode: soft-light;
 }
 
-.song-card {
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  width: 166px;
-  min-height: 178px;
-  padding: 7px;
-  transform: translate3d(var(--path-x), var(--path-y), var(--card-z)) rotateZ(var(--tilt)) rotateY(calc(var(--tilt) * 0.55)) scale(var(--card-depth));
-  transform-style: preserve-3d;
-  transition: filter 180ms ease, transform 180ms ease;
-  will-change: transform;
-}
-
-.song-card::before {
-  position: absolute;
-  top: 3px;
-  left: 50%;
-  width: 18px;
-  height: 2px;
-  background: rgba(156, 199, 216, 0.42);
-  content: "";
-  transform: translateX(-50%);
-}
-
-.song-card.selected .song-card-face {
-  box-shadow:
-    0 0 0 2px #8b111b,
-    0 0 0 4px rgba(156, 199, 216, 0.18),
-    0 0 28px rgba(139, 17, 27, 0.42),
-    4px 4px 0 #000;
-}
-
-.song-card.selected::before {
-  background: #8b111b;
-  box-shadow: 0 0 16px rgba(139, 17, 27, 0.68);
-}
-
-.song-card:hover,
-.song-card:focus-visible {
-  filter: saturate(1.08) contrast(1.06);
-  transform: translate3d(calc(var(--path-x) + var(--curve-x-hover)), calc(var(--path-y) - 12px), var(--card-z-high)) rotateZ(var(--tilt-hover)) rotateY(calc(var(--tilt-hover) * -0.65)) scale(var(--card-depth-hover));
-}
-
-.song-card-face {
-  position: relative;
-  display: grid;
-  width: 146px;
-  aspect-ratio: 1;
-  align-items: end;
-  padding: 14px;
-  overflow: hidden;
-  border: 2px inset #d0d0c8;
-  border-radius: 2px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 28%),
-    repeating-linear-gradient(90deg, rgba(156, 199, 216, 0.075) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(0deg, rgba(139, 17, 27, 0.07) 0 1px, transparent 1px 18px),
-    #08080a;
-  box-shadow: inset 1px 1px 0 #fbfbf4, inset -1px -1px 0 #3a3a37, 4px 4px 0 #000, 0 22px 54px rgba(0, 0, 0, 0.48);
-}
-
-.song-card-face::before,
-.song-card-face::after {
-  position: absolute;
-  content: "";
-  pointer-events: none;
-}
-
-.song-card-face::before {
-  inset: 10px;
-  border: 1px solid rgba(239, 239, 231, 0.12);
-}
-
-.song-card-face::after {
-  right: 13px;
-  top: 13px;
-  width: 24px;
-  height: 24px;
-  border-top: 1px solid rgba(156, 199, 216, 0.42);
-  border-right: 1px solid rgba(156, 199, 216, 0.42);
-}
-
-.song-card-title {
-  position: relative;
-  z-index: 1;
-  display: -webkit-box;
-  max-height: 4.4em;
-  overflow: hidden;
-  color: rgba(239, 239, 231, 0.86);
-  font-family: "Courier New", monospace;
-  font-size: 0.88rem;
-  font-weight: 900;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
-  text-transform: uppercase;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-}
-
-.track-list {
-  align-items: center;
-  gap: 26px;
-  min-height: 0;
-  padding: 34px 42px 30px;
-  perspective: 900px;
-  perspective-origin: 50% 45%;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-}
-
-.track-list::-webkit-scrollbar {
-  display: none;
-}
-
-.track-list::before {
-  position: sticky;
-  left: 0;
-  display: block;
-  flex: 0 0 42px;
-  align-self: stretch;
-  content: "";
-  pointer-events: none;
-}
-
-.track-list::after {
-  display: none;
-}
-
 .album-graphic-tile {
   width: 152px;
 }
@@ -1982,51 +1348,6 @@ button:disabled {
   color: #9cc7d8;
 }
 
-.song-card.missing-song-card {
-  cursor: default;
-  opacity: 1;
-}
-
-.song-card.missing-song-card .song-card-face {
-  border-style: dashed;
-  opacity: 0.56;
-}
-
-.song-card.missing-song-card .song-card-face::after {
-  position: absolute;
-  inset: 18%;
-  border: 1px dotted rgba(255, 255, 255, 0.52);
-  content: "";
-  z-index: 2;
-}
-
-.favorite-badge {
-  border: 1px outset #c8c8c8;
-  border-radius: 0;
-  background: #bfbfbf;
-  color: #111;
-  right: 10px;
-  bottom: 10px;
-  opacity: 0.74;
-}
-
-.missing-badge {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border: 1px outset #c8c8c8;
-  color: #111;
-  background: #bfbfbf;
-  box-shadow: 2px 2px 0 #000, inset 1px 1px 0 #ffffff, inset -1px -1px 0 #777;
-  font-family: "Courier New", monospace;
-  font-size: 16px;
-  font-weight: 900;
-}
-
 .visualizer {
   height: 72px;
   padding: 16px 14px 14px;
@@ -2035,28 +1356,6 @@ button:disabled {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px) 0 0 / 18px 18px,
     rgba(0, 0, 0, 0.22);
-}
-
-.visualizer span {
-  min-height: 7px;
-  border-radius: 0;
-  background: linear-gradient(180deg, #9cc7d8, #8b111b);
-  opacity: 0.68;
-}
-
-.crt-window::before {
-  position: absolute;
-  inset: 16px;
-  z-index: 0;
-  border: 1px solid rgba(156, 199, 216, 0.06);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(139, 17, 27, 0.24), transparent 28%),
-    radial-gradient(circle at 50% 58%, rgba(156, 199, 216, 0.15), transparent 36%);
-  content: "";
-  opacity: var(--bass-opacity);
-  pointer-events: none;
-  transform: translateY(var(--bass-offset)) scale(var(--bass-scale));
-  transition: opacity 80ms linear, transform 80ms linear;
 }
 
 .screen-status,
@@ -2102,12 +1401,6 @@ button:disabled {
   box-shadow:
     0 0 var(--bass-glow) rgba(156, 199, 216, 0.11),
     inset 0 0 28px rgba(139, 17, 27, 0.08);
-}
-
-.app-shell.is-playing .visualizer span:nth-child(-n + 7) {
-  background: linear-gradient(180deg, #efefe7, #8b111b 70%);
-  box-shadow: 0 0 18px rgba(139, 17, 27, 0.38);
-  opacity: 0.94;
 }
 
 .stage-path {
@@ -2243,161 +1536,6 @@ button:disabled {
   font-family: "Courier New", monospace;
   font-size: 0.72rem;
   text-transform: uppercase;
-}
-
-.signal-field {
-  position: absolute;
-  top: 62px;
-  right: 8px;
-  bottom: 52%;
-  z-index: 0;
-  width: min(48%, 520px);
-  overflow: hidden;
-  border: 1px solid rgba(156, 199, 216, 0.08);
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 28%),
-    rgba(0, 0, 0, 0.08);
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.06), inset -1px -1px 0 rgba(0, 0, 0, 0.62);
-  opacity: 0.56;
-  pointer-events: none;
-}
-
-.signal-field::before,
-.signal-field::after {
-  position: absolute;
-  content: "";
-  pointer-events: none;
-}
-
-.signal-field::before {
-  inset: 14px;
-  border: 1px dotted rgba(239, 239, 231, 0.12);
-}
-
-.signal-field::after {
-  inset: 0;
-  background:
-    radial-gradient(circle at var(--playback-progress) 52%, rgba(139, 17, 27, 0.22), transparent 18%),
-    radial-gradient(circle at 76% 30%, rgba(156, 199, 216, 0.12), transparent 24%);
-  opacity: var(--bass-opacity);
-  transform: scale(var(--bass-scale));
-}
-
-.signal-grid {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(90deg, rgba(156, 199, 216, 0.09) 0 1px, transparent 1px 30px),
-    repeating-linear-gradient(0deg, rgba(139, 17, 27, 0.08) 0 1px, transparent 1px 30px),
-    linear-gradient(90deg, transparent, rgba(156, 199, 216, 0.08));
-  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 100%);
-}
-
-.signal-columns {
-  position: absolute;
-  right: 26px;
-  bottom: 34px;
-  left: 26px;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  align-items: end;
-  gap: 8px;
-  height: 44%;
-}
-
-.signal-columns span {
-  display: block;
-  height: var(--signal-height);
-  min-height: 12px;
-  border: 1px solid rgba(239, 239, 231, 0.08);
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.46), rgba(156, 199, 216, 0.24) 38%, rgba(139, 17, 27, 0.28)),
-    #08080a;
-  box-shadow: 0 0 18px rgba(156, 199, 216, 0.12);
-  opacity: 0.14;
-  transform: translateY(var(--bass-offset)) scaleY(var(--bass-hit));
-  transform-origin: bottom;
-  transition: height 80ms linear, opacity 80ms linear, transform 80ms linear;
-}
-
-.app-shell.is-playing .signal-columns span {
-  opacity: var(--bass-soft-opacity);
-}
-
-.signal-sweep {
-  display: none;
-}
-
-.shelf-flow-rail {
-  --shelf-flow-height: 8px;
-  --shelf-flow-thumb-size: 20px;
-  position: relative;
-  z-index: 3;
-  display: grid;
-  align-items: center;
-  min-height: 34px;
-  padding: 0 44px;
-}
-
-.shelf-flow-line {
-  position: absolute;
-  top: 50%;
-  right: 44px;
-  left: 44px;
-  height: var(--shelf-flow-height);
-  border: 1px inset rgba(208, 208, 200, 0.28);
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.14) 0 1px, transparent 1px 34px),
-    rgba(0, 0, 0, 0.38);
-  box-sizing: border-box;
-  box-shadow:
-    0 0 16px rgba(139, 17, 27, 0.08),
-    inset 0 0 18px rgba(156, 199, 216, 0.04);
-  overflow: visible;
-  transform: translateY(-50%);
-  transition: none;
-}
-
-.shelf-flow-line > .shelf-flow-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  display: block;
-  width: var(--shelf-flow-progress, 50%);
-  min-width: 0;
-  max-width: 100%;
-  height: 100%;
-  background:
-    linear-gradient(90deg, #8b111b, rgba(156, 199, 216, 0.72)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0 1px, transparent 1px 10px);
-  box-shadow: 0 0 14px rgba(139, 17, 27, 0.26);
-  transform: none;
-  transition: none;
-}
-
-.shelf-flow-line > .shelf-flow-fill::after {
-  content: none;
-}
-
-.shelf-flow-line > .shelf-flow-thumb {
-  position: absolute;
-  top: 50%;
-  left: var(--shelf-flow-progress, 50%);
-  width: var(--shelf-flow-thumb-size);
-  height: var(--shelf-flow-thumb-size);
-  border: 1px outset #d0d0c8;
-  background: #b7b7b1;
-  box-sizing: border-box;
-  box-shadow:
-    2px 2px 0 #000,
-    0 0 12px rgba(156, 199, 216, 0.16),
-    0 0 42px rgba(139, 17, 27, 0.18);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: none;
-}
-
-.shelf-flow-node {
-  display: none;
 }
 
 .library-bay .bay-header,
@@ -2566,38 +1704,6 @@ button:disabled {
   opacity: calc(0.4 + var(--bass-level, 0) * 0.6);
 }
 
-.signal-frame {
-  position: absolute;
-  pointer-events: none;
-}
-
-.signal-frame-stereo {
-  inset: 28px;
-  border: 2px solid rgba(239, 239, 231, 0.64);
-  box-shadow: 0 0 0 1px rgba(156, 199, 216, 0.18);
-}
-
-.signal-frame-waveform {
-  inset: 108px 82px 82px;
-  border: 1px solid rgba(156, 199, 216, 0.35);
-}
-
-.signal-frame-lock {
-  right: 28px;
-  bottom: 28px;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(239, 239, 231, 0.42);
-}
-
-.signal-frame-scanner {
-  top: 48px;
-  left: 48px;
-  width: 42%;
-  height: 28%;
-  border: 1px dotted rgba(156, 199, 216, 0.24);
-}
-
 .signal-axis {
   position: absolute;
   background: rgba(156, 199, 216, 0.12);
@@ -2616,31 +1722,6 @@ button:disabled {
   bottom: 28px;
   left: var(--signal-x);
   width: 1px;
-}
-
-.signal-node {
-  position: absolute;
-  top: var(--signal-y);
-  left: var(--signal-x);
-  width: var(--signal-node-size);
-  height: var(--signal-node-size);
-  border: 1px solid rgba(255, 210, 214, 0.46);
-  background: #8b111b;
-  box-shadow:
-    0 0 0 calc(10px * var(--signal-confidence)) rgba(139, 17, 27, 0.08),
-    0 0 var(--bass-glow) rgba(139, 17, 27, 0.38);
-  transform: translate(-50%, -50%) scale(var(--bass-node-scale));
-  transition: top 110ms linear, left 110ms linear, transform 80ms linear, box-shadow 80ms linear;
-}
-
-.signal-node span {
-  position: absolute;
-  inset: 34%;
-  border: 1px solid rgba(239, 239, 231, 0.48);
-}
-
-.app-shell.is-playing .signal-node {
-  animation: signalNodePulse 420ms steps(3, end) infinite;
 }
 
 .signal-readout,
@@ -2721,46 +1802,6 @@ button:disabled {
 .artifact-label {
   color: rgba(156, 199, 216, 0.68);
   font-weight: 900;
-}
-
-.signal-field {
-  opacity: 0.36;
-}
-
-.signal-field::after {
-  background:
-    radial-gradient(circle at var(--playback-progress) 52%, rgba(139, 17, 27, 0.16), transparent 15%),
-    radial-gradient(circle at 76% 30%, rgba(156, 199, 216, 0.1), transparent 24%);
-}
-
-.signal-columns span {
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.32), rgba(156, 199, 216, 0.22) 42%, rgba(156, 199, 216, 0.12)),
-    #08080a;
-  opacity: 0.08;
-}
-
-.app-shell.is-playing .signal-columns span {
-  opacity: var(--bass-soft-opacity);
-}
-
-.song-card.selected {
-  transform: translate3d(0, -16px, 72px) rotateZ(-2deg) rotateY(0deg) scale(1.08);
-}
-
-.song-card.selected .song-card-face {
-  border-color: #efefe7;
-  box-shadow:
-    0 0 0 2px rgba(239, 239, 231, 0.92),
-    0 0 0 5px rgba(139, 17, 27, 0.46),
-    0 0 46px rgba(139, 17, 27, 0.52),
-    5px 5px 0 #000;
-}
-
-.song-card.selected::before {
-  width: 28px;
-  background: #efefe7;
-  box-shadow: 0 0 20px rgba(139, 17, 27, 0.72);
 }
 
 .focused-track-strip {
@@ -2966,25 +2007,6 @@ button:disabled {
   box-shadow: 0 0 32px rgba(139, 17, 27, 0.42), inset 0 0 12px rgba(139, 17, 27, 0.2);
 }
 
-.app-shell.is-playing .crt-window::before {
-  animation: crtBootFlicker 720ms steps(4, end) 1;
-}
-
-.app-shell.is-idle .visualizer span {
-  opacity: 0.46;
-  transition: height 620ms ease-out, opacity 620ms ease-out;
-}
-
-@keyframes signalNodePulse {
-  0%,
-  100% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.28);
-  }
-}
-
 @keyframes metadataScanline {
   0% {
     opacity: 0;
@@ -3178,15 +2200,6 @@ button:disabled {
   box-shadow: 0 0 18px rgba(139, 17, 27, 0.13);
 }
 
-.crt-window {
-  grid-template-rows: auto minmax(292px, 1fr) auto 74px;
-  gap: 10px;
-}
-
-.now-playing-bay {
-  grid-template-rows: minmax(0, 1fr) auto auto auto;
-}
-
 .cartridge-art {
   width: min(390px, 92%);
   min-height: 350px;
@@ -3218,38 +2231,6 @@ button:disabled {
   left: 9px;
   transform: translateY(-50%) rotate(-90deg);
   transform-origin: left center;
-}
-
-.signal-node > span:first-child {
-  position: absolute;
-  inset: 34%;
-  border: 1px solid rgba(239, 239, 231, 0.48);
-}
-
-.signal-node-tooltip {
-  position: absolute;
-  left: calc(100% + 12px);
-  top: 50%;
-  min-width: 178px;
-  padding: 5px 7px;
-  border: 1px solid rgba(156, 199, 216, 0.22);
-  color: rgba(239, 239, 231, 0.78);
-  background: rgba(0, 0, 0, 0.82);
-  box-shadow: 2px 2px 0 #000;
-  font-family: "Courier New", monospace;
-  font-size: 0.56rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  opacity: 0;
-  pointer-events: none;
-  text-transform: uppercase;
-  transform: translateY(-50%) translateX(-4px);
-  transition: opacity 120ms ease, transform 120ms ease;
-}
-
-.signal-node:hover .signal-node-tooltip {
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
 }
 
 .file-inspector {
@@ -3391,23 +2372,6 @@ button:disabled {
   white-space: nowrap;
 }
 
-.signal-field {
-  opacity: 0.24;
-}
-
-.signal-columns span {
-  opacity: 0.055;
-}
-
-.app-shell.is-playing .signal-columns span {
-  opacity: min(var(--bass-soft-opacity), 0.22);
-}
-
-.track-list {
-  min-height: 168px;
-  padding: 28px 30px 30px;
-}
-
 .focused-track-strip {
   grid-template-columns: minmax(170px, 0.75fr) minmax(120px, 0.55fr) minmax(180px, 0.7fr);
   min-height: 30px;
@@ -3459,6 +2423,13 @@ button:disabled {
 
 .catalog-search input::placeholder {
   color: rgba(239, 239, 231, 0.34);
+}
+
+/* The F shortcut's landing target needs visible focus even with an empty
+   query — the input itself stripped its outline. */
+.catalog-search:focus-within {
+  border-color: rgba(214, 199, 155, 0.7);
+  box-shadow: 0 0 0 1px rgba(214, 199, 155, 0.3);
 }
 
 .catalog-filter-chips,
@@ -3793,52 +2764,6 @@ button:disabled {
   100% { opacity: 0; }
 }
 
-.track-list:focus-visible {
-  outline: 1px dotted rgba(239, 239, 231, 0.42);
-  outline-offset: -10px;
-}
-
-.song-card {
-  opacity: 0.56;
-  filter: saturate(0.72) blur(0.15px);
-}
-
-.song-card.selected {
-  opacity: 1;
-  filter: none;
-}
-
-.song-card-stamp,
-.song-card-code {
-  position: absolute;
-  z-index: 2;
-  color: rgba(156, 199, 216, 0.56);
-  font-family: "Courier New", monospace;
-  font-size: 0.5rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.song-card-stamp {
-  top: 9px;
-  left: 9px;
-  max-width: calc(100% - 18px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.song-card-code {
-  right: 9px;
-  bottom: 9px;
-}
-
-.song-card.selected .song-card-stamp,
-.song-card.selected .song-card-code {
-  color: rgba(239, 239, 231, 0.72);
-}
-
 .song-card-title,
 .metadata-title strong {
   position: relative;
@@ -3896,23 +2821,6 @@ button:disabled {
   animation: relockHeader 180ms steps(2, end) 1;
 }
 
-.app-shell.is-relocking .signal-node {
-  animation: relockNode 190ms steps(3, end) 1, signalNodePulse 420ms steps(3, end) infinite;
-}
-
-.app-shell.is-relocking .song-card {
-  animation: shelfJitter 180ms steps(2, end) 1;
-}
-
-.app-shell.is-relocking .song-card.selected .song-card-face {
-  box-shadow:
-    -2px 0 0 rgba(139, 17, 27, 0.65),
-    2px 0 0 rgba(156, 199, 216, 0.48),
-    0 0 0 2px rgba(239, 239, 231, 0.9),
-    0 0 42px rgba(139, 17, 27, 0.48),
-    5px 5px 0 #000;
-}
-
 .app-shell.is-relocking .metadata-row.active::after {
   animation: metadataScanline 420ms linear;
 }
@@ -3942,19 +2850,18 @@ button:disabled {
 .app-shell.is-microglitching.micro-shelf .signal-map::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, transparent 48%, rgba(156, 199, 216, 0.12) 49%, transparent 51%);
+  /* Above the scope canvas (z-index 1) and hot enough to read: the old
+     0.12-alpha line at z-auto was buried under the trace and never showed. */
+  z-index: 2;
+  background: linear-gradient(0deg, transparent 47%, rgba(156, 199, 216, 0.3) 49%, transparent 52%);
   content: "";
-  opacity: 0.75;
+  opacity: 0.85;
   pointer-events: none;
   animation: mapMicroScan 220ms steps(3, end) 1;
 }
 
 .app-shell.is-microglitching.micro-row .metadata-row.active .metadata-title strong {
   animation: rowTextDesync 210ms steps(2, end) 1;
-}
-
-.app-shell.is-microglitching.micro-shelf .song-card.selected {
-  animation: shelfJitter 220ms steps(2, end) 1;
 }
 
 .interference-off.is-relocking .song-card,
@@ -4012,25 +2919,6 @@ button:disabled {
   100% {
     filter: none;
     transform: translateX(0);
-  }
-}
-
-@keyframes relockNode {
-  0% {
-    transform: translate(-50%, -50%) scale(calc(var(--bass-node-scale) + 0.28));
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(var(--bass-node-scale));
-  }
-}
-
-@keyframes shelfJitter {
-  0%,
-  100% {
-    margin-left: 0;
-  }
-  50% {
-    margin-left: calc(1px * var(--interference-level));
   }
 }
 
@@ -4103,13 +2991,6 @@ button:disabled {
   }
 }
 
-/* Final deck pass: compact left instrumentation and stronger right-side bass pulse. */
-.crt-window {
-  grid-template-rows: 18px minmax(190px, 1fr) 82px 54px;
-  gap: 7px;
-  padding: 12px 14px;
-}
-
 .screen-status {
   min-height: 18px;
   font-size: 0.62rem;
@@ -4129,28 +3010,6 @@ button:disabled {
 .signal-map {
   min-height: 0;
   margin: 10px;
-}
-
-.signal-frame-stereo {
-  inset: 16px;
-}
-
-.signal-frame-waveform {
-  inset: 66px 62px 42px;
-}
-
-.signal-frame-lock {
-  right: 18px;
-  bottom: 18px;
-  width: 34px;
-  height: 34px;
-}
-
-.signal-frame-scanner {
-  top: 38px;
-  left: 40px;
-  width: 44%;
-  height: 28%;
 }
 
 .signal-axis-x {
@@ -4230,10 +3089,6 @@ button:disabled {
   gap: 4px;
 }
 
-.visualizer span {
-  min-height: 5px;
-}
-
 .stage-path {
   min-height: 38px;
   padding: 0 14px;
@@ -4247,19 +3102,6 @@ button:disabled {
 .key-hints {
   min-height: 20px;
   padding: 0 18px 7px;
-}
-
-.song-card {
-  transform: translate(var(--path-x), var(--path-y)) rotate(var(--tilt));
-}
-
-.song-card:hover,
-.song-card:focus-visible {
-  transform: translate(var(--path-x), calc(var(--path-y) - 8px)) rotate(0deg) scale(1.025);
-}
-
-.song-card.selected {
-  transform: translate3d(0, -10px, 72px) rotateZ(-0.75deg) scale(1.06);
 }
 
 @keyframes songCardIn {
@@ -4321,54 +3163,6 @@ button:disabled {
 .app-shell.is-playing .now-playing-module::after {
   opacity: var(--bass-opacity);
   transform: scaleX(var(--bass-hit));
-}
-
-.signal-field {
-  opacity: 0.2;
-}
-
-.app-shell.is-playing .signal-field {
-  opacity: 0.34;
-}
-
-.signal-field::after {
-  background:
-    radial-gradient(circle at var(--playback-progress) 52%, rgba(139, 17, 27, 0.68), transparent 14%),
-    linear-gradient(90deg, transparent 0 var(--playback-progress), rgba(139, 17, 27, 0.3) var(--playback-progress), transparent 100%),
-    radial-gradient(circle at 76% 30%, rgba(156, 199, 216, 0.08), transparent 24%);
-  opacity: var(--bass-opacity);
-}
-
-.signal-columns span {
-  transform: translateY(var(--bass-offset)) scaleY(var(--bass-hit));
-}
-
-.app-shell.is-playing .signal-columns span {
-  opacity: min(var(--bass-soft-opacity), 0.34);
-  box-shadow: 0 0 var(--bass-glow) rgba(139, 17, 27, 0.16);
-}
-
-.shelf-flow-line {
-  box-shadow:
-    0 0 12px rgba(156, 199, 216, 0.06),
-    inset 0 0 18px rgba(156, 199, 216, 0.04);
-}
-
-.shelf-flow-line > .shelf-flow-fill {
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.7), rgba(239, 239, 231, 0.78)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.22) 0 1px, transparent 1px 10px);
-  box-shadow:
-    0 0 9px rgba(139, 17, 27, 0.16),
-    0 0 5px rgba(239, 239, 231, 0.18);
-}
-
-.shelf-flow-line > .shelf-flow-thumb {
-  background: #d0d0c8;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.32),
-    0 0 12px rgba(156, 199, 216, 0.12);
 }
 
 .app-shell.is-playing .metadata-row.active {
@@ -4502,308 +3296,6 @@ button:disabled {
   transform: none;
 }
 
-/* Shelf rail is an index control, not an audio meter. Keep it locked to its line. */
-.shelf-flow-rail {
-  --shelf-flow-height: 7px;
-  --shelf-flow-half-height: 3.5px;
-  --shelf-flow-border-width: 1px;
-  --shelf-flow-thumb-width: 18px;
-  --shelf-flow-thumb-height: 18px;
-  --shelf-flow-thumb-half-height: 9px;
-  --shelf-flow-center-y: 17px;
-  --shelf-flow-progress: 50%;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-progress), 96%);
-  position: relative;
-  display: block;
-  height: 34px;
-  min-height: 34px;
-  contain: layout paint;
-  isolation: isolate;
-  pointer-events: none;
-  animation: none !important;
-  filter: none !important;
-  transition: none !important;
-  transform: none !important;
-}
-
-.shelf-flow-line {
-  position: absolute;
-  top: calc(var(--shelf-flow-center-y) - var(--shelf-flow-half-height));
-  right: 44px;
-  left: 44px;
-  height: var(--shelf-flow-height);
-  overflow: visible;
-  animation: none !important;
-  filter: none !important;
-  transition: none !important;
-  transform: none !important;
-  transform-origin: center;
-}
-
-.shelf-flow-line > span::after {
-  content: none;
-}
-
-.shelf-flow-line > .shelf-flow-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: var(--shelf-flow-position);
-  height: 100%;
-  border-right: 1px solid rgba(239, 239, 231, 0.68);
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.78), rgba(239, 239, 231, 0.52)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 10px);
-  box-shadow:
-    0 0 8px rgba(139, 17, 27, 0.14),
-    inset 0 0 8px rgba(239, 239, 231, 0.08);
-  animation: none !important;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
-  will-change: auto;
-}
-
-.shelf-flow-line > .shelf-flow-thumb {
-  position: absolute;
-  top: calc(var(--shelf-flow-half-height) - var(--shelf-flow-thumb-half-height) - var(--shelf-flow-border-width));
-  left: var(--shelf-flow-position);
-  display: block;
-  width: var(--shelf-flow-thumb-width);
-  height: var(--shelf-flow-thumb-height);
-  border: 1px outset #d0d0c8;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.94), rgba(156, 199, 216, 0.58)),
-    #b7b7b1;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    0 0 10px rgba(156, 199, 216, 0.12);
-  pointer-events: none;
-  animation: none !important;
-  filter: none !important;
-  transform: translateX(-50%) !important;
-  transform-origin: center;
-  transition: none !important;
-  will-change: auto;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute;
-  top: 50%;
-  right: -4px;
-  left: -4px;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.55);
-  box-shadow: 0 1px 0 rgba(239, 239, 231, 0.16);
-  content: "";
-  transform: translateY(-50%);
-}
-
-.app-shell.is-playing .shelf-flow-line {
-  animation: none !important;
-  box-shadow:
-    0 0 8px rgba(139, 17, 27, 0.1),
-    inset 0 0 12px rgba(156, 199, 216, 0.04);
-  transform: none !important;
-}
-
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill {
-  animation: none !important;
-  box-shadow:
-    0 0 8px rgba(139, 17, 27, 0.14),
-    inset 0 0 8px rgba(239, 239, 231, 0.08);
-  transform: none !important;
-}
-
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb {
-  top: calc(var(--shelf-flow-half-height) - var(--shelf-flow-thumb-half-height) - var(--shelf-flow-border-width));
-  left: var(--shelf-flow-position);
-  animation: none !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    0 0 10px rgba(156, 199, 216, 0.12);
-  transform: translateX(-50%) !important;
-}
-
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail *,
-.app-shell.is-playing .shelf-flow-rail *::before,
-.app-shell.is-playing .shelf-flow-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  transition: none !important;
-  transform-origin: center;
-}
-
-/* Final shelf slider lock: this rail tracks catalog position only, never bass. */
-.shelf-flow-rail {
-  --shelf-flow-center-y: 17px;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-progress), 96%);
-  filter: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line {
-  top: 50% !important;
-  box-shadow:
-    0 0 8px rgba(156, 199, 216, 0.06),
-    inset 0 0 12px rgba(156, 199, 216, 0.04) !important;
-  transform: translateY(-50%) !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line > .shelf-flow-fill {
-  box-shadow:
-    0 0 8px rgba(139, 17, 27, 0.14),
-    inset 0 0 8px rgba(239, 239, 231, 0.08) !important;
-  transform: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb {
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  margin-left: 0 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    0 0 10px rgba(156, 199, 216, 0.12) !important;
-  transform: translate(-50%, -50%) !important;
-  animation: none !important;
-  filter: none !important;
-  opacity: 1 !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb {
-  animation: none !important;
-  filter: none !important;
-  transition: none !important;
-}
-
-/* Shelf rail hard lock: catalog index only, isolated from audio-reactive layers. */
-.shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail {
-  --shelf-flow-track-left: 44px;
-  --shelf-flow-track-right: 44px;
-  --shelf-flow-track-height: 8px;
-  --shelf-flow-thumb-width: 20px;
-  --shelf-flow-thumb-height: 20px;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-progress, 50%), 96%);
-  position: relative !important;
-  z-index: 8;
-  display: block !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  margin: 0;
-  padding: 0 var(--shelf-flow-track-right) 0 var(--shelf-flow-track-left) !important;
-  overflow: visible !important;
-  contain: paint;
-  isolation: isolate;
-  background:
-    linear-gradient(180deg, rgba(7, 8, 10, 0), rgba(7, 8, 10, 0.76) 35%, rgba(7, 8, 10, 0.76) 66%, rgba(7, 8, 10, 0)),
-    linear-gradient(90deg, rgba(139, 17, 27, 0.05), transparent 42%, rgba(156, 199, 216, 0.04));
-  opacity: 1 !important;
-  pointer-events: none;
-  transform: none !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-rail *,
-.shelf-flow-rail *::before,
-.shelf-flow-rail *::after,
-.app-shell.is-playing .shelf-flow-rail *,
-.app-shell.is-playing .shelf-flow-rail *::before,
-.app-shell.is-playing .shelf-flow-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line {
-  position: absolute !important;
-  top: calc(50% - (var(--shelf-flow-track-height) / 2)) !important;
-  right: var(--shelf-flow-track-right) !important;
-  left: var(--shelf-flow-track-left) !important;
-  display: block !important;
-  height: var(--shelf-flow-track-height) !important;
-  overflow: visible !important;
-  border: 1px inset rgba(208, 208, 200, 0.32);
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.18) 0 1px, transparent 1px 18px),
-    rgba(4, 5, 7, 0.9);
-  box-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, 0.48),
-    inset 0 0 14px rgba(156, 199, 216, 0.05) !important;
-  transform: none !important;
-}
-
-.shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: 100% !important;
-  border-right: 1px solid rgba(239, 239, 231, 0.72);
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.86), rgba(239, 239, 231, 0.46)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0 1px, transparent 1px 12px);
-  box-shadow:
-    0 0 8px rgba(139, 17, 27, 0.16),
-    inset 0 0 7px rgba(239, 239, 231, 0.08) !important;
-  transform: none !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: calc((var(--shelf-flow-track-height) - var(--shelf-flow-thumb-height)) / 2 - 1px) !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-width) !important;
-  height: var(--shelf-flow-thumb-height) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8;
-  border-radius: 0;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.98), rgba(156, 199, 216, 0.58)),
-    #b7b7b1;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34) !important;
-  opacity: 1 !important;
-  transform: translateX(-50%) !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before {
-  top: calc(var(--shelf-flow-thumb-height) / 2 - 1px) !important;
-  right: -4px;
-  left: -4px;
-  height: 2px;
-  background: rgba(4, 5, 7, 0.7);
-  box-shadow:
-    0 -1px 0 rgba(239, 239, 231, 0.18),
-    0 1px 0 rgba(139, 17, 27, 0.24);
-  transform: none !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .app-shell,
   .app-shell *,
@@ -4814,460 +3306,6 @@ button:disabled {
     scroll-behavior: auto !important;
     transition-duration: 1ms !important;
   }
-}
-
-/* Shelf rail final lock: selected-track index only, never audio-reactive. */
-.shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-seeking .shelf-flow-rail,
-.app-shell.is-relocking .shelf-flow-rail,
-.app-shell.interference-low .shelf-flow-rail,
-.app-shell.interference-med .shelf-flow-rail,
-.app-shell.interference-max .shelf-flow-rail {
-  --bass-glow: 0px;
-  --bass-hit: 1;
-  --bass-level: 0;
-  --bass-offset: 0px;
-  --bass-opacity: 0;
-  --bass-scale: 1;
-  --bass-soft-opacity: 0;
-  --shelf-flow-track-left: 44px;
-  --shelf-flow-track-right: 44px;
-  --shelf-flow-track-height: 2px;
-  --shelf-flow-thumb-size: 16px;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-index-position, var(--shelf-flow-progress, 50%)), 96%);
-  position: relative !important;
-  z-index: 8;
-  display: block !important;
-  height: 24px !important;
-  min-height: 24px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate;
-  background: transparent !important;
-  opacity: 1 !important;
-  pointer-events: none;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-rail *,
-.shelf-flow-rail *::before,
-.shelf-flow-rail *::after {
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-seeking .shelf-flow-line,
-.app-shell.is-relocking .shelf-flow-line,
-.app-shell.interference-low .shelf-flow-line,
-.app-shell.interference-med .shelf-flow-line,
-.app-shell.interference-max .shelf-flow-line {
-  position: absolute !important;
-  top: calc(50% - (var(--shelf-flow-track-height) / 2)) !important;
-  right: var(--shelf-flow-track-right) !important;
-  left: var(--shelf-flow-track-left) !important;
-  display: block !important;
-  height: var(--shelf-flow-track-height) !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(239, 239, 231, 0.38), rgba(156, 199, 216, 0.18)),
-    rgba(4, 5, 7, 0.94) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.78),
-    0 -1px 0 rgba(239, 239, 231, 0.12) !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transform: none !important;
-  transform-origin: center !important;
-}
-
-.shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: 0 !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.72), rgba(239, 239, 231, 0.58)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transform: none !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: calc(50% - (var(--shelf-flow-thumb-size) / 2)) !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.98), rgba(156, 199, 216, 0.52)),
-    #b7b7b1 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.38) !important;
-  opacity: 1 !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transform: translateX(-50%) !important;
-  transform-origin: center !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute !important;
-  top: calc(50% - (var(--shelf-flow-track-height) / 2)) !important;
-  right: -4px !important;
-  left: -4px !important;
-  height: var(--shelf-flow-track-height) !important;
-  background: rgba(4, 5, 7, 0.72) !important;
-  box-shadow: 0 1px 0 rgba(239, 239, 231, 0.16) !important;
-  content: "" !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transform: none !important;
-}
-
-/* Shelf rail geometry lock: centerline and thumb are fixed to catalog index, not audio. */
-.shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-seeking .shelf-flow-rail,
-.app-shell.is-relocking .shelf-flow-rail,
-.app-shell.interference-low .shelf-flow-rail,
-.app-shell.interference-med .shelf-flow-rail,
-.app-shell.interference-max .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-index-position, 50%), 96%);
-  --shelf-flow-rail-x: 44px;
-  --shelf-flow-track-height: 2px;
-  --shelf-flow-thumb-size: 16px;
-  height: 24px !important;
-  min-height: 24px !important;
-  background: transparent !important;
-  contain: layout paint style !important;
-  filter: none !important;
-  overflow: visible !important;
-  pointer-events: none;
-  transform: none !important;
-}
-
-.shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-seeking .shelf-flow-line,
-.app-shell.is-relocking .shelf-flow-line,
-.app-shell.interference-low .shelf-flow-line,
-.app-shell.interference-med .shelf-flow-line,
-.app-shell.interference-max .shelf-flow-line {
-  position: absolute !important;
-  inset: 0 var(--shelf-flow-rail-x) !important;
-  height: auto !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  overflow: visible !important;
-  transform: none !important;
-}
-
-.shelf-flow-line::before,
-.app-shell.is-playing .shelf-flow-line::before,
-.app-shell.is-seeking .shelf-flow-line::before,
-.app-shell.is-relocking .shelf-flow-line::before,
-.app-shell.interference-low .shelf-flow-line::before,
-.app-shell.interference-med .shelf-flow-line::before,
-.app-shell.interference-max .shelf-flow-line::before {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  left: 0;
-  height: var(--shelf-flow-track-height);
-  background:
-    linear-gradient(90deg, rgba(239, 239, 231, 0.4), rgba(156, 199, 216, 0.18)),
-    rgba(4, 5, 7, 0.94);
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.78),
-    0 -1px 0 rgba(239, 239, 231, 0.12);
-  content: "";
-  transform: translateY(-50%);
-}
-
-.shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-fill {
-  top: 50% !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.72), rgba(239, 239, 231, 0.58)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb {
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.38) !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb::before {
-  top: 50% !important;
-  height: var(--shelf-flow-track-height) !important;
-  transform: translateY(-50%) !important;
-}
-
-/* Permanent shelf index rail: fixed geometry, no audio-reactive inheritance. */
-.shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-idle .shelf-flow-rail,
-.app-shell.is-seeking .shelf-flow-rail,
-.app-shell.is-relocking .shelf-flow-rail,
-.app-shell.interference-off .shelf-flow-rail,
-.app-shell.interference-low .shelf-flow-rail,
-.app-shell.interference-med .shelf-flow-rail,
-.app-shell.interference-max .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-inset: 44px;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-index-position, 50%), 96%);
-  --shelf-flow-thumb-size: 16px;
-  --shelf-flow-track-height: 2px;
-  --shelf-flow-y: 50%;
-  position: relative !important;
-  z-index: 10;
-  display: block !important;
-  height: 24px !important;
-  min-height: 24px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate;
-  background: transparent !important;
-  opacity: 1 !important;
-  pointer-events: none;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-rail *,
-.shelf-flow-rail *::before,
-.shelf-flow-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-idle .shelf-flow-line,
-.app-shell.is-seeking .shelf-flow-line,
-.app-shell.is-relocking .shelf-flow-line,
-.app-shell.interference-off .shelf-flow-line,
-.app-shell.interference-low .shelf-flow-line,
-.app-shell.interference-med .shelf-flow-line,
-.app-shell.interference-max .shelf-flow-line {
-  position: absolute !important;
-  inset: 0 var(--shelf-flow-inset) !important;
-  display: block !important;
-  height: auto !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.shelf-flow-line::before,
-.app-shell.is-playing .shelf-flow-line::before,
-.app-shell.is-idle .shelf-flow-line::before,
-.app-shell.is-seeking .shelf-flow-line::before,
-.app-shell.is-relocking .shelf-flow-line::before,
-.app-shell.interference-off .shelf-flow-line::before,
-.app-shell.interference-low .shelf-flow-line::before,
-.app-shell.interference-med .shelf-flow-line::before,
-.app-shell.interference-max .shelf-flow-line::before {
-  position: absolute !important;
-  top: var(--shelf-flow-y) !important;
-  right: 0 !important;
-  left: 0 !important;
-  height: var(--shelf-flow-track-height) !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.2) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.44), rgba(156, 199, 216, 0.18)),
-    rgba(4, 5, 7, 0.96) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.82),
-    0 -1px 0 rgba(239, 239, 231, 0.12) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: var(--shelf-flow-y) !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.72), rgba(239, 239, 231, 0.5)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: var(--shelf-flow-y) !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.98), rgba(156, 199, 216, 0.5)),
-    #b7b7b1 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute !important;
-  top: var(--shelf-flow-y) !important;
-  right: -4px !important;
-  left: -4px !important;
-  height: var(--shelf-flow-track-height) !important;
-  background: rgba(4, 5, 7, 0.72) !important;
-  box-shadow: 0 1px 0 rgba(239, 239, 231, 0.14) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
 }
 
 /* Final override: shelf slider stays on one fixed centerline in every playback state. */
@@ -5501,368 +3539,6 @@ button:disabled {
   transform: translateY(-50%) !important;
 }
 
-/* Hard lock the shelf index rail: fixed centerline, catalog index only. */
-.shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-idle .shelf-flow-rail,
-.app-shell.is-seeking .shelf-flow-rail,
-.app-shell.is-relocking .shelf-flow-rail,
-.app-shell.interference-off .shelf-flow-rail,
-.app-shell.interference-low .shelf-flow-rail,
-.app-shell.interference-med .shelf-flow-rail,
-.app-shell.interference-max .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-center-y: 12px;
-  --shelf-flow-inset: 44px;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-index-position, 50%), 96%);
-  --shelf-flow-thumb-size: 16px;
-  --shelf-flow-track-height: 2px;
-  position: relative !important;
-  z-index: 10 !important;
-  display: block !important;
-  height: 24px !important;
-  min-height: 24px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate !important;
-  background: transparent !important;
-  opacity: 1 !important;
-  pointer-events: none !important;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-rail *,
-.shelf-flow-rail *::before,
-.shelf-flow-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-idle .shelf-flow-line,
-.app-shell.is-seeking .shelf-flow-line,
-.app-shell.is-relocking .shelf-flow-line,
-.app-shell.interference-off .shelf-flow-line,
-.app-shell.interference-low .shelf-flow-line,
-.app-shell.interference-med .shelf-flow-line,
-.app-shell.interference-max .shelf-flow-line {
-  position: absolute !important;
-  top: 0 !important;
-  right: var(--shelf-flow-inset) !important;
-  bottom: 0 !important;
-  left: var(--shelf-flow-inset) !important;
-  display: block !important;
-  height: 100% !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.shelf-flow-line::before,
-.app-shell.is-playing .shelf-flow-line::before,
-.app-shell.is-idle .shelf-flow-line::before,
-.app-shell.is-seeking .shelf-flow-line::before,
-.app-shell.is-relocking .shelf-flow-line::before,
-.app-shell.interference-off .shelf-flow-line::before,
-.app-shell.interference-low .shelf-flow-line::before,
-.app-shell.interference-med .shelf-flow-line::before,
-.app-shell.interference-max .shelf-flow-line::before {
-  position: absolute !important;
-  top: var(--shelf-flow-center-y) !important;
-  right: 0 !important;
-  left: 0 !important;
-  display: block !important;
-  height: var(--shelf-flow-track-height) !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.22) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.42), rgba(156, 199, 216, 0.18)),
-    rgba(4, 5, 7, 0.96) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.82),
-    0 -1px 0 rgba(239, 239, 231, 0.12) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: var(--shelf-flow-center-y) !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.76), rgba(239, 239, 231, 0.5)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: var(--shelf-flow-center-y) !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.98), rgba(156, 199, 216, 0.5)),
-    #b7b7b1 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute !important;
-  top: 50% !important;
-  right: -4px !important;
-  left: -4px !important;
-  height: var(--shelf-flow-track-height) !important;
-  background: rgba(4, 5, 7, 0.72) !important;
-  box-shadow: 0 1px 0 rgba(239, 239, 231, 0.14) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
-/* Static catalog index rail: selected song position only, never audio-reactive. */
-.shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-idle .shelf-flow-rail,
-.app-shell.is-seeking .shelf-flow-rail,
-.app-shell.is-relocking .shelf-flow-rail,
-.app-shell.interference-off .shelf-flow-rail,
-.app-shell.interference-low .shelf-flow-rail,
-.app-shell.interference-med .shelf-flow-rail,
-.app-shell.interference-max .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-center: 50%;
-  --shelf-flow-inset: 44px;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-index-position, 50%), 96%);
-  --shelf-flow-thumb-size: 16px;
-  --shelf-flow-track-height: 2px;
-  position: relative !important;
-  z-index: 10;
-  display: block !important;
-  height: 24px !important;
-  min-height: 24px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate;
-  background: transparent !important;
-  opacity: 1 !important;
-  pointer-events: none;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-rail *,
-.shelf-flow-rail *::before,
-.shelf-flow-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  scale: none !important;
-  translate: none !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-idle .shelf-flow-line,
-.app-shell.is-seeking .shelf-flow-line,
-.app-shell.is-relocking .shelf-flow-line,
-.app-shell.interference-off .shelf-flow-line,
-.app-shell.interference-low .shelf-flow-line,
-.app-shell.interference-med .shelf-flow-line,
-.app-shell.interference-max .shelf-flow-line {
-  position: absolute !important;
-  inset: 0 var(--shelf-flow-inset) !important;
-  display: block !important;
-  height: 100% !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.shelf-flow-line::before,
-.app-shell.is-playing .shelf-flow-line::before,
-.app-shell.is-idle .shelf-flow-line::before,
-.app-shell.is-seeking .shelf-flow-line::before,
-.app-shell.is-relocking .shelf-flow-line::before,
-.app-shell.interference-off .shelf-flow-line::before,
-.app-shell.interference-low .shelf-flow-line::before,
-.app-shell.interference-med .shelf-flow-line::before,
-.app-shell.interference-max .shelf-flow-line::before {
-  position: absolute !important;
-  top: var(--shelf-flow-center) !important;
-  right: 0 !important;
-  left: 0 !important;
-  height: var(--shelf-flow-track-height) !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.22) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.44), rgba(156, 199, 216, 0.18)),
-    rgba(4, 5, 7, 0.96) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.82),
-    0 -1px 0 rgba(239, 239, 231, 0.12) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: var(--shelf-flow-center) !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.72), rgba(239, 239, 231, 0.5)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: translateY(-50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: var(--shelf-flow-center) !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.98), rgba(156, 199, 216, 0.5)),
-    #b7b7b1 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute !important;
-  top: var(--shelf-flow-center) !important;
-  right: -4px !important;
-  left: -4px !important;
-  height: var(--shelf-flow-track-height) !important;
-  background: rgba(4, 5, 7, 0.72) !important;
-  box-shadow: 0 1px 0 rgba(239, 239, 231, 0.14) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
 /* End-of-file lock: this shelf slider never inherits music-reactive motion. */
 :is(
     .app-shell,
@@ -6081,938 +3757,6 @@ button:disabled {
   animation: none !important;
 }
 
-/* Absolute rail lock: the shelf slider is a catalog index, never an audio meter. */
-.app-shell .shelf-flow-rail,
-.app-shell.is-playing .shelf-flow-rail,
-.app-shell.is-idle .shelf-flow-rail,
-.app-shell.is-seeking .shelf-flow-rail,
-.app-shell.is-relocking .shelf-flow-rail,
-.app-shell.interference-off .shelf-flow-rail,
-.app-shell.interference-low .shelf-flow-rail,
-.app-shell.interference-med .shelf-flow-rail,
-.app-shell.interference-max .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-inset: 44px !important;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-static-position, var(--shelf-flow-index-position, 50%)), 96%) !important;
-  --shelf-flow-thumb-size: 16px !important;
-  --shelf-flow-track-height: 2px !important;
-  position: relative !important;
-  z-index: 12 !important;
-  display: block !important;
-  height: 26px !important;
-  min-height: 26px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate !important;
-  background: transparent !important;
-  opacity: 1 !important;
-  pointer-events: none !important;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.app-shell .shelf-flow-rail::before {
-  position: absolute !important;
-  z-index: 0 !important;
-  inset: 5px 0 !important;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(7, 8, 10, 0),
-      rgba(7, 8, 10, 0.92) 32%,
-      rgba(7, 8, 10, 0.92) 68%,
-      rgba(7, 8, 10, 0)
-    ) !important;
-  content: "" !important;
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-}
-
-.app-shell .shelf-flow-rail *,
-.app-shell .shelf-flow-rail *::before,
-.app-shell .shelf-flow-rail *::after {
-  filter: none !important;
-  scale: none !important;
-  translate: none !important;
-  rotate: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.app-shell .shelf-flow-line,
-.app-shell.is-playing .shelf-flow-line,
-.app-shell.is-idle .shelf-flow-line,
-.app-shell.is-seeking .shelf-flow-line,
-.app-shell.is-relocking .shelf-flow-line,
-.app-shell.interference-off .shelf-flow-line,
-.app-shell.interference-low .shelf-flow-line,
-.app-shell.interference-med .shelf-flow-line,
-.app-shell.interference-max .shelf-flow-line {
-  position: absolute !important;
-  z-index: 1 !important;
-  top: 50% !important;
-  right: var(--shelf-flow-inset) !important;
-  bottom: auto !important;
-  left: var(--shelf-flow-inset) !important;
-  display: block !important;
-  width: auto !important;
-  height: var(--shelf-flow-track-height) !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.24) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.44), rgba(156, 199, 216, 0.18)),
-    rgba(4, 5, 7, 0.98) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.82),
-    0 -1px 0 rgba(239, 239, 231, 0.12) !important;
-  opacity: 1 !important;
-  transform: translateY(-50%) !important;
-}
-
-.app-shell .shelf-flow-line::before,
-.app-shell .shelf-flow-line::after {
-  content: none !important;
-}
-
-.app-shell .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-fill,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.72), rgba(239, 239, 231, 0.46)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.app-shell .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 0.98), rgba(156, 199, 216, 0.5)),
-    #b7b7b1 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.34),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.app-shell .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-playing .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-idle .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-seeking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.is-relocking .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-off .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-low .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-med .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.interference-max .shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute !important;
-  top: 50% !important;
-  right: -4px !important;
-  left: -4px !important;
-  height: var(--shelf-flow-track-height) !important;
-  background: rgba(4, 5, 7, 0.72) !important;
-  box-shadow: 0 1px 0 rgba(239, 239, 231, 0.14) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
-/* Locked shelf index rail: catalog position only, never an audio meter. */
-.app-shell .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-static-position, 50%), 96%) !important;
-  --shelf-flow-track-y: 13px !important;
-  height: 26px !important;
-  min-height: 26px !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate !important;
-  filter: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-}
-
-.app-shell .shelf-flow-rail,
-.app-shell .shelf-flow-rail *,
-.app-shell .shelf-flow-rail *::before,
-.app-shell .shelf-flow-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  translate: none !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-.app-shell .shelf-flow-rail::before,
-.app-shell .shelf-flow-line::before,
-.app-shell .shelf-flow-line::after,
-.app-shell .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell .shelf-flow-line > .shelf-flow-thumb::after {
-  content: none !important;
-}
-
-.app-shell .shelf-flow-line {
-  position: absolute !important;
-  top: var(--shelf-flow-track-y) !important;
-  right: 44px !important;
-  bottom: auto !important;
-  left: 44px !important;
-  z-index: 1 !important;
-  display: block !important;
-  width: auto !important;
-  height: 2px !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.24) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.5), rgba(156, 199, 216, 0.22)),
-    rgba(5, 6, 8, 0.96) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.78),
-    0 -1px 0 rgba(239, 239, 231, 0.14) !important;
-  opacity: 1 !important;
-  transform: translateY(-50%) !important;
-}
-
-.app-shell .shelf-flow-line > .shelf-flow-fill {
-  position: absolute !important;
-  top: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.2) 0 1px, transparent 1px 14px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.68), rgba(156, 199, 216, 0.34)) !important;
-  box-shadow: none !important;
-  opacity: 0.82 !important;
-  transform: none !important;
-}
-
-.app-shell .shelf-flow-line > .shelf-flow-thumb {
-  position: absolute !important;
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  display: block !important;
-  width: 18px !important;
-  height: 18px !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 1), rgba(156, 199, 216, 0.55)),
-    #b8b8b2 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.38),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-static-position, 50%), 96%) !important;
-  --shelf-flow-track-y: 13px !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line {
-  top: var(--shelf-flow-track-y) !important;
-  height: 2px !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.24) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.5), rgba(156, 199, 216, 0.22)),
-    rgba(5, 6, 8, 0.96) !important;
-  transform: translateY(-50%) !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-fill {
-  top: 0 !important;
-  width: var(--shelf-flow-position) !important;
-  height: 100% !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.2) 0 1px, transparent 1px 14px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.68), rgba(156, 199, 216, 0.34)) !important;
-  opacity: 0.82 !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-thumb {
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  width: 18px !important;
-  height: 18px !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.38),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail::before,
-.app-shell.app-shell.app-shell .shelf-flow-line::before,
-.app-shell.app-shell.app-shell .shelf-flow-line::after,
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-thumb::before,
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-thumb::after {
-  content: none !important;
-}
-
-/* Shelf slider hard stop: fixed catalog rail, no music-reactive movement. */
-.app-shell.app-shell.app-shell .shelf-flow-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-static-position, 50%), 96%) !important;
-  --shelf-flow-thumb-size: 18px !important;
-  --shelf-flow-track-height: 2px !important;
-  --shelf-flow-track-y: 13px !important;
-  height: 26px !important;
-  min-height: 26px !important;
-  overflow: visible !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line {
-  top: calc(var(--shelf-flow-track-y) - (var(--shelf-flow-track-height) / 2)) !important;
-  height: var(--shelf-flow-track-height) !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-fill {
-  top: 0 !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-thumb {
-  top: calc((var(--shelf-flow-track-height) - var(--shelf-flow-thumb-size)) / 2) !important;
-  left: calc(var(--shelf-flow-position) - (var(--shelf-flow-thumb-size) / 2)) !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-line > .shelf-flow-thumb::before {
-  position: absolute !important;
-  top: calc(50% - (var(--shelf-flow-track-height) / 2)) !important;
-  right: -5px !important;
-  left: -5px !important;
-  height: var(--shelf-flow-track-height) !important;
-  background:
-    linear-gradient(90deg, rgba(239, 239, 231, 0.64), rgba(156, 199, 216, 0.32)),
-    rgba(5, 6, 8, 0.92) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.74),
-    0 -1px 0 rgba(239, 239, 231, 0.16) !important;
-  content: "" !important;
-  transform: none !important;
-}
-
-/* Static catalog index rail: fixed to one centerline and isolated from audio-reactive state. */
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-position: clamp(4%, var(--shelf-flow-static-position, 50%), 96%) !important;
-  --shelf-flow-thumb-size: 18px !important;
-  --shelf-flow-track-height: 2px !important;
-  position: relative !important;
-  z-index: 30 !important;
-  display: block !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  margin: 0 !important;
-  padding: 0 44px !important;
-  overflow: visible !important;
-  contain: layout paint style !important;
-  isolation: isolate !important;
-  background: transparent !important;
-  filter: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"],
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *,
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *::before,
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *::after {
-  animation: none !important;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  transition: none !important;
-  translate: none !important;
-  will-change: auto !important;
-}
-
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"]::before,
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line::before,
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line::after,
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb::before,
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb::after {
-  content: none !important;
-}
-
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line {
-  position: absolute !important;
-  top: 50% !important;
-  right: 44px !important;
-  bottom: auto !important;
-  left: 44px !important;
-  z-index: 1 !important;
-  display: block !important;
-  width: auto !important;
-  height: var(--shelf-flow-track-height) !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.24) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.5), rgba(156, 199, 216, 0.22)),
-    rgba(5, 6, 8, 0.96) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.78),
-    0 -1px 0 rgba(239, 239, 231, 0.14) !important;
-  opacity: 1 !important;
-  transform: translateY(-50%) !important;
-}
-
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-fill {
-  position: absolute !important;
-  top: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: 0 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.2) 0 1px, transparent 1px 14px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.64), rgba(156, 199, 216, 0.32)) !important;
-  box-shadow: none !important;
-  opacity: 0.84 !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb {
-  position: absolute !important;
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  z-index: 2 !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 1), rgba(156, 199, 216, 0.55)),
-    #b8b8b2 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.38),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-/* Shelf index rail: fixed catalog position only, with the thumb pinned to one centerline. */
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-inset: 44px !important;
-  --shelf-flow-position: clamp(
-    4%,
-    var(--shelf-flow-static-position, var(--shelf-flow-index-position, 50%)),
-    96%
-  ) !important;
-  --shelf-flow-rail-height: 30px !important;
-  --shelf-flow-thumb-size: 18px !important;
-  --shelf-flow-track-height: 2px !important;
-  position: relative !important;
-  z-index: 40 !important;
-  display: block !important;
-  height: var(--shelf-flow-rail-height) !important;
-  min-height: var(--shelf-flow-rail-height) !important;
-  margin: 0 !important;
-  padding: 0 var(--shelf-flow-inset) !important;
-  overflow: visible !important;
-  contain: layout style paint !important;
-  isolation: isolate !important;
-  background: transparent !important;
-  filter: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"],
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *::before,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *::after {
-  animation: none !important;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  transition: none !important;
-  translate: none !important;
-  will-change: auto !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line {
-  position: absolute !important;
-  top: 0 !important;
-  right: var(--shelf-flow-inset) !important;
-  bottom: auto !important;
-  left: var(--shelf-flow-inset) !important;
-  z-index: 1 !important;
-  display: block !important;
-  width: auto !important;
-  height: var(--shelf-flow-rail-height) !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line::before {
-  position: absolute !important;
-  top: 50% !important;
-  right: 0 !important;
-  left: 0 !important;
-  display: block !important;
-  height: var(--shelf-flow-track-height) !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.24) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.52), rgba(156, 199, 216, 0.22)),
-    rgba(5, 6, 8, 0.96) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.78),
-    0 -1px 0 rgba(239, 239, 231, 0.14) !important;
-  content: "" !important;
-  transform: translateY(-50%) !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line::after,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb::before,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb::after {
-  content: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-fill {
-  position: absolute !important;
-  top: 50% !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: 0 !important;
-  z-index: 2 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: var(--shelf-flow-track-height) !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.22) 0 1px, transparent 1px 14px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.7), rgba(156, 199, 216, 0.36)) !important;
-  box-shadow: none !important;
-  opacity: 0.86 !important;
-  transform: translateY(-50%) !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb {
-  position: absolute !important;
-  top: 50% !important;
-  left: var(--shelf-flow-position) !important;
-  z-index: 3 !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(180deg, rgba(239, 239, 231, 1), rgba(156, 199, 216, 0.55)),
-    #b8b8b2 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.38),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
-/* Shelf rail final lock: catalog index only, with visible track/fill/thumb on one static centerline. */
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --shelf-flow-inset: 44px !important;
-  --shelf-flow-position: clamp(
-    4%,
-    var(--shelf-flow-static-position, var(--shelf-flow-index-position, 50%)),
-    96%
-  ) !important;
-  --shelf-flow-rail-height: 28px !important;
-  --shelf-flow-thumb-size: 18px !important;
-  --shelf-flow-track-height: 2px !important;
-  position: relative !important;
-  z-index: 60 !important;
-  display: block !important;
-  height: var(--shelf-flow-rail-height) !important;
-  min-height: var(--shelf-flow-rail-height) !important;
-  margin: 0 !important;
-  padding: 0 var(--shelf-flow-inset) !important;
-  overflow: visible !important;
-  contain: layout style paint !important;
-  isolation: isolate !important;
-  background: transparent !important;
-  filter: none !important;
-  opacity: 1 !important;
-  pointer-events: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"],
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *::before,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] *::after {
-  animation: none !important;
-  filter: none !important;
-  rotate: none !important;
-  scale: none !important;
-  transition: none !important;
-  translate: none !important;
-  will-change: auto !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"]::before,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line::before,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line::after,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb::before,
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb::after {
-  content: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-line {
-  position: absolute !important;
-  top: calc((var(--shelf-flow-rail-height) - var(--shelf-flow-track-height)) / 2) !important;
-  right: var(--shelf-flow-inset) !important;
-  bottom: auto !important;
-  left: var(--shelf-flow-inset) !important;
-  z-index: 1 !important;
-  display: block !important;
-  width: auto !important;
-  height: var(--shelf-flow-track-height) !important;
-  overflow: visible !important;
-  border: 0 !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.22) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.46), rgba(156, 199, 216, 0.2)),
-    rgba(4, 5, 7, 0.98) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.82),
-    0 -1px 0 rgba(239, 239, 231, 0.14) !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-fill {
-  position: absolute !important;
-  top: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: 0 !important;
-  z-index: 2 !important;
-  display: block !important;
-  width: var(--shelf-flow-position) !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  border: 0 !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.68), rgba(239, 239, 231, 0.52)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 0.96 !important;
-  transform: none !important;
-}
-
-.app-shell.app-shell.app-shell .shelf-flow-rail[data-static-rail="catalog-index"] .shelf-flow-thumb {
-  position: absolute !important;
-  top: calc((var(--shelf-flow-track-height) - var(--shelf-flow-thumb-size)) / 2) !important;
-  left: calc(var(--shelf-flow-position) - (var(--shelf-flow-thumb-size) / 2)) !important;
-  z-index: 3 !important;
-  display: block !important;
-  width: var(--shelf-flow-thumb-size) !important;
-  height: var(--shelf-flow-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  box-sizing: border-box !important;
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0 calc(50% - 1px),
-      rgba(4, 5, 7, 0.58) calc(50% - 1px) calc(50% + 1px),
-      transparent calc(50% + 1px)
-    ),
-    linear-gradient(180deg, rgba(239, 239, 231, 1), rgba(156, 199, 216, 0.56)),
-    #b8b8b2 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.38),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* Catalog index rail: selected row only. It is visually isolated from audio-reactive layers. */
-.catalog-index-rail,
-.app-shell.is-playing .catalog-index-rail,
-.app-shell.is-idle .catalog-index-rail,
-.app-shell.is-seeking .catalog-index-rail,
-.app-shell.is-relocking .catalog-index-rail,
-.app-shell.interference-off .catalog-index-rail,
-.app-shell.interference-low .catalog-index-rail,
-.app-shell.interference-med .catalog-index-rail,
-.app-shell.interference-max .catalog-index-rail {
-  --bass-glow: 0px !important;
-  --bass-hit: 1 !important;
-  --bass-level: 0 !important;
-  --bass-node-scale: 1 !important;
-  --bass-offset: 0px !important;
-  --bass-opacity: 0 !important;
-  --bass-scale: 1 !important;
-  --bass-soft-opacity: 0 !important;
-  --catalog-index-inset: 44px;
-  --catalog-index-position: 50%;
-  --catalog-index-rail-height: 30px;
-  --catalog-index-track-height: 2px;
-  --catalog-index-thumb-size: 18px;
-  --catalog-index-center-y: calc(var(--catalog-index-rail-height) / 2);
-  position: relative !important;
-  z-index: 80 !important;
-  display: block !important;
-  height: var(--catalog-index-rail-height) !important;
-  min-height: var(--catalog-index-rail-height) !important;
-  margin: 0 !important;
-  padding: 0 var(--catalog-index-inset) !important;
-  overflow: hidden !important;
-  contain: layout style paint !important;
-  isolation: isolate !important;
-  pointer-events: none !important;
-  background:
-    linear-gradient(180deg, rgba(4, 5, 7, 0.98), rgba(9, 10, 12, 0.96)),
-    rgba(4, 5, 7, 0.98) !important;
-  border-top: 1px solid rgba(239, 239, 231, 0.08) !important;
-  border-bottom: 1px solid rgba(156, 199, 216, 0.1) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.72) !important;
-  filter: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-  will-change: auto !important;
-}
-
-.catalog-index-rail,
-.catalog-index-rail *,
-.catalog-index-rail *::before,
-.catalog-index-rail *::after {
-  animation: none !important;
-  filter: none !important;
-  mix-blend-mode: normal !important;
-  rotate: none !important;
-  scale: none !important;
-  transition: none !important;
-  translate: none !important;
-  transform-origin: center !important;
-  will-change: auto !important;
-}
-
-.catalog-index-line,
-.app-shell.is-playing .catalog-index-line,
-.app-shell.is-seeking .catalog-index-line,
-.app-shell.is-relocking .catalog-index-line {
-  position: absolute !important;
-  top: var(--catalog-index-center-y) !important;
-  right: var(--catalog-index-inset) !important;
-  left: var(--catalog-index-inset) !important;
-  z-index: 1 !important;
-  display: block !important;
-  height: var(--catalog-index-track-height) !important;
-  overflow: visible !important;
-  background:
-    repeating-linear-gradient(90deg, rgba(239, 239, 231, 0.22) 0 1px, transparent 1px 18px),
-    linear-gradient(90deg, rgba(239, 239, 231, 0.46), rgba(156, 199, 216, 0.2)),
-    rgba(4, 5, 7, 0.98) !important;
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.82),
-    0 -1px 0 rgba(239, 239, 231, 0.14) !important;
-  transform: translateY(-50%) !important;
-}
-
-.catalog-index-fill,
-.app-shell.is-playing .catalog-index-fill,
-.app-shell.is-seeking .catalog-index-fill,
-.app-shell.is-relocking .catalog-index-fill {
-  position: absolute !important;
-  top: 50% !important;
-  bottom: auto !important;
-  left: 0 !important;
-  z-index: 2 !important;
-  display: block !important;
-  width: clamp(4%, var(--catalog-index-position), 96%) !important;
-  height: var(--catalog-index-track-height) !important;
-  background:
-    linear-gradient(90deg, rgba(139, 17, 27, 0.68), rgba(239, 239, 231, 0.52)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 14px) !important;
-  box-shadow: none !important;
-  opacity: 0.96 !important;
-  transform: translateY(-50%) !important;
-}
-
-.catalog-index-thumb,
-.app-shell.is-playing .catalog-index-thumb,
-.app-shell.is-seeking .catalog-index-thumb,
-.app-shell.is-relocking .catalog-index-thumb {
-  position: absolute !important;
-  top: 50% !important;
-  left: clamp(4%, var(--catalog-index-position), 96%) !important;
-  z-index: 3 !important;
-  display: block !important;
-  width: var(--catalog-index-thumb-size) !important;
-  height: var(--catalog-index-thumb-size) !important;
-  margin: 0 !important;
-  border: 1px outset #d0d0c8 !important;
-  border-radius: 0 !important;
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0 calc(50% - 1px),
-      rgba(4, 5, 7, 0.58) calc(50% - 1px) calc(50% + 1px),
-      transparent calc(50% + 1px)
-    ),
-    linear-gradient(180deg, rgba(239, 239, 231, 1), rgba(156, 199, 216, 0.56)),
-    #b8b8b2 !important;
-  box-shadow:
-    2px 2px 0 #000,
-    inset 1px 1px 0 rgba(255, 255, 255, 0.38),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.42) !important;
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) !important;
-}
-
 /* ============================================================
    Vintage-hardware overhaul: pure scope, VU needles, AMP knob,
    cartridge labels, insert/eject, patina, attract, shuttle.
@@ -7051,15 +3795,6 @@ button:disabled {
   z-index: 1;
   mix-blend-mode: screen;
   opacity: 1;
-}
-
-.signal-frame-bezel {
-  position: absolute;
-  inset: 6px;
-  z-index: 2;
-  pointer-events: none;
-  border: 1px solid rgba(156, 199, 216, 0.12);
-  box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.85);
 }
 
 /* --- Meter bank: digital bars + analog VU side by side --- */
@@ -7337,35 +4072,6 @@ button:disabled {
   animation: cartridge-insert 0.34s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
-/* --- Generated cassette bands for artless cards --- */
-.song-card.no-cover .song-card-bands {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 22%;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    90deg,
-    hsl(var(--art-hue, 0deg) 58% 46%) 0 16%,
-    hsl(var(--art-hue-2, 40deg) 52% 42%) 16% 32%,
-    hsl(var(--art-hue-3, 200deg) 48% 40%) 32% 48%
-  );
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.55);
-}
-
-.song-card.no-cover .song-card-sub {
-  font-family: "Courier New", monospace;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 3px;
-}
-
 /* --- Play-count patina --- */
 .cartridge-art[data-wear="1"] .signal-map,
 .song-card[data-wear="1"] .song-card-face {
@@ -7382,46 +4088,28 @@ button:disabled {
   filter: saturate(0.78) brightness(0.92) contrast(1.05);
 }
 
-.play-stamp {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 3;
-  padding: 1px 4px;
-  font-family: "Courier New", monospace;
-  font-size: 8px;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(139, 17, 27, 0.6);
-  border-radius: 2px;
-}
-
-/* --- Attract mode (idle screensaver) --- */
-.app-shell.is-attract .app-header,
-.app-shell.is-attract .catalog-shell,
+/* --- Attract mode (idle screensaver) ---
+   Fade targets are the CURRENT chrome: screen-header, the catalog shelf,
+   inspector, transport rail, and key hints — the old app-header /
+   catalog-shell / transport-bar / now-playing-bay names died in the shelf
+   redesign and left the screensaver dimming almost nothing. */
+.app-shell.is-attract .screen-header,
+.app-shell.is-attract .deck-catalog,
 .app-shell.is-attract .file-inspector,
-.app-shell.is-attract .meter-bank,
-.app-shell.is-attract .transport-bar,
+.app-shell.is-attract .deck-controls,
 .app-shell.is-attract .key-hints {
   opacity: 0.06;
   transition: opacity 1.4s ease;
-}
-
-.app-shell.is-attract .now-playing-bay {
-  transition: transform 6s ease-in-out;
-  transform: scale(1.02);
 }
 
 .app-shell.is-attract .signal-map {
   box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9), 0 0 60px rgba(139, 17, 27, calc(0.2 + var(--bass-level, 0) * 0.4));
 }
 
-.app-shell:not(.is-attract) .app-header,
-.app-shell:not(.is-attract) .catalog-shell,
+.app-shell:not(.is-attract) .screen-header,
+.app-shell:not(.is-attract) .deck-catalog,
 .app-shell:not(.is-attract) .file-inspector,
-.app-shell:not(.is-attract) .meter-bank,
-.app-shell:not(.is-attract) .transport-bar,
+.app-shell:not(.is-attract) .deck-controls,
 .app-shell:not(.is-attract) .key-hints {
   transition: opacity 0.5s ease;
 }
@@ -7513,6 +4201,12 @@ button:disabled {
   justify-content: space-between;
   padding: 16px 22px;
   pointer-events: none;
+}
+
+/* pointer-events:none inherits from the overlay — without this the hero
+   crown is decorative: hover states fire nowhere and clicks fall through. */
+.hero-overlay .fav-toggle {
+  pointer-events: auto;
 }
 
 .hero-np {
@@ -7837,25 +4531,6 @@ button:disabled {
   filter: blur(30px) saturate(1.15) brightness(0.5);
   opacity: 0.24;
   transform: scale(1.06) rotate(0deg);
-}
-
-.hero-backdrop.is-pressing {
-  animation: pressingSpin 90s linear infinite;
-  animation-play-state: paused;
-}
-
-.app-shell.is-playing .hero-backdrop.is-pressing {
-  animation-play-state: running;
-}
-
-@keyframes pressingSpin {
-  from {
-    transform: scale(1.06) rotate(0deg);
-  }
-
-  to {
-    transform: scale(1.06) rotate(360deg);
-  }
 }
 
 /* --- C4 phosphor burn-in: the most-worn title ghosts into attract mode --- */
@@ -8229,73 +4904,8 @@ button:disabled {
   transform: none;
 }
 
-/* ============================================================
-   Meter-bank calibration pass: real pixel range, zero rest
-   state, REACT sensitivity control.
-   ============================================================ */
-
-/* Bars now live inside the cabinet: JS maps 3-32px against the ~37px inner
-   height, so nothing pins at the ceiling or bleeds past the bezel. */
-.deck-controls .visualizer span {
-  min-height: 3px;
-}
-
 .deck-controls .visualizer {
   overflow: hidden;
-}
-
-/* The old 620ms idle glide made bars drift out of sync across track swaps;
-   rest fast, rise only on real data. */
-.app-shell.is-idle .visualizer span {
-  transition: height 180ms ease-out, opacity 300ms ease-out;
-}
-
-/* --- REACT sensitivity: segmented toggle on the control shelf --- */
-.deck-controls .react-control {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.deck-controls .react-control > span {
-  color: rgba(156, 199, 216, 0.62);
-  font-family: "Courier New", monospace;
-  font-size: 0.58rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-align: center;
-}
-
-.deck-controls .react-control > div {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 50px;
-}
-
-.deck-controls .react-control button {
-  padding: 5px 8px;
-  border: 1px solid rgba(156, 199, 216, 0.24);
-  background: rgba(5, 5, 6, 0.5);
-  color: rgba(156, 199, 216, 0.6);
-  font-family: "Courier New", monospace;
-  font-size: 0.52rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-}
-
-.deck-controls .react-control button:hover {
-  border-color: rgba(156, 199, 216, 0.42);
-  color: rgba(239, 239, 231, 0.85);
-}
-
-.deck-controls .react-control button.active {
-  border-color: rgba(139, 17, 27, 0.7);
-  background: linear-gradient(180deg, rgba(139, 17, 27, 0.34), rgba(139, 17, 27, 0.14));
-  color: #efefe7;
-  box-shadow: inset 0 -2px 0 #8b111b;
 }
 
 /* ============================================================
@@ -8828,7 +5438,9 @@ button:disabled {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(239, 239, 231, 0.11) 48%, transparent 55%);
+  /* Composited through the parent veil's 0.32 opacity — authored ~3x hot so
+     the on-screen roll lands near 11% instead of an invisible 3%. */
+  background: linear-gradient(180deg, transparent 0%, rgba(239, 239, 231, 0.34) 48%, transparent 55%);
   animation: broadcastRoll 7s linear infinite;
 }
 
@@ -8838,7 +5450,8 @@ button:disabled {
   left: 0;
   right: 0;
   height: 3px;
-  background: rgba(239, 239, 231, 0.26);
+  /* Same parent-opacity compensation as the roll bar. */
+  background: rgba(239, 239, 231, 0.8);
   animation: tearBand 3.7s steps(7, end) infinite;
 }
 
@@ -9504,47 +6117,6 @@ button:disabled {
   text-align: center;
 }
 
-/* ============================================================
-   Delta Scope + memory dials: center-split bars around the
-   song's own norm; stately needle swings for memory modes.
-   ============================================================ */
-
-/* Center line = "normal for this track". */
-.visualizer.visualizer-delta {
-  position: relative;
-  align-items: center;
-}
-
-.visualizer.visualizer-delta::after {
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: 50%;
-  height: 1px;
-  background: rgba(239, 239, 231, 0.16);
-  pointer-events: none;
-}
-
-/* Bars grow away from the center line: hot red above (louder/brighter than
-   this song's norm), cool teal below (quieter/duller). */
-.visualizer.visualizer-delta span {
-  align-self: center;
-  transform: translateY(0);
-}
-
-.visualizer.visualizer-delta span.d-up {
-  transform: translateY(calc(var(--meter-height, 3px) / -2));
-  background: linear-gradient(180deg, #d24a42, #7c1118);
-  opacity: 0.92;
-}
-
-.visualizer.visualizer-delta span.d-down {
-  transform: translateY(calc(var(--meter-height, 3px) / 2));
-  background: linear-gradient(180deg, rgba(156, 199, 216, 0.6), rgba(156, 199, 216, 0.22));
-  opacity: 0.6;
-}
-
 /* Memory dial modes swing with deliberation; VU keeps its live twitch. */
 .vu-meter.meter-face-track .vu-needle,
 .vu-meter.meter-face-archive .vu-needle,
@@ -9583,31 +6155,6 @@ button:disabled {
 
 .app-shell.is-hot.is-playing .deck-controls {
   transform: none;
-}
-
-/* --- Approach Lane: replaces the meter bank bars --- */
-.visualizer.approach-lane-wrap {
-  display: block;
-  position: relative;
-  padding: 6px 10px;
-}
-
-.approach-lane {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.lane-tag {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgba(156, 199, 216, 0.4);
-  font-family: "Courier New", monospace;
-  font-size: 0.52rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
 }
 
 /* --- SmokeRing idle tube --- */

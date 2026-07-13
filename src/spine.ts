@@ -946,7 +946,7 @@ export function heroTextureDataUrl(seedText: string, hue: number, spine?: TrackS
   // Archive plate code, bottom-right.
   const plateCode = `ARC-${(Math.abs(seed) % 0xffff).toString(16).toUpperCase().padStart(4, "0")}`;
   context.font = "900 22px 'Courier New', monospace";
-  context.fillStyle = "rgba(239, 239, 231, 0.07)";
+  context.fillStyle = "rgba(239, 239, 231, 0.2)";
   context.textAlign = "right";
   context.fillText(plateCode, width - 14, height - 12);
 

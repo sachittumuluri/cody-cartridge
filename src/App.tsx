@@ -31,7 +31,6 @@ import {
 type BadgeId = "heart" | "star" | "bolt" | "moon" | "flame" | "gem";
 type InterferenceMode = "off" | "low" | "med" | "max";
 type RepeatMode = "off" | "all" | "one";
-type ReactLevel = "low" | "med" | "high";
 // The dials read the machine's memory, not audiophile trivia: per-song
 // character, archive health, the session odometer, operating temperature —
 // with classic VU kept as the fiction's anchor mode.
@@ -56,8 +55,7 @@ const meterModeChannels: Record<MeterMode, [string, string]> = {
   vu: ["L", "R"]
 };
 type MicroGlitchKind = "header" | "map" | "row" | "shelf";
-type SaveSlotId = "save-01" | "save-02" | "save-03";
-type ShelfView = "library" | "favorites" | "takeout" | "missing" | SaveSlotId;
+type ShelfView = "library" | "favorites" | "takeout" | "missing";
 
 type Track = CodyFileTrack & {
   duration: number;
@@ -103,12 +101,6 @@ type StatusChip = {
   tone?: "alert" | "match" | "muted";
 };
 
-type SaveSlot = {
-  id: SaveSlotId;
-  label: string;
-  trackIds: string[];
-};
-
 type TrackAnalysis = {
   bass: Float32Array;
   fps: number;
@@ -122,12 +114,9 @@ type StoredState = {
   heroDock?: boolean;
   interference?: InterferenceMode;
   meter?: MeterMode;
-  react?: ReactLevel;
   reducedMotion?: boolean;
   repeat?: RepeatMode;
   shelfSize?: ShelfSize;
-  scanlines?: boolean;
-  saveSlots?: SaveSlot[];
   takeoutSongs?: TakeoutSong[];
   tracks?: Track[];
   volume?: number;
@@ -138,11 +127,6 @@ const spineStorageKey = "cody-cartridge-spines-v1";
 const spineStoreLimit = 500;
 const defaultVolume = 0.72;
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
-const defaultSaveSlots: SaveSlot[] = [
-  { id: "save-01", label: "SAVE 01", trackIds: [] },
-  { id: "save-02", label: "SAVE 02", trackIds: [] },
-  { id: "save-03", label: "SAVE 03", trackIds: [] }
-];
 const audioExtensions = /\.(mp3|m4a|aac|flac|wav|ogg|opus|aiff|aif)$/i;
 
 function resolveTrackUrl(value: string | undefined) {
@@ -192,19 +176,10 @@ function sanitizeStoredState(state: StoredState): StoredState {
     ? state.tracks.filter((track) => isDurablePlaybackUrl(track.url))
     : undefined;
   const trackIds = new Set((tracks ?? []).map((track) => track.id));
-  const saveSlots = Array.isArray(state.saveSlots)
-    ? state.saveSlots
-        .filter((slot) => slot && typeof slot.id === "string" && typeof slot.label === "string")
-        .map((slot) => ({
-          ...slot,
-          trackIds: Array.isArray(slot.trackIds) ? slot.trackIds.filter((trackId) => trackIds.has(trackId)) : []
-        }))
-    : undefined;
 
   return {
     ...state,
     currentId: state.currentId && trackIds.has(state.currentId) ? state.currentId : "",
-    saveSlots,
     tracks
   };
 }
@@ -248,10 +223,6 @@ function getStoreDemoReducedMotion() {
   }
 
   return new URLSearchParams(window.location.search).get("store-reduced-motion") === "1";
-}
-
-function cloneDefaultSaveSlots() {
-  return defaultSaveSlots.map((slot) => ({ ...slot, trackIds: [...slot.trackIds] }));
 }
 
 function demoArtworkDataUrl(index: number, title: string) {
@@ -342,8 +313,6 @@ function createStoreDemoState(): StoredState {
     currentId: demoTracks[0].id,
     interference: "low",
     reducedMotion: getStoreDemoReducedMotion(),
-    scanlines: true,
-    saveSlots: cloneDefaultSaveSlots(),
     takeoutSongs,
     tracks: demoTracks,
     volume: 0.72
@@ -1057,7 +1026,9 @@ function getStatusChips(track: Track | undefined, missingSong?: TakeoutSong): St
   if (!track) {
     return [
       { label: "MISSING FILE", query: "missing:file", tone: "alert" },
-      { label: "YT ROW", query: missingSong?.videoId ? `yt:${missingSong.videoId}` : "tag:takeout", tone: "muted" }
+      // Fallback filters to the ghost shelf itself: tag:takeout resolves via
+      // isTakeoutMatched(track), which is always false for missing rows.
+      { label: "YT ROW", query: missingSong?.videoId ? `yt:${missingSong.videoId}` : "missing:file", tone: "muted" }
     ];
   }
 
@@ -1203,6 +1174,13 @@ function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
       const target = Number(comparison[2]);
       const confidence = formatMatchConfidence(track);
 
+      // "below N" means a WEAK match, not the absence of one — without this,
+      // match:<80 floods with every local/demo track at confidence 0 and the
+      // LOW CONF chip's own query buries the rows it points at.
+      if ((operator === "<" || operator === "<=") && confidence <= 0) {
+        return false;
+      }
+
       if (operator === "<") {
         return confidence < target;
       }
@@ -1320,9 +1298,13 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === "ArrowUp" || event.key === "ArrowRight") {
       event.preventDefault();
+      // The knob owns its arrows — without this the global handler also
+      // seeks the track ±5s on the same press.
+      event.stopPropagation();
       onChange(clamp(value + 0.05));
     } else if (event.key === "ArrowDown" || event.key === "ArrowLeft") {
       event.preventDefault();
+      event.stopPropagation();
       onChange(clamp(value - 0.05));
     }
   }
@@ -1525,10 +1507,6 @@ function App() {
   const [importStatus, setImportStatus] = useState("Loading desktop music");
   const [isDragActive, setIsDragActive] = useState(false);
   const [activeShelf, setActiveShelf] = useState<ShelfView>(() => initialState.activeShelf ?? "library");
-  const [saveSlots, setSaveSlots] = useState<SaveSlot[]>(() =>
-    initialState.saveSlots?.length ? initialState.saveSlots : cloneDefaultSaveSlots()
-  );
-  const [scanlines] = useState(() => initialState.scanlines ?? true);
   const [systemReducedMotion, setSystemReducedMotion] = useState(() => prefersReducedMotion());
   const reducedMotion = initialState.reducedMotion === true || systemReducedMotion;
   const [bootMode, setBootMode] = useState<"boot" | "reindex" | null>(() => (storeDemoMode ? null : "boot"));
@@ -1543,9 +1521,6 @@ function App() {
   const cartridgeSwapTimerRef = useRef<number | null>(null);
   const [repeatMode, setRepeatMode] = useState<RepeatMode>(() =>
     initialState.repeat === "all" || initialState.repeat === "one" ? initialState.repeat : "off"
-  );
-  const [reactLevel, setReactLevel] = useState<ReactLevel>(() =>
-    initialState.react === "low" || initialState.react === "high" ? initialState.react : "med"
   );
   const latticeCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const paintGrooveLatticeRef = useRef<() => void>(() => undefined);
@@ -1645,7 +1620,6 @@ function App() {
     [takeoutMatchMap, takeoutSongs]
   );
   const takeoutMissingCount = Math.max(0, takeoutSongs.length - takeoutMatchedCount);
-  const activeSaveSlot = saveSlots.find((slot) => slot.id === activeShelf);
 
   const shelfTracks = useMemo(() => {
     if (activeShelf === "library") {
@@ -1676,10 +1650,8 @@ function App() {
       return [];
     }
 
-    const slot = saveSlots.find((item) => item.id === activeShelf);
-    const slotTrackIds = new Set(slot?.trackIds ?? []);
-    return tracks.filter((track) => slotTrackIds.has(track.id));
-  }, [activeShelf, saveSlots, takeoutMatchMap, takeoutSongs, tracks]);
+    return [];
+  }, [activeShelf, takeoutMatchMap, takeoutSongs, tracks]);
 
   const shelfCards = useMemo<ShelfCard[]>(() => {
     if (activeShelf === "takeout" || activeShelf === "missing") {
@@ -1747,29 +1719,9 @@ function App() {
         .filter(Boolean)
         .join(" · ") || "none"
     : "no file";
-  const focusedCardIndex = Math.max(
-    0,
-    filteredCards.findIndex((card) => card.kind === "track" && card.track.id === currentTrack?.id)
-  );
-  const shelfFlowProgress =
-    filteredCards.length <= 1
-      ? 50
-      : Math.min(96, Math.max(4, (focusedCardIndex / (filteredCards.length - 1)) * 100));
-  const catalogIndexRailStyle = useMemo(
-    () => {
-      const shelfPosition = `${shelfFlowProgress.toFixed(2)}%`;
-
-      return {
-        "--catalog-index-position": shelfPosition
-      } as CSSProperties;
-    },
-    [shelfFlowProgress]
-  );
   const bassMeterStyle = {
     "--playback-progress": `${playbackProgress}%`,
     "--playback-ratio": (playbackProgress / 100).toFixed(4),
-    "--interference-level":
-      interference === "off" ? "0" : interference === "low" ? "1" : interference === "med" ? "2" : "3",
     "--signal-confidence": (matchConfidence / 100).toFixed(2)
   } as CSSProperties;
   const activeShelfLabel =
@@ -1779,9 +1731,7 @@ function App() {
         ? "Crowned"
         : activeShelf === "takeout"
           ? "YT Map"
-          : activeShelf === "missing"
-            ? "Missing"
-            : activeSaveSlot?.label ?? "Save slot";
+          : "Missing";
   // B1: only shelves with content earn a tab; Local is always present.
   const shelfTabs = useMemo(() => {
     const tabs: Array<{ id: ShelfView; label: string }> = [{ id: "library", label: "LOCAL" }];
@@ -1798,12 +1748,8 @@ function App() {
       tabs.push({ id: "missing", label: "MISSING" });
     }
 
-    saveSlots
-      .filter((slot) => slot.trackIds.length > 0)
-      .forEach((slot) => tabs.push({ id: slot.id, label: slot.label }));
-
     return tabs;
-  }, [saveSlots, takeoutMissingCount, takeoutSongs.length, tracks]);
+  }, [takeoutMissingCount, takeoutSongs.length, tracks]);
   // Filtering runs entirely through the FIND query language; the clickable
   // status chips on each row set the same query contextually.
   const currentTrackIndex = tracks.findIndex((track) => track.id === currentTrack?.id);
@@ -1909,8 +1855,12 @@ function App() {
     if ((storeDemoMode || storePosterMode) && target.bpm > 0) {
       const demoPeriod = 60 / target.bpm;
       const demoErrs = [0.012, -0.018, 0.045, 0.005, 0.11, -0.03];
+      // The paused painter anchors at now=0 and looks back ~4 beats, so
+      // seeds sit on INTEGER beats behind the strike line (the old -6.5
+      // half-beat offset drew every demo hit mid-gap, contradicting its own
+      // near-zero err values).
       grooveHitsRef.current = demoErrs.map((err, index) => ({
-        time: target.gridPhase + (index - 6.5) * demoPeriod + err,
+        time: target.gridPhase + (index - 6) * demoPeriod + err,
         err
       }));
     }
@@ -2078,7 +2028,6 @@ function App() {
     setTracing(null);
     setSpineRevision((revision) => revision + 1);
     setRepeatMode("off");
-    setReactLevel("med");
     setHeroDocked(false);
     setDenseRows(false);
     setMeterMode("track");
@@ -2094,7 +2043,6 @@ function App() {
     setIsPlaying(false);
     setQuery("");
     setActiveShelf("library");
-    setSaveSlots(cloneDefaultSaveSlots());
     setImportStatus("Local library reset");
     setBootMode("reindex");
     triggerDegauss();
@@ -2142,7 +2090,23 @@ function App() {
     }
 
     const duration = reducedMotion ? 300 : bootMode === "reindex" ? 1150 : 2000;
-    const timeout = window.setTimeout(() => setBootMode(null), duration);
+    const timeout = window.setTimeout(() => {
+      setBootMode(null);
+
+      // The self-test sweep keeps writing needle swing until the overlay
+      // drops; without an explicit reset the needles and peak pips hold the
+      // sweep's residue on an idle deck.
+      const vu = vuStateRef.current;
+      vu.l = 0;
+      vu.r = 0;
+      vu.peakL = 0;
+      vu.peakR = 0;
+      vu.peakHoldL = 0;
+      vu.peakHoldR = 0;
+      vu.lampL = 0;
+      vu.lampR = 0;
+      writeVuNeedles();
+    }, duration);
     return () => window.clearTimeout(timeout);
   }, [bootMode, reducedMotion]);
 
@@ -2766,12 +2730,9 @@ function App() {
         heroDock: heroDocked,
         interference,
         meter: meterMode,
-        react: reactLevel,
         reducedMotion: initialState.reducedMotion === true,
         repeat: repeatMode,
         shelfSize,
-        scanlines,
-        saveSlots,
         takeoutSongs,
         tracks: durableTracks,
         volume
@@ -2785,11 +2746,8 @@ function App() {
     interference,
     initialState.reducedMotion,
     meterMode,
-    reactLevel,
     repeatMode,
     shelfSize,
-    saveSlots,
-    scanlines,
     storeDemoMode,
     takeoutSongs,
     tracks,
@@ -2813,19 +2771,10 @@ function App() {
 
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        const selectedCard = document.querySelector(`[data-track-id="${CSS.escape(currentId)}"]`) as HTMLElement | null;
-        const trackList = selectedCard?.closest(".track-list") as HTMLElement | null;
-
-        if (!selectedCard || !trackList) {
-          return;
-        }
-
-        trackList.scrollTo({
-          behavior: reducedMotion ? "auto" : "smooth",
-          left: selectedCard.offsetLeft - (trackList.clientWidth - selectedCard.clientWidth) / 2
-        });
-
-        // Keep the active catalog row in view too as selection moves.
+        // Keep the active catalog row in view as selection moves (J/K, row
+        // arrows, auto-advance). The old card-shelf scroll targets
+        // (data-track-id / .track-list) died in the shelf redesign and their
+        // early-return kept this line from ever running.
         const activeRow = document.querySelector(".metadata-row.active") as HTMLElement | null;
         activeRow?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
       });
@@ -3260,7 +3209,11 @@ function App() {
   }
 
   function onDragLeave(event: DragEvent<HTMLElement>) {
-    if (event.currentTarget === event.target) {
+    // Leaving the window fires dragleave on whichever CHILD the cursor was
+    // over, so a currentTarget===target check missed it and the drop overlay
+    // stuck until the next click. relatedTarget is null when the drag truly
+    // exits the document.
+    if (event.currentTarget === event.target || !(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) {
       setIsDragActive(false);
     }
   }
@@ -3720,7 +3673,12 @@ function App() {
         return wave;
       }
 
-      const index = (history.cursor - Math.min(lag, history.frames.length - 1) + 13 * 4) % history.frames.length;
+      // Normalize against the CURRENT ring length: the fixed +52 offset is
+      // only a clean multiple when the ring is full (52 % 13 === 0); during
+      // warm-up it selected scrambled frames.
+      const length = history.frames.length;
+      const clampedLag = Math.min(lag, length - 1);
+      const index = ((history.cursor - clampedLag) % length + length) % length;
       return history.frames[index] ?? wave;
     };
 
@@ -4104,6 +4062,15 @@ function App() {
     const settle = () => {
       bassLevelRef.current = 0;
       vuStateRef.current = { l: 0, r: 0, peakL: 0, peakR: 0, peakHoldL: 0, peakHoldR: 0, lampL: 0, lampR: 0 };
+
+      // Memory faces (TRACK/ARCHIVE/SESSION/HEAT) own the needles at rest —
+      // settle back onto their values instead of zero, so pausing doesn't
+      // blank a dial that isn't measuring the live signal.
+      if (meterModeRef.current !== "vu") {
+        vuStateRef.current.l = needleSourceRef.current.l;
+        vuStateRef.current.r = needleSourceRef.current.r;
+      }
+
       writeBassVars(0, 0);
       writeSignalColumns(0);
       writeVuNeedles();
@@ -4705,6 +4672,9 @@ function App() {
       const errorName = error instanceof DOMException ? error.name : "Playback error";
       setIsPlaying(false);
       setImportStatus(`${errorName} - click Play`);
+      // importStatus only surfaces as a hover tooltip — the teletype line is
+      // the visible fault channel.
+      flashSystemMessage(`SIGNAL FAULT · ${errorName.toUpperCase()}`, 1600);
       playScopeTear();
       return;
     }
@@ -4987,8 +4957,10 @@ function App() {
     const nextIndex = queueIndex < 0 ? 0 : (queueIndex + 1) % playbackQueue.length;
 
     // A natural end-of-track advance re-locks like a fresh cartridge; only a
-    // deliberate skip winds the tape.
-    if (!autoAdvance) {
+    // deliberate skip winds the tape. A single-track queue wraps onto itself:
+    // no track change, so don't arm the wind flag (it would leak and
+    // suppress the next real cartridge swap's lock sequence).
+    if (!autoAdvance && playbackQueue[nextIndex].id !== currentTrack?.id) {
       markTapeWind();
     }
 
@@ -5002,13 +4974,25 @@ function App() {
 
     const queueIndex = playbackQueue.findIndex((track) => track.id === currentTrack?.id);
     const previousIndex = queueIndex <= 0 ? playbackQueue.length - 1 : queueIndex - 1;
-    markTapeWind();
+
+    if (playbackQueue[previousIndex].id !== currentTrack?.id) {
+      markTapeWind();
+    }
+
     playTrack(playbackQueue[previousIndex].id);
   }
 
   // B6 repeat: ONE re-arms the same cartridge, ALL wraps the queue (stock
   // behavior), OFF lets the deck stop at the end of the shelf.
   function onTrackEnded() {
+    // A cued PLAY NEXT wins over repeat-one and end-of-shelf: the user
+    // explicitly asked for that cartridge next, so never strand it as a
+    // stuck CUED row.
+    if (playNextId && tracks.some((track) => track.id === playNextId && isLocalPlaybackUrl(track.url))) {
+      nextTrack(true);
+      return;
+    }
+
     if (repeatMode === "one" && audioRef.current) {
       // Repeat grammar: the progress line visibly loops back through the
       // machine — paintSeekSpine sweeps a highlight right-to-left.
@@ -5100,9 +5084,18 @@ function App() {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      // Never shadow browser/OS chords (Cmd+F find, Cmd+K, Alt+Arrow…).
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        return;
+      }
+
       const target = event.target instanceof HTMLElement ? event.target : null;
+      const targetInput = target instanceof HTMLInputElement ? target : null;
+      // Only text-entry surfaces swallow shortcuts. Sliders and knobs are
+      // INPUTs too, but SPACE/J/K/F should keep working with one focused;
+      // their own arrow handling stops propagation where it must win.
       const isTyping =
-        target?.tagName === "INPUT" ||
+        (targetInput && !["range", "button", "checkbox", "radio"].includes(targetInput.type)) ||
         target?.tagName === "TEXTAREA" ||
         target?.getAttribute("contenteditable") === "true";
 
@@ -5150,13 +5143,14 @@ function App() {
       }
 
       if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-        event.preventDefault();
-        const direction = event.key === "ArrowRight" ? 1 : -1;
-
-        if (target?.closest(".track-list")) {
-          selectShelfOffset(direction);
+        // A focused slider (seek bar) owns its own arrow keys natively —
+        // seeking on top of that would double-step.
+        if (targetInput?.type === "range") {
           return;
         }
+
+        event.preventDefault();
+        const direction = event.key === "ArrowRight" ? 1 : -1;
 
         if (event.repeat) {
           // Tape-shuttle: held key ramps the seek rate up like a spinning reel.
@@ -5283,17 +5277,14 @@ function App() {
 
   const appClasses = [
     "app-shell",
-    scanlines ? "scanlines-on" : "",
     reducedMotion ? "reduced-motion" : "",
     `interference-${interference}`,
     isDragActive ? "is-dragging" : "",
-    bootMode ? "is-booting" : "",
     microGlitch ? "is-microglitching" : "",
     microGlitch ? `micro-${microGlitch}` : "",
     isRelocking ? "is-relocking" : "",
     seekPulse ? "is-seeking" : "",
     attract ? "is-attract" : "",
-    shuttle ? "is-shuttling" : "",
     isFindSweeping ? "is-findsweep" : "",
     volume > 0.78 ? "is-hot" : "",
     isPlaying ? "is-playing" : "is-idle"
@@ -5351,6 +5342,28 @@ function App() {
           }
         }}
         onEnded={onTrackEnded}
+        onError={() => {
+          // Mid-playback media faults (file deleted, decode failure) never
+          // hit startAudioPlayback's catch — surface them the same way.
+          const mediaError = audioRef.current?.error;
+
+          if (!mediaError) {
+            return;
+          }
+
+          const label =
+            mediaError.code === MediaError.MEDIA_ERR_DECODE
+              ? "DECODE FAULT"
+              : mediaError.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+                ? "UNREADABLE SIGNAL"
+                : mediaError.code === MediaError.MEDIA_ERR_NETWORK
+                  ? "SIGNAL DROPOUT"
+                  : "MEDIA FAULT";
+          setIsPlaying(false);
+          setImportStatus(`${label} - click Play`);
+          flashSystemMessage(`SIGNAL FAULT · ${label}`, 1600);
+          playScopeTear();
+        }}
       />
 
       <section className={`console-screen ${isDegaussing ? "is-degauss" : ""}`} aria-label="Cody Cartridge player">
@@ -5825,6 +5838,10 @@ function App() {
                         }
 
                         event.preventDefault();
+                        // The row owns this press: without stopPropagation
+                        // the global SPACE handler also fires togglePlayback,
+                        // pausing the track this handler just started.
+                        event.stopPropagation();
                         playTrack(track.id);
                       }}
                     >
@@ -5976,7 +5993,7 @@ function App() {
                           <button
                             type="button"
                             className="row-action"
-                            aria-label={`Find cover for ${title}`}
+                            aria-label={`Re-strike pressing for ${title}`}
                             title={
                               track.artworkUrl
                                 ? "Cover present — generated pressing not used"
@@ -5985,7 +6002,7 @@ function App() {
                             disabled={Boolean(track.artworkUrl)}
                             onClick={() => restrikePressing(track)}
                           >
-                            FIND COVER
+                            RE-STRIKE
                           </button>
                           <button
                             type="button"
@@ -6001,7 +6018,7 @@ function App() {
                               });
                             }}
                           >
-                            EDIT TAGS
+                            INSPECT
                           </button>
                           <button
                             type="button"
