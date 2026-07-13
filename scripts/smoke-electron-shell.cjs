@@ -8,12 +8,14 @@ const path = require("node:path");
 const projectRoot = path.resolve(__dirname, "..");
 const distIndexPath = path.join(projectRoot, "dist", "index.html");
 const electronBinary = path.join(projectRoot, "node_modules", ".bin", process.platform === "win32" ? "electron.cmd" : "electron");
-const timeoutMs = 20000;
+const timeoutMs = 45000;
 
 function createSmokeWavBuffer() {
   const sampleRate = 44100;
-  const durationSeconds = 0.35;
-  const frequency = 220;
+  // Long enough for the in-app playback probe to sample mid-play; 110Hz
+  // sits inside the deck's 170Hz bass lowpass so the probe level registers.
+  const durationSeconds = 3;
+  const frequency = 110;
   const sampleCount = Math.floor(sampleRate * durationSeconds);
   const dataSize = sampleCount * 2;
   const buffer = Buffer.alloc(44 + dataSize);
@@ -70,6 +72,9 @@ async function main() {
         CODY_FORCE_DIST: "1",
         CODY_SHELL_SMOKE: "1",
         CODY_SHELL_SMOKE_AUDIO_PATH: fixturePath,
+        // Keep smoke state (localStorage, play counts, bookmarks) out of
+        // the developer's real app profile.
+        CODY_SHELL_SMOKE_USER_DATA_DIR: path.join(fixtureDir, "user-data"),
         ELECTRON_DISABLE_SECURITY_WARNINGS: "true"
       },
       stdio: ["ignore", "pipe", "pipe"]

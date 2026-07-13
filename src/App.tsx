@@ -4544,6 +4544,10 @@ function App() {
       writeSignalColumns(bassLevelRef.current);
       writeVuNeedles();
 
+      // Shell-smoke probe: a nonzero level proves real signal is flowing
+      // through the Web Audio graph (a cross-origin-muted source reads 0).
+      (window as Window & { __codyLiveLevel?: number }).__codyLiveLevel = bassLevelRef.current;
+
       // Smoothness: playback progress rides an imperative CSS var at 60fps
       // (row illumination, fallback seek rail) while React ticks at 1Hz.
       const progressAudio = audioRef.current;
@@ -5328,6 +5332,11 @@ function App() {
 
       <audio
         ref={audioRef}
+        // CORS mode keeps the Web Audio graph untainted when media arrives
+        // cross-origin (cody-app:// page + cody-media:// audio in the
+        // packaged shell). Without it the element plays but every analyser
+        // reads zeros. Harmless for blob: and same-origin sources.
+        crossOrigin="anonymous"
         onPlay={onAudioPlay}
         onPause={onAudioPause}
         onLoadedMetadata={onLoadedMetadata}

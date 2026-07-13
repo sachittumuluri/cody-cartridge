@@ -16,6 +16,11 @@ protocol.registerSchemesAsPrivileged([
   {
     scheme: "cody-media",
     privileges: {
+      // corsEnabled lets the renderer consume media in CORS mode: without
+      // it, a cody-app:// page feeding cody-media:// audio into
+      // createMediaElementSource plays fine but the graph outputs silence
+      // (cross-origin taint), and spine-tracing fetches are blocked.
+      corsEnabled: true,
       secure: true,
       standard: true,
       stream: true,
@@ -25,6 +30,7 @@ protocol.registerSchemesAsPrivileged([
   {
     scheme: "cody-art",
     privileges: {
+      corsEnabled: true,
       secure: true,
       standard: true,
       supportFetchAPI: true
@@ -1451,6 +1457,74 @@ async function runShellSmoke(mainWindow) {
     assertShellSmoke(mediaResponse.headers.get("content-range")?.startsWith("bytes 0-63/"), "media response did not expose expected content-range");
     assertShellSmoke(mediaBytes.length === 64, `media range response returned ${mediaBytes.length} bytes`);
     passCount += 9;
+
+    // End-to-end playback: leave the synthetic store-demo catalog, boot the
+    // real renderer, drive the transport, and assert the Web Audio graph
+    // carries signal. net.fetch above runs in the main process and bypasses
+    // renderer CORS entirely — only this catches a muted cross-origin
+    // MediaElementSource (the element plays but every analyser reads 0).
+    logShellSmokeStep("loading real-mode renderer for playback probe");
+    await mainWindow.loadURL(getRendererUrl());
+
+    const playbackProbe = await mainWindow.webContents.executeJavaScript(
+      `(async () => {
+        const waitFor = async (predicate, timeoutMs) => {
+          const startedAt = Date.now();
+
+          while (Date.now() - startedAt < timeoutMs) {
+            if (predicate()) {
+              return true;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 150));
+          }
+
+          return false;
+        };
+
+        const armed = await waitFor(() => {
+          const playButton = document.querySelector(".play-button");
+          return Boolean(playButton) && !playButton.disabled;
+        }, 9000);
+        const playButton = document.querySelector(".play-button");
+        const rows = document.querySelectorAll(".metadata-row").length;
+
+        if (!armed) {
+          return { skipped: true, rows, reason: "no armed track (empty local library?)" };
+        }
+
+        playButton.click();
+        await new Promise((resolve) => setTimeout(resolve, 2200));
+        const audio = document.querySelector("audio");
+        const state = {
+          skipped: false,
+          rows,
+          heroTitle: ((document.querySelector("h1, h2, h3") || {}).textContent || "").slice(0, 40),
+          src: audio ? audio.currentSrc.slice(0, 40) : "",
+          paused: audio ? audio.paused : true,
+          time: audio ? audio.currentTime : 0,
+          ready: audio ? audio.readyState : -1,
+          mediaError: audio && audio.error ? audio.error.code : null,
+          level: window.__codyLiveLevel ?? 0
+        };
+        if (audio) {
+          audio.pause();
+        }
+        return state;
+      })()`
+    );
+
+    if (playbackProbe.skipped) {
+      logShellSmokeStep(`playback probe skipped: ${JSON.stringify(playbackProbe)}`);
+    } else {
+      assertShellSmoke(playbackProbe.mediaError === null, `playback probe hit media error: ${JSON.stringify(playbackProbe)}`);
+      assertShellSmoke(playbackProbe.paused === false, `playback probe did not enter playing state: ${JSON.stringify(playbackProbe)}`);
+      assertShellSmoke(playbackProbe.time > 0.8, `playback probe made no progress: ${JSON.stringify(playbackProbe)}`);
+      assertShellSmoke(
+        playbackProbe.level > 0.02,
+        `web audio graph carried no signal while playing (cross-origin mute?): ${JSON.stringify(playbackProbe)}`
+      );
+      passCount += 4;
+    }
   }
 
   if (shellSmokeResetProbe) {
