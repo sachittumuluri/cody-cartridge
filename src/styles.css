@@ -8784,8 +8784,11 @@ button:disabled {
   display: block;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>");
   background-size: 160px 160px;
-  opacity: 0.05;
-  mix-blend-mode: soft-light;
+  /* screen, not soft-light: soft-light is a near no-op over this near-black
+     deck, which made every interference level read as OFF. screen adds
+     luminance to dark pixels while leaving bright text mostly untouched. */
+  opacity: 0.14;
+  mix-blend-mode: screen;
 }
 
 .app-shell.interference-low .console-screen {
@@ -8795,7 +8798,11 @@ button:disabled {
 /* MED: chromatic separation + waveform instability (scope jitter is fed by
    the audio loop; the fringe applies to decorative surfaces only). */
 .app-shell.interference-med .interference-veil {
-  opacity: 0.08;
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>"),
+    repeating-linear-gradient(180deg, rgba(214, 222, 231, 0.16) 0 1px, transparent 1px 3px);
+  background-size: 160px 160px, 100% 3px;
+  animation: veilShift 2.6s steps(4, end) infinite;
 }
 
 .app-shell.interference-med .signal-map,
@@ -8810,7 +8817,10 @@ button:disabled {
 
 /* MAX: intercepted broadcast — heavier grain, roll bar, tear bands. */
 .app-shell.interference-max .interference-veil {
-  opacity: 0.13;
+  opacity: 0.32;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>"),
+    repeating-linear-gradient(180deg, rgba(214, 222, 231, 0.2) 0 1px, transparent 1px 3px);
+  background-size: 160px 160px, 100% 3px;
   animation: veilShift 1.4s steps(5, end) infinite;
 }
 
@@ -8818,7 +8828,7 @@ button:disabled {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(239, 239, 231, 0.05) 48%, transparent 55%);
+  background: linear-gradient(180deg, transparent 0%, rgba(239, 239, 231, 0.11) 48%, transparent 55%);
   animation: broadcastRoll 7s linear infinite;
 }
 
@@ -8828,7 +8838,7 @@ button:disabled {
   left: 0;
   right: 0;
   height: 3px;
-  background: rgba(239, 239, 231, 0.16);
+  background: rgba(239, 239, 231, 0.26);
   animation: tearBand 3.7s steps(7, end) infinite;
 }
 
