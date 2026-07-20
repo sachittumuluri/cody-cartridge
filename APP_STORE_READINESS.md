@@ -397,3 +397,7 @@ Use this as the starting point for App Store Connect's EU Digital Services Act c
 - Manage European Union Digital Services Act trader requirements: https://developer.apple.com/help/app-store-connect/manage-compliance-information/manage-european-union-digital-services-act-trader-requirements/
 - Required, localizable, and editable properties: https://developer.apple.com/help/app-store-connect/reference/app-information/required-localizable-and-editable-properties/
 - App information: https://developer.apple.com/help/app-store-connect/reference/app-information/app-information/
+
+> Note: `com.apple.security.files.user-selected.read-write` replaced the
+> former read-only entitlement — The Lathe CUT export writes a WAV to a
+> user-chosen save-dialog path (the only write surface in the app).

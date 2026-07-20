@@ -50,5 +50,6 @@ interface Window {
     pickTakeoutCsv: () => Promise<CodyTakeoutCsv[]>;
     readTakeoutCsvPaths: (filePaths: string[]) => Promise<CodyTakeoutCsv[]>;
     setPlaybackActive: (active: boolean) => Promise<boolean>;
+    exportCut?: (payload: { suggestedName: string; bytes: ArrayBuffer }) => Promise<{ saved: boolean; filePath?: string }>;
   };
 }

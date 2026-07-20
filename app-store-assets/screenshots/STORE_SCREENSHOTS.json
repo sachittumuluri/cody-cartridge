@@ -32,7 +32,7 @@
     "requiredFor": "Mac apps",
     "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
   },
-  "generatedAt": "2026-07-20T17:47:19.897Z",
+  "generatedAt": "2026-07-20T19:59:28.571Z",
   "renderer": "dist/index.html",
   "screenshotCount": 4,
   "source": "store-demo",
@@ -42,7 +42,7 @@
   },
   "screenshots": [
     {
-      "bytes": 940865,
+      "bytes": 939842,
       "filePath": "app-store-assets/screenshots/01-library-1440x900.png",
       "height": 900,
       "id": "library",
@@ -54,13 +54,13 @@
         "store-shelf": "library",
         "store-poster": "1"
       },
-      "sha256": "e317b72e3f0c10bbe396581bac3bfe5ed5b0b1daa76d414e11bce8c342d1e801",
+      "sha256": "d6eca812622052ed3a3a8c6a0579ba1dc4030bc6b9ba95426d277bf6fb975a16",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 1019639,
+      "bytes": 1020056,
       "filePath": "app-store-assets/screenshots/02-takeout-map-1440x900.png",
       "height": 900,
       "id": "takeout",
@@ -72,13 +72,13 @@
         "store-shelf": "takeout",
         "store-poster": "1"
       },
-      "sha256": "9ab7b8abf774418b55c07fedee318cbe7d1ae02a9f5382b012ec5c746cafe1aa",
+      "sha256": "f9859b6f3d477bb13edee499a539ab70bbe5c0223206aad39b225ead19beb5d2",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=takeout&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 796264,
+      "bytes": 796624,
       "filePath": "app-store-assets/screenshots/03-missing-files-1440x900.png",
       "height": 900,
       "id": "missing",
@@ -90,13 +90,13 @@
         "store-shelf": "missing",
         "store-poster": "1"
       },
-      "sha256": "fac181de306f38a2cf90900b145962b62fa12abe6e3ef744ba1e70524cfe9fa5",
+      "sha256": "c455503989b26c6cb6993517a2ff95b4720d93bc2cecb1088ecf852699b1e1e8",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=missing&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 1046777,
+      "bytes": 1053551,
       "filePath": "app-store-assets/screenshots/04-lathe-bench-1440x900.png",
       "height": 900,
       "id": "lathe",
@@ -109,7 +109,7 @@
         "store-poster": "1",
         "store-lathe": "1"
       },
-      "sha256": "e21a6f5a2783f7dd1b25d393dfc519ad62373283b0da6d9f3810b41e3292731d",
+      "sha256": "4a839531f0137aec7c4cbcd10f7144ce4712f9d3733a78094db17157c346dc12",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library&store-poster=1&store-lathe=1",
       "width": 1440

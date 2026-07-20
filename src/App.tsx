@@ -117,10 +117,11 @@ type ToneSettings = {
   treble: number; // dB, -12..12 (highshelf 5.5kHz)
   width: number; // side gain, 0 mono .. 1 stock .. 1.6 wide
   drive: number; // wet mix 0..1
+  reverb: number; // hall wet mix 0..1
   speed: number; // playbackRate 0.8..1.25, 1 = stock
 };
 
-const flatTone: ToneSettings = { sub: 0, bass: 0, mid: 0, treble: 0, width: 1, drive: 0, speed: 1 };
+const flatTone: ToneSettings = { sub: 0, bass: 0, mid: 0, treble: 0, width: 1, drive: 0, reverb: 0, speed: 1 };
 
 function isFlatCut(tone: ToneSettings | undefined): boolean {
   if (!tone) {
@@ -134,6 +135,7 @@ function isFlatCut(tone: ToneSettings | undefined): boolean {
     Math.abs(tone.treble) < 0.25 &&
     Math.abs(tone.width - 1) < 0.01 &&
     tone.drive < 0.005 &&
+    tone.reverb < 0.005 &&
     Math.abs(tone.speed - 1) < 0.005
   );
 }
@@ -149,6 +151,7 @@ function sanitizeTone(raw: Partial<ToneSettings> | undefined): ToneSettings {
     treble: bounded(raw?.treble, -12, 12, 0),
     width: bounded(raw?.width, 0, 1.6, 1),
     drive: bounded(raw?.drive, 0, 1, 0),
+    reverb: bounded(raw?.reverb, 0, 1, 0),
     speed: bounded(raw?.speed, 0.8, 1.25, 1)
   };
 }
@@ -178,11 +181,248 @@ function formatCutSummary(tone: ToneSettings): string {
     parts.push(`DRV ${Math.round(tone.drive * 100)}%`);
   }
 
+  if (tone.reverb >= 0.005) {
+    parts.push(`RVB ${Math.round(tone.reverb * 100)}%`);
+  }
+
   if (Math.abs(tone.speed - 1) >= 0.005) {
     parts.push(`${tone.speed.toFixed(2)}×`);
   }
 
   return parts.join(" · ");
+}
+
+type ToneNodes = {
+  subShelf: BiquadFilterNode;
+  bassShelf: BiquadFilterNode;
+  midPeak: BiquadFilterNode;
+  trebleShelf: BiquadFilterNode;
+  msSideLevel: GainNode;
+  dryGain: GainNode;
+  wetGain: GainNode;
+  reverbDry: GainNode;
+  reverbWet: GainNode;
+};
+
+// The Lathe hall: a synthesized stereo impulse — exponential-decay noise,
+// one-pole smoothed for a dark tail, 20ms pre-delay, channels decorrelated.
+// No samples shipped; every context (live or offline render) grows its own.
+function createHallImpulse(context: BaseAudioContext): AudioBuffer {
+  const sampleRate = context.sampleRate;
+  const seconds = 3.2;
+  const preDelay = Math.floor(sampleRate * 0.02);
+  const length = Math.floor(sampleRate * seconds) + preDelay;
+  const impulse = context.createBuffer(2, length, sampleRate);
+
+  for (let channel = 0; channel < 2; channel += 1) {
+    const data = impulse.getChannelData(channel);
+    let smooth = 0;
+
+    for (let index = preDelay; index < length; index += 1) {
+      const t = (index - preDelay) / (length - preDelay);
+      const noise = Math.random() * 2 - 1;
+      // Darker as the tail decays — highs die first in a real room.
+      const tone = 0.22 + 0.5 * (1 - t);
+      smooth += tone * (noise - smooth);
+      data[index] = smooth * Math.pow(1 - t, 2.1);
+    }
+  }
+
+  return impulse;
+}
+
+// One chain, two contexts: the live graph and the offline CUT export build
+// the identical bench so what you hear is exactly what you press to disk.
+function buildBenchChain(context: BaseAudioContext, input: AudioNode): { output: AudioNode; nodes: ToneNodes } {
+  const subShelf = context.createBiquadFilter();
+  subShelf.type = "lowshelf";
+  subShelf.frequency.value = 60;
+  const bassShelf = context.createBiquadFilter();
+  bassShelf.type = "lowshelf";
+  bassShelf.frequency.value = 150;
+  const midPeak = context.createBiquadFilter();
+  midPeak.type = "peaking";
+  midPeak.frequency.value = 1000;
+  midPeak.Q.value = 0.9;
+  const trebleShelf = context.createBiquadFilter();
+  trebleShelf.type = "highshelf";
+  trebleShelf.frequency.value = 5500;
+
+  // WIDTH via mid/side: force stereo before the splitter so mono sources
+  // upmix (otherwise side = L/2 and the right channel dies).
+  const widthIn = context.createGain();
+  widthIn.channelCount = 2;
+  widthIn.channelCountMode = "explicit";
+  const msSplit = context.createChannelSplitter(2);
+  const msMid = context.createGain();
+  msMid.gain.value = 0.5;
+  const msInvR = context.createGain();
+  msInvR.gain.value = -1;
+  const msSide = context.createGain();
+  msSide.gain.value = 0.5;
+  const msSideLevel = context.createGain();
+  msSideLevel.gain.value = 1;
+  const msInvSide = context.createGain();
+  msInvSide.gain.value = -1;
+  const msMerge = context.createChannelMerger(2);
+
+  // DRIVE: tanh soft-clip on a wet path; postTrim restores unity
+  // small-signal gain so drive changes texture, not loudness.
+  const driveIn = context.createGain();
+  const dryGain = context.createGain();
+  dryGain.gain.value = 1;
+  const shaper = context.createWaveShaper();
+  const curve = new Float32Array(1024);
+
+  for (let index = 0; index < curve.length; index += 1) {
+    const x = (index / (curve.length - 1)) * 2 - 1;
+    curve[index] = Math.tanh(2.2 * x) / Math.tanh(2.2);
+  }
+
+  shaper.curve = curve;
+  shaper.oversample = "2x";
+  const postTrim = context.createGain();
+  postTrim.gain.value = Math.tanh(2.2) / 2.2;
+  const wetGain = context.createGain();
+  wetGain.gain.value = 0;
+  const benchOut = context.createGain();
+
+  // REVERB: the hall sits after the drive so driven signals bloom.
+  const convolver = context.createConvolver();
+  convolver.buffer = createHallImpulse(context);
+  const reverbDry = context.createGain();
+  reverbDry.gain.value = 1;
+  const reverbWet = context.createGain();
+  reverbWet.gain.value = 0;
+  const latheOut = context.createGain();
+
+  // EQ ladder.
+  input.connect(subShelf);
+  subShelf.connect(bassShelf);
+  bassShelf.connect(midPeak);
+  midPeak.connect(trebleShelf);
+  trebleShelf.connect(widthIn);
+
+  // M/S matrix: mid = (L+R)/2 to both channels; side = (L-R)/2 scaled
+  // by WIDTH, added to L and subtracted from R.
+  widthIn.connect(msSplit);
+  msSplit.connect(msMid, 0);
+  msSplit.connect(msMid, 1);
+  msMid.connect(msMerge, 0, 0);
+  msMid.connect(msMerge, 0, 1);
+  msSplit.connect(msSide, 0);
+  msSplit.connect(msInvR, 1);
+  msInvR.connect(msSide);
+  msSide.connect(msSideLevel);
+  msSideLevel.connect(msMerge, 0, 0);
+  msSideLevel.connect(msInvSide);
+  msInvSide.connect(msMerge, 0, 1);
+
+  // Drive wet/dry into the bench output.
+  msMerge.connect(driveIn);
+  driveIn.connect(dryGain);
+  dryGain.connect(benchOut);
+  driveIn.connect(shaper);
+  shaper.connect(postTrim);
+  postTrim.connect(wetGain);
+  wetGain.connect(benchOut);
+
+  // Reverb wet/dry into the lathe output.
+  benchOut.connect(reverbDry);
+  reverbDry.connect(latheOut);
+  benchOut.connect(convolver);
+  convolver.connect(reverbWet);
+  reverbWet.connect(latheOut);
+
+  return {
+    output: latheOut,
+    nodes: { subShelf, bassShelf, midPeak, trebleShelf, msSideLevel, dryGain, wetGain, reverbDry, reverbWet }
+  };
+}
+
+// EDITIONS: the classic cuts, one press each — the mixing nuance is baked
+// into the numbers so nobody needs to know what a shelving filter is.
+const latheEditions: Array<{ id: string; label: string; tone: ToneSettings }> = [
+  { id: "stock", label: "STOCK", tone: { ...flatTone } },
+  {
+    id: "slowed",
+    label: "SLOWED+RVB",
+    tone: { sub: 3, bass: 0, mid: 0, treble: -1, width: 1.15, drive: 0.1, reverb: 0.45, speed: 0.85 }
+  },
+  {
+    id: "nightcore",
+    label: "NIGHTCORE",
+    tone: { sub: 0, bass: 0, mid: 0, treble: 2, width: 1.1, drive: 0, reverb: 0.15, speed: 1.2 }
+  },
+  {
+    id: "nextroom",
+    label: "NEXT ROOM",
+    tone: { sub: 2, bass: 0, mid: -3, treble: -9, width: 0.7, drive: 0, reverb: 0.3, speed: 1 }
+  }
+];
+
+// Stereo 16-bit PCM at the buffer's true sample rate — the CUT export
+// container. Interleaved, 44-byte canonical header.
+function encodeWavStereo(buffer: AudioBuffer): Uint8Array {
+  const length = buffer.length;
+  const sampleRate = buffer.sampleRate;
+  const dataSize = length * 4;
+  const bytes = new Uint8Array(44 + dataSize);
+  const view = new DataView(bytes.buffer);
+  const writeTag = (offset: number, text: string) => {
+    for (let index = 0; index < text.length; index += 1) {
+      bytes[offset + index] = text.charCodeAt(index);
+    }
+  };
+
+  writeTag(0, "RIFF");
+  view.setUint32(4, 36 + dataSize, true);
+  writeTag(8, "WAVE");
+  writeTag(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 2, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 4, true);
+  view.setUint16(32, 4, true);
+  view.setUint16(34, 16, true);
+  writeTag(36, "data");
+  view.setUint32(40, dataSize, true);
+
+  const left = buffer.getChannelData(0);
+  const right = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : left;
+  let offset = 44;
+
+  for (let index = 0; index < length; index += 1) {
+    view.setInt16(offset, Math.round(Math.max(-1, Math.min(1, left[index])) * 32767), true);
+    offset += 2;
+    view.setInt16(offset, Math.round(Math.max(-1, Math.min(1, right[index])) * 32767), true);
+    offset += 2;
+  }
+
+  return bytes;
+}
+
+function matchEdition(tone: ToneSettings): string | null {
+  for (const edition of latheEditions) {
+    const reference = edition.tone;
+    const close = (a: number, b: number, tolerance: number) => Math.abs(a - b) < tolerance;
+
+    if (
+      close(tone.sub, reference.sub, 0.3) &&
+      close(tone.bass, reference.bass, 0.3) &&
+      close(tone.mid, reference.mid, 0.3) &&
+      close(tone.treble, reference.treble, 0.3) &&
+      close(tone.width, reference.width, 0.02) &&
+      close(tone.drive, reference.drive, 0.01) &&
+      close(tone.reverb, reference.reverb, 0.01) &&
+      close(tone.speed, reference.speed, 0.006)
+    ) {
+      return edition.label;
+    }
+  }
+
+  return null;
 }
 
 type StoredState = {
@@ -473,7 +713,7 @@ function createStoreDemoState(): StoredState {
     reducedMotion: getStoreDemoReducedMotion(),
     takeoutSongs,
     toneByTrack: {
-      [demoTracks[0].id]: { sub: 4, bass: 0, mid: -2, treble: 3, width: 1.3, drive: 0.35, speed: 1.05 }
+      [demoTracks[0].id]: { sub: 4, bass: 0, mid: -2, treble: 3, width: 1.3, drive: 0.35, reverb: 0.4, speed: 1.05 }
     },
     tracks: demoTracks,
     volume: 0.72
@@ -1662,15 +1902,7 @@ function App() {
   const toneShelfRef = useRef<BiquadFilterNode | null>(null);
   // The Lathe: bench nodes + the latest bypass-resolved settings, applied
   // immediately when the graph is (re)built.
-  const toneNodesRef = useRef<{
-    subShelf: BiquadFilterNode;
-    bassShelf: BiquadFilterNode;
-    midPeak: BiquadFilterNode;
-    trebleShelf: BiquadFilterNode;
-    msSideLevel: GainNode;
-    dryGain: GainNode;
-    wetGain: GainNode;
-  } | null>(null);
+  const toneNodesRef = useRef<ToneNodes | null>(null);
   const toneApplyRef = useRef<ToneSettings>(flatTone);
   const benchBypassRef = useRef(false);
   const benchTickRef = useRef<{ curveDb: Float32Array | null }>({ curveDb: null });
@@ -1785,6 +2017,7 @@ function App() {
   );
   const [benchOpen, setBenchOpen] = useState(() => initialState.latheOpen === true);
   const [benchBypass, setBenchBypass] = useState(false);
+  const [cutExporting, setCutExporting] = useState(false);
   const [denseRows, setDenseRows] = useState(() => initialState.denseRows === true);
   const [meterMode, setMeterMode] = useState<MeterMode>(() =>
     meterModeOrder.includes(initialState.meter as MeterMode) ? (initialState.meter as MeterMode) : "track"
@@ -1861,6 +2094,98 @@ function App() {
 
       return { ...existing, [currentId]: next };
     });
+  }
+
+  function cycleEdition() {
+    if (!currentId) {
+      return;
+    }
+
+    const currentLabel = matchEdition(currentTone);
+    const index = latheEditions.findIndex((edition) => edition.label === currentLabel);
+    const next = latheEditions[(index + 1) % latheEditions.length];
+    updateTone({ ...next.tone });
+    flashSystemMessage(`EDITION · ${next.label}`, 900);
+  }
+
+  async function exportCut() {
+    const track = currentTrack;
+
+    if (!track || cutExporting) {
+      return;
+    }
+
+    setCutExporting(true);
+    flashSystemMessage("CUTTING…", 1600);
+
+    try {
+      // The cut is the lathe's work at unity monitor level: the export
+      // renders source → bench (EQ/width/drive/reverb, varispeed via the
+      // buffer source) through the SAME buildBenchChain as live playback.
+      const effective = benchBypass ? flatTone : currentTone;
+      const response = await fetch(track.url);
+
+      if (!response.ok) {
+        throw new Error(`fetch ${response.status}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const decodeContext = new AudioContext();
+      let decoded: AudioBuffer;
+
+      try {
+        decoded = await decodeContext.decodeAudioData(arrayBuffer.slice(0));
+      } finally {
+        await decodeContext.close().catch(() => undefined);
+      }
+
+      const sampleRate = decoded.sampleRate;
+      const tailSeconds = effective.reverb >= 0.005 ? 3.5 : 0.1;
+      const renderSeconds = decoded.duration / effective.speed + tailSeconds;
+      const offline = new OfflineAudioContext(2, Math.ceil(renderSeconds * sampleRate), sampleRate);
+      const sourceNode = offline.createBufferSource();
+      sourceNode.buffer = decoded;
+      // Resamples with pitch — identical character to live varispeed.
+      sourceNode.playbackRate.value = effective.speed;
+
+      const bench = buildBenchChain(offline, sourceNode);
+      bench.nodes.subShelf.gain.value = effective.sub;
+      bench.nodes.bassShelf.gain.value = effective.bass;
+      bench.nodes.midPeak.gain.value = effective.mid;
+      bench.nodes.trebleShelf.gain.value = effective.treble;
+      bench.nodes.msSideLevel.gain.value = effective.width;
+      bench.nodes.wetGain.gain.value = effective.drive;
+      bench.nodes.dryGain.gain.value = 1 - effective.drive;
+      bench.nodes.reverbWet.gain.value = effective.reverb * 0.9;
+      bench.nodes.reverbDry.gain.value = 1 - effective.reverb * 0.3;
+      bench.output.connect(offline.destination);
+      sourceNode.start(0);
+
+      const rendered = await offline.startRendering();
+      const wavBytes = encodeWavStereo(rendered);
+      const editionLabel = matchEdition(effective);
+      const suffix = editionLabel && editionLabel !== "STOCK" ? editionLabel : "Cut";
+      const base = (track.title || track.fileName || "track").replace(/[\\/:*?"<>|]/g, "_").slice(0, 120);
+      const suggestedName = `${base} (${suffix}).wav`;
+
+      if (window.musicHost?.exportCut) {
+        const result = await window.musicHost.exportCut({ suggestedName, bytes: wavBytes.buffer });
+        flashSystemMessage(result?.saved ? `CUT PRESSED · ${suggestedName.toUpperCase()}` : "CUT SHELVED", 1800);
+      } else {
+        const blob = new Blob([wavBytes], { type: "audio/wav" });
+        const anchor = document.createElement("a");
+        anchor.href = URL.createObjectURL(blob);
+        anchor.download = suggestedName;
+        anchor.click();
+        window.setTimeout(() => URL.revokeObjectURL(anchor.href), 4000);
+        flashSystemMessage(`CUT PRESSED · ${suggestedName.toUpperCase()}`, 1800);
+      }
+    } catch {
+      flashSystemMessage("CUT FAILED · SIGNAL UNREADABLE", 1600);
+      playScopeTear();
+    } finally {
+      setCutExporting(false);
+    }
   }
   const currentPlayCount = currentTrack?.playCount ?? 0;
   const currentWearTier = currentPlayCount >= 25 ? 3 : currentPlayCount >= 10 ? 2 : currentPlayCount >= 3 ? 1 : 0;
@@ -2251,6 +2576,9 @@ function App() {
       ramp(nodes.msSideLevel.gain, effective.width);
       ramp(nodes.wetGain.gain, effective.drive);
       ramp(nodes.dryGain.gain, 1 - effective.drive);
+      // Loudness-sane hall mix: wet rides up faster than dry ducks.
+      ramp(nodes.reverbWet.gain, effective.reverb * 0.9);
+      ramp(nodes.reverbDry.gain, 1 - effective.reverb * 0.3);
     }
 
     const audio = audioRef.current;
@@ -5195,98 +5523,17 @@ function App() {
       sourceRef.current = context.createMediaElementSource(audio);
 
       // The Lathe: always-in-circuit bench between the warmth shelf and the
-      // AMP gain. BYPASS ramps every stage to neutral instead of
-      // reconnecting (the graph is built once; reconnects pop). All meters
-      // tap post-ampGain, so the cut reads on every instrument for free.
-      const subShelf = context.createBiquadFilter();
-      subShelf.type = "lowshelf";
-      subShelf.frequency.value = 60;
-      const bassShelf = context.createBiquadFilter();
-      bassShelf.type = "lowshelf";
-      bassShelf.frequency.value = 150;
-      const midPeak = context.createBiquadFilter();
-      midPeak.type = "peaking";
-      midPeak.frequency.value = 1000;
-      midPeak.Q.value = 0.9;
-      const trebleShelf = context.createBiquadFilter();
-      trebleShelf.type = "highshelf";
-      trebleShelf.frequency.value = 5500;
+      // AMP gain, built by the same chain-builder the offline CUT export
+      // uses — live preview and pressed file are the identical circuit.
+      // BYPASS ramps every stage to neutral instead of reconnecting (the
+      // graph is built once; reconnects pop). All meters tap post-ampGain,
+      // so the cut reads on every instrument for free.
+      const bench = buildBenchChain(context, toneShelf);
+      toneNodesRef.current = bench.nodes;
 
-      // WIDTH via mid/side: force stereo before the splitter so mono
-      // sources upmix (otherwise side = L/2 and the right channel dies).
-      const widthIn = context.createGain();
-      widthIn.channelCount = 2;
-      widthIn.channelCountMode = "explicit";
-      const msSplit = context.createChannelSplitter(2);
-      const msMid = context.createGain();
-      msMid.gain.value = 0.5;
-      const msInvR = context.createGain();
-      msInvR.gain.value = -1;
-      const msSide = context.createGain();
-      msSide.gain.value = 0.5;
-      const msSideLevel = context.createGain();
-      msSideLevel.gain.value = 1;
-      const msInvSide = context.createGain();
-      msInvSide.gain.value = -1;
-      const msMerge = context.createChannelMerger(2);
-
-      // DRIVE: tanh soft-clip on a wet path; postTrim restores unity
-      // small-signal gain so drive changes texture, not loudness.
-      const driveIn = context.createGain();
-      const dryGain = context.createGain();
-      dryGain.gain.value = 1;
-      const shaper = context.createWaveShaper();
-      const curve = new Float32Array(1024);
-
-      for (let index = 0; index < curve.length; index += 1) {
-        const x = (index / (curve.length - 1)) * 2 - 1;
-        curve[index] = Math.tanh(2.2 * x) / Math.tanh(2.2);
-      }
-
-      shaper.curve = curve;
-      shaper.oversample = "2x";
-      const postTrim = context.createGain();
-      postTrim.gain.value = Math.tanh(2.2) / 2.2;
-      const wetGain = context.createGain();
-      wetGain.gain.value = 0;
-      const benchOut = context.createGain();
-
-      // EQ ladder.
-      toneShelf.connect(subShelf);
-      subShelf.connect(bassShelf);
-      bassShelf.connect(midPeak);
-      midPeak.connect(trebleShelf);
-      trebleShelf.connect(widthIn);
-
-      // M/S matrix: mid = (L+R)/2 to both channels; side = (L-R)/2 scaled
-      // by WIDTH, added to L and subtracted from R.
-      widthIn.connect(msSplit);
-      msSplit.connect(msMid, 0);
-      msSplit.connect(msMid, 1);
-      msMid.connect(msMerge, 0, 0);
-      msMid.connect(msMerge, 0, 1);
-      msSplit.connect(msSide, 0);
-      msSplit.connect(msInvR, 1);
-      msInvR.connect(msSide);
-      msSide.connect(msSideLevel);
-      msSideLevel.connect(msMerge, 0, 0);
-      msSideLevel.connect(msInvSide);
-      msInvSide.connect(msMerge, 0, 1);
-
-      // Drive wet/dry into the bench output.
-      msMerge.connect(driveIn);
-      driveIn.connect(dryGain);
-      dryGain.connect(benchOut);
-      driveIn.connect(shaper);
-      shaper.connect(postTrim);
-      postTrim.connect(wetGain);
-      wetGain.connect(benchOut);
-
-      toneNodesRef.current = { subShelf, bassShelf, midPeak, trebleShelf, msSideLevel, dryGain, wetGain };
-
-      // source → toneShelf → [bench] → ampGain → analyser → destination
+      // source → toneShelf → [bench incl. reverb] → ampGain → analyser → destination
       sourceRef.current.connect(toneShelf);
-      benchOut.connect(ampGain);
+      bench.output.connect(ampGain);
       ampGain.connect(analyserRef.current);
       analyserRef.current.connect(context.destination);
 
@@ -6928,6 +7175,16 @@ function App() {
                         updateTone({ speed: rate });
                       }}
                     />
+                    <Knob
+                      size="bench"
+                      label="REVERB"
+                      ariaLabel="Reverb amount"
+                      value={currentTone.reverb}
+                      defaultValue={0}
+                      format={(next) => `${Math.round(next * 100)}%`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ reverb: next })}
+                    />
                     <div className="lathe-switches">
                       <button
                         type="button"
@@ -6952,6 +7209,28 @@ function App() {
                         }}
                       >
                         FLAT
+                      </button>
+                      <button
+                        type="button"
+                        className="lathe-switch"
+                        aria-label="Cycle edition presets"
+                        disabled={!currentTrack}
+                        title="Press a classic edition onto this cartridge — the mixing nuance is baked in"
+                        onClick={cycleEdition}
+                      >
+                        {matchEdition(currentTone) ?? "CUSTOM"}
+                      </button>
+                      <button
+                        type="button"
+                        className={`lathe-switch ${cutExporting ? "is-busy" : ""}`}
+                        aria-label="Export this cut as a WAV file"
+                        disabled={!currentTrack || cutExporting}
+                        title="Press this cut to disk — offline render through the exact live chain"
+                        onClick={() => {
+                          void exportCut();
+                        }}
+                      >
+                        {cutExporting ? "CUTTING" : "CUT ▸ WAV"}
                       </button>
                     </div>
                   </div>

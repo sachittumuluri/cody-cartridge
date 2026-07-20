@@ -247,14 +247,14 @@ async function main() {
     })()`);
 
     assert(bench.toggleFound, "Lathe TUNE toggle is missing.");
-    assert(bench.sliderCount === 7, `Expected 7 Lathe bench sliders, saw ${bench.sliderCount}.`);
-    assert(bench.labeledSliders === 7, `Lathe bench sliders missing aria-labels: ${JSON.stringify(bench)}`);
+    assert(bench.sliderCount === 8, `Expected 8 Lathe bench sliders, saw ${bench.sliderCount}.`);
+    assert(bench.labeledSliders === 8, `Lathe bench sliders missing aria-labels: ${JSON.stringify(bench)}`);
     assert(
-      bench.switchLabels.includes("BYP") && bench.switchLabels.includes("FLAT"),
+      bench.switchLabels.includes("BYP") && bench.switchLabels.includes("FLAT") && bench.switchLabels.length >= 4,
       `Lathe bench switches missing: ${JSON.stringify(bench.switchLabels)}`
     );
     assert(bench.closedAgain, "Lathe bench did not close on second toggle.");
-    console.log("- lathe bench: 7 labeled tone sliders + BYP/FLAT switches passed");
+    console.log("- lathe bench: 8 labeled tone sliders + BYP/FLAT/PRESS/CUT switches passed");
   } finally {
     window.destroy();
   }

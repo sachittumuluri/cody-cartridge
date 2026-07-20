@@ -1370,7 +1370,8 @@ async function runShellSmoke(mainWindow) {
           "importAudioPaths",
           "readTakeoutCsvPaths",
           "onMenuCommand",
-          "setPlaybackActive"
+          "setPlaybackActive",
+          "exportCut"
         ];
         const missingHostMethods = hostMethods.filter((key) => typeof host[key] !== "function");
         const cards = document.querySelectorAll(".metadata-cover").length;
@@ -1567,6 +1568,11 @@ async function runShellSmoke(mainWindow) {
           // Read the flag after React committed the bypass state.
           const bypassState = bench.state();
           bench.bypass(false);
+          // Reverb leg: state truthfulness (audible-tail asserts are
+          // unreliable on arbitrary program material).
+          bench.set({ sub: 0, bass: 0, reverb: 0.9 });
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          const reverbState = (window.__codyToneState || {}).reverb;
           bench.flat();
           audio.pause();
           return {
@@ -1574,6 +1580,7 @@ async function runShellSmoke(mainWindow) {
             baseline,
             cutLevel,
             restored,
+            reverbState,
             bypassFlagTruthful: bypassState.bypassed === true
           };
         })()`
@@ -1591,7 +1598,11 @@ async function runShellSmoke(mainWindow) {
           `Lathe BYPASS did not restore the stock level: ${JSON.stringify(toneProbe)}`
         );
         assertShellSmoke(toneProbe.bypassFlagTruthful, `__codyToneState bypass flag untruthful: ${JSON.stringify(toneProbe)}`);
-        passCount += 3;
+        assertShellSmoke(
+          Math.abs((toneProbe.reverbState ?? 0) - 0.9) < 0.001,
+          `Lathe reverb state untruthful: ${JSON.stringify(toneProbe)}`
+        );
+        passCount += 4;
       }
     }
   }
@@ -1660,7 +1671,7 @@ async function runShellSmoke(mainWindow) {
 
   console.log(`Electron shell smoke checks: ${passCount} passed`);
   console.log(`- menu labels: ${requiredMenuLabels.length}`);
-  console.log(`- preload bridge methods: ${state.missingHostMethods.length === 0 ? 8 : 0}`);
+  console.log(`- preload bridge methods: ${state.missingHostMethods.length === 0 ? 9 : 0}`);
   console.log(`- renderer cards/rows: ${state.cards}/${state.rows}`);
   if (smokeAudioPath) {
     console.log("- local audio import IPC and media range streaming: passed");
@@ -1914,6 +1925,33 @@ app.whenReady().then(async () => {
     }
 
     return playbackBlockerId !== null;
+  }));
+
+  ipcMain.handle("music:export", withTrustedRenderer(async (_event, payload) => {
+    // The Lathe CUT export: the ONLY write surface in the app. The renderer
+    // sends finished WAV bytes; the path comes exclusively from the user's
+    // save dialog — no silent writes, name reduced to a safe basename.
+    const rawName = typeof payload?.suggestedName === "string" ? payload.suggestedName : "cut.wav";
+    const safeBase = path.basename(rawName).replace(/[\\/:*?"<>|]/g, "_").slice(0, 160);
+    const suggested = safeBase.toLowerCase().endsWith(".wav") ? safeBase : `${safeBase}.wav`;
+    const bytes = payload?.bytes;
+
+    if (!(bytes instanceof ArrayBuffer) && !ArrayBuffer.isView(bytes)) {
+      return { saved: false };
+    }
+
+    const result = await dialog.showSaveDialog({
+      title: "Press this cut to disk",
+      defaultPath: path.join(app.getPath("downloads"), suggested),
+      filters: [{ name: "WAV audio", extensions: ["wav"] }]
+    });
+
+    if (result.canceled || !result.filePath) {
+      return { saved: false };
+    }
+
+    await fs.writeFile(result.filePath, Buffer.from(bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes));
+    return { saved: true, filePath: result.filePath };
   }));
 
   const mainWindow = await createWindow();

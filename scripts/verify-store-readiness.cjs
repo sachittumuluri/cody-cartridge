@@ -7011,7 +7011,7 @@ function checkElectronShell() {
   assert(main.includes("setWindowOpenHandler"), "Electron shell denies new window requests");
   assert(main.includes("will-navigate"), "Electron shell guards top-level navigation");
   assert(main.includes("withTrustedRenderer"), "Electron shell guards music IPC handlers by trusted renderer");
-  assert((main.match(/ipcMain\.handle\("music:[^"]+", withTrustedRenderer/g) ?? []).length === 6, "All music IPC handlers use trusted renderer guard");
+  assert((main.match(/ipcMain\.handle\("music:[^"]+", withTrustedRenderer/g) ?? []).length === 8, "All music IPC handlers use trusted renderer guard");
   assert(main.includes("filterRendererProvidedPaths"), "Electron shell filters renderer-provided file paths");
   assert(main.includes("findSecurityScopedBookmark(filePath)"), "MAS renderer-provided paths require stored security-scoped bookmarks");
   assert(main.includes("function isAllowedMediaPath(filePath)"), "Electron shell centralizes media path access policy");
