@@ -54,7 +54,7 @@ const meterModeChannels: Record<MeterMode, [string, string]> = {
   heat: ["TMP", "MAX"],
   vu: ["L", "R"]
 };
-type MicroGlitchKind = "header" | "map" | "row" | "shelf";
+type MicroGlitchKind = "header" | "map" | "row" | "fringe" | "spine" | "lattice" | "vu";
 type ShelfView = "library" | "favorites" | "takeout" | "missing";
 
 type Track = CodyFileTrack & {
@@ -1691,6 +1691,11 @@ function App() {
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const defaultLibraryLoadedRef = useRef(false);
   const microGlitchResetRef = useRef<number | null>(null);
+  // Painter-domain interference: transient corruption inside the instruments
+  // (spine mis-reads, lattice ghost hits, VU static kicks).
+  const seekGlitchRef = useRef<{ until: number; cols: number[] }>({ until: 0, cols: [] });
+  const latticeGhostRef = useRef<{ until: number }>({ until: 0 });
+  const vuKickRef = useRef<{ until: number; l: number; r: number }>({ until: 0, l: 0, r: 0 });
   const microGlitchTimerRef = useRef<number | null>(null);
   const previousTrackIdRef = useRef("");
   const relockTimerRef = useRef<number | null>(null);
@@ -2558,15 +2563,17 @@ function App() {
     let isCancelled = false;
 
     const scheduleMicroGlitch = () => {
-      const minDelay = interference === "low" ? 35000 : interference === "med" ? 28000 : 25000;
-      const maxDelay = interference === "low" ? 45000 : interference === "med" ? 38000 : 32000;
+      const minDelay = interference === "low" ? 40000 : interference === "med" ? 26000 : 18000;
+      const maxDelay = interference === "low" ? 55000 : interference === "med" ? 36000 : 26000;
       const delay = minDelay + Math.round(Math.random() * (maxDelay - minDelay));
+      // LOW is a rare bad-sector read; MED adds transmission artifacts;
+      // MAX corrupts every instrument, needles included.
       const candidates: MicroGlitchKind[] =
         interference === "low"
-          ? ["header", "map"]
+          ? ["spine"]
           : interference === "med"
-            ? ["header", "map", "row", "shelf"]
-            : ["header", "map", "row", "shelf"];
+            ? ["header", "map", "row", "fringe", "spine", "lattice"]
+            : ["header", "map", "row", "fringe", "spine", "lattice", "vu"];
 
       microGlitchTimerRef.current = window.setTimeout(() => {
         if (isCancelled) {
@@ -2600,6 +2607,45 @@ function App() {
       }
     };
   }, [interference, isPlaying, reducedMotion]);
+
+  useEffect(() => {
+    // Painter-domain glitch kinds: arm the instrument refs for one short
+    // corruption window and force paints so paused instruments read it too.
+    if (!microGlitch || reducedMotion) {
+      return;
+    }
+
+    const now = performance.now();
+
+    if (microGlitch === "spine") {
+      seekGlitchRef.current = {
+        until: now + 240,
+        cols: Array.from({ length: 3 }, () => Math.random())
+      };
+      paintSeekSpineRef.current();
+      const settle = window.setTimeout(() => paintSeekSpineRef.current(), 300);
+      return () => window.clearTimeout(settle);
+    }
+
+    if (microGlitch === "lattice") {
+      latticeGhostRef.current = { until: now + 260 };
+      paintGrooveLatticeRef.current();
+      const settle = window.setTimeout(() => paintGrooveLatticeRef.current(), 320);
+      return () => window.clearTimeout(settle);
+    }
+
+    if (microGlitch === "vu") {
+      vuKickRef.current = {
+        until: now + 240,
+        l: (Math.random() - 0.5) * 0.12,
+        r: (Math.random() - 0.5) * 0.12
+      };
+      writeVuNeedles();
+      const settle = window.setTimeout(() => writeVuNeedles(), 300);
+      return () => window.clearTimeout(settle);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [microGlitch, reducedMotion]);
 
   useEffect(() => {
     if (!currentId) {
@@ -3749,8 +3795,10 @@ function App() {
     const progress = total > 0 ? Math.min(1, Math.max(0, time / total)) : 0;
 
     // Smoothness: at ~4px/sec of playhead motion most frames are pixel-
-    // identical — skip them unless an animation (reveal/loop) is running.
-    const animating = seekRevealStartRef.current > 0 || seekLoopRef.current > 0;
+    // identical — skip them unless an animation (reveal/loop) or a
+    // bad-sector interference read is running.
+    const seekGlitching = seekGlitchRef.current.until > performance.now();
+    const animating = seekRevealStartRef.current > 0 || seekLoopRef.current > 0 || seekGlitching;
     const paintKey = `${currentTrack?.id ?? ""}|${width}x${height}|${Math.round(progress * width)}|${spineRevision}`;
 
     if (!animating && paintKey === seekPaintKeyRef.current) {
@@ -3786,6 +3834,17 @@ function App() {
         const sweepX = width * (1 - loopProgress);
         context.fillStyle = `rgba(202, 48, 48, ${(0.85 * (1 - loopProgress)).toFixed(3)})`;
         context.fillRect(sweepX - 2, 0, 3, height);
+      }
+    }
+
+    // Interference bad-sector read: a few columns mis-read as static blue
+    // for one beat of the glitch window, then the settle repaint restores
+    // the archived truth. Brightness-only; geometry untouched.
+    if (seekGlitching) {
+      for (const columnFraction of seekGlitchRef.current.cols) {
+        const x = Math.round(columnFraction * (width - 3));
+        context.fillStyle = "rgba(156, 199, 216, 0.55)";
+        context.fillRect(x, height * 0.12, 2, height * 0.76);
       }
     }
   }
@@ -3898,6 +3957,20 @@ function App() {
             : `rgba(202, 48, 48, ${Math.min(1, 0.6 * flash).toFixed(3)})`;
       context.fillStyle = color;
       context.fillRect(x - pixelRatio, middle - height * 0.2, 2 * pixelRatio, height * 0.4);
+    }
+
+    // Interference ghost hits: phantom ticks in static grey — beats the
+    // detector never heard, gone on the settle repaint.
+    if (latticeGhostRef.current.until > performance.now() && period > 0) {
+      context.fillStyle = "rgba(156, 178, 190, 0.4)";
+
+      for (let ghost = 0; ghost < 3; ghost += 1) {
+        const x = strikeX - (0.4 + ghost * 1.7 + Math.random() * 0.6) * (period / secondsPerPx);
+
+        if (x > 0) {
+          context.fillRect(x, middle - height * 0.14, pixelRatio, height * 0.28);
+        }
+      }
     }
 
     // Strike line.
@@ -4266,6 +4339,17 @@ function App() {
       }
     }
 
+    // MAX interference: a VHS head-switch band rolls down the tube at
+    // constant velocity — brightness only, confined to the glass.
+    if (interferenceRef.current === "max") {
+      const bandY = ((performance.now() / 2600) % 1) * height;
+      context.shadowBlur = 0;
+      context.fillStyle = "rgba(200, 214, 224, 0.05)";
+      context.fillRect(0, bandY, width, 4 * pixelRatio);
+      context.fillStyle = "rgba(200, 214, 224, 0.10)";
+      context.fillRect(0, bandY + 4 * pixelRatio, width, pixelRatio);
+    }
+
     context.globalCompositeOperation = "source-over";
     context.shadowBlur = 0;
   }
@@ -4502,8 +4586,13 @@ function App() {
     }
 
     const vu = vuStateRef.current;
-    container.style.setProperty("--vu-l", vu.l.toFixed(3));
-    container.style.setProperty("--vu-r", vu.r.toFixed(3));
+    // MAX-interference static kick: a brief random needle offset, decaying
+    // over the glitch window — analog receivers flinch at static.
+    const kick = vuKickRef.current;
+    const kickAlive = kick.until > performance.now();
+    const kickScale = kickAlive ? (kick.until - performance.now()) / 240 : 0;
+    container.style.setProperty("--vu-l", Math.min(1, Math.max(0, vu.l + kick.l * kickScale)).toFixed(3));
+    container.style.setProperty("--vu-r", Math.min(1, Math.max(0, vu.r + kick.r * kickScale)).toFixed(3));
     container.style.setProperty("--vu-peak-l", vu.peakHoldL.toFixed(3));
     container.style.setProperty("--vu-peak-r", vu.peakHoldR.toFixed(3));
     container.style.setProperty("--vu-lamp-l", vu.lampL.toFixed(3));
@@ -6030,10 +6119,6 @@ function App() {
           </div>
         ) : null}
 
-        {/* Item 14: interference visual layer — grain/scanlines/chromatic
-            fringe/tears scale with the mode; decorative only, never text. */}
-        <span className="interference-veil" aria-hidden="true" />
-
         <div ref={deckRef} className={`deck ${heroDocked ? "hero-docked" : ""} shelf-${shelfSize}`}>
           <section className="deck-hero" aria-label="Now playing">
             <button
@@ -6066,6 +6151,9 @@ function App() {
               aria-label={currentTrack ? `Signal map for ${currentTrack.title} by ${currentTrack.artist}` : "Empty signal map"}
             >
               <div className="signal-map signal-scope-only" aria-hidden="true">
+                {/* Interference lives INSIDE the tube — broadcast noise on
+                    the scope glass, never a wash over the console chrome. */}
+                <span className="interference-veil" aria-hidden="true" />
                 {/* The pilot light: crimson smoke curls in the glass whenever
                     the deck idles — dim beneath the structure map while a
                     cartridge is paused, full-strength in an empty tube. The

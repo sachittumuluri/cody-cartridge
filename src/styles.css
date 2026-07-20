@@ -2846,8 +2846,7 @@ button:disabled {
   animation: microFlickerHit 210ms steps(2, end) 1;
 }
 
-.app-shell.is-microglitching.micro-map .signal-map::after,
-.app-shell.is-microglitching.micro-shelf .signal-map::after {
+.app-shell.is-microglitching.micro-map .signal-map::after {
   position: absolute;
   inset: 0;
   /* Above the scope canvas (z-index 1) and hot enough to read: the old
@@ -5375,9 +5374,11 @@ button:disabled {
 
 /* --- Item 14: interference becomes a visible layer stack --- */
 .interference-veil {
+  /* Scoped inside .signal-map — broadcast noise on the tube glass only,
+     never a wash over the console chrome. */
   position: absolute;
   inset: 0;
-  z-index: 30;
+  z-index: 3;
   display: none;
   pointer-events: none;
 }
@@ -5397,7 +5398,7 @@ button:disabled {
   /* screen, not soft-light: soft-light is a near no-op over this near-black
      deck, which made every interference level read as OFF. screen adds
      luminance to dark pixels while leaving bright text mostly untouched. */
-  opacity: 0.14;
+  opacity: 0.1;
   mix-blend-mode: screen;
 }
 
@@ -5408,26 +5409,26 @@ button:disabled {
 /* MED: chromatic separation + waveform instability (scope jitter is fed by
    the audio loop; the fringe applies to decorative surfaces only). */
 .app-shell.interference-med .interference-veil {
-  opacity: 0.22;
+  opacity: 0.16;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>"),
     repeating-linear-gradient(180deg, rgba(214, 222, 231, 0.16) 0 1px, transparent 1px 3px);
   background-size: 160px 160px, 100% 3px;
   animation: veilShift 2.6s steps(4, end) infinite;
 }
 
-.app-shell.interference-med .signal-map,
-.app-shell.interference-max .signal-map {
-  filter: drop-shadow(1px 0 0 rgba(255, 40, 70, 0.14)) drop-shadow(-1px 0 0 rgba(60, 200, 255, 0.14));
+/* Chromatic fringe is a transmission ARTIFACT, not a standing state: it
+   flashes for one glitch window when the scheduler rolls "fringe". */
+.app-shell.is-microglitching.micro-fringe .signal-map {
+  filter: drop-shadow(1.4px 0 0 rgba(255, 40, 70, 0.3)) drop-shadow(-1.4px 0 0 rgba(60, 200, 255, 0.3));
 }
 
-.app-shell.interference-med .metadata-cover,
-.app-shell.interference-max .metadata-cover {
-  filter: drop-shadow(0.6px 0 0 rgba(255, 40, 70, 0.22)) drop-shadow(-0.6px 0 0 rgba(60, 200, 255, 0.22));
+.app-shell.is-microglitching.micro-fringe .metadata-cover {
+  filter: drop-shadow(1px 0 0 rgba(255, 40, 70, 0.4)) drop-shadow(-1px 0 0 rgba(60, 200, 255, 0.4));
 }
 
 /* MAX: intercepted broadcast — heavier grain, roll bar, tear bands. */
 .app-shell.interference-max .interference-veil {
-  opacity: 0.32;
+  opacity: 0.24;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>"),
     repeating-linear-gradient(180deg, rgba(214, 222, 231, 0.2) 0 1px, transparent 1px 3px);
   background-size: 160px 160px, 100% 3px;
