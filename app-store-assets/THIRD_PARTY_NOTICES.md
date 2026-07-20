@@ -1,6 +1,6 @@
 # Cody Cartridge Third-Party Notices
 
-Last generated: 2026-07-12T21:40:34.363Z
+Last generated: 2026-07-13T07:21:35.069Z
 
 Cody Cartridge uses open-source packages for its local macOS player, build tooling, and release pipeline. This inventory is generated from `package-lock.json` and should be regenerated before App Store upload.
 

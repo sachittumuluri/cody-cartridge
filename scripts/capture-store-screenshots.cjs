@@ -46,6 +46,15 @@ const screenshots = [
     query: { "store-demo": "1", "store-shelf": "missing", "store-poster": "1" },
     width: 1440,
     height: 900
+  },
+  {
+    fileName: "04-lathe-bench-1440x900.png",
+    id: "lathe",
+    label: "The Lathe tone bench",
+    query: { "store-demo": "1", "store-shelf": "library", "store-poster": "1", "store-lathe": "1" },
+    readySelector: ".lathe-bench",
+    width: 1440,
+    height: 900
   }
 ];
 
@@ -55,16 +64,18 @@ function wait(ms) {
   });
 }
 
-async function waitForDemoRender(window) {
+async function waitForDemoRender(window, extraSelector) {
   const rendered = await window.webContents.executeJavaScript(
     `new Promise((resolve) => {
       const started = Date.now();
+      const extraSelector = ${JSON.stringify(extraSelector ?? null)};
       const check = () => {
         const ready =
           document.querySelector(".deck-hero") &&
           document.querySelector(".metadata-panel") &&
           document.querySelector(".deck-controls") &&
-          document.querySelector(".hero-title");
+          document.querySelector(".hero-title") &&
+          (!extraSelector || document.querySelector(extraSelector));
 
         if (ready || Date.now() - started > 6000) {
           resolve(Boolean(ready));
@@ -90,7 +101,7 @@ async function captureScreenshot(window, config) {
 
   const url = `${pathToFileURL(distIndexPath).toString()}?${new URLSearchParams(config.query).toString()}`;
   await window.loadURL(url);
-  await waitForDemoRender(window);
+  await waitForDemoRender(window, config.readySelector);
   await window.webContents.executeJavaScript('document.documentElement.classList.add("store-capture");');
 
   const image = await window.capturePage();

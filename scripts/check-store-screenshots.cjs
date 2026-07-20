@@ -24,7 +24,8 @@ const appStoreConnectSpec = {
 const screenshots = [
   "app-store-assets/screenshots/01-library-1440x900.png",
   "app-store-assets/screenshots/02-takeout-map-1440x900.png",
-  "app-store-assets/screenshots/03-missing-files-1440x900.png"
+  "app-store-assets/screenshots/03-missing-files-1440x900.png",
+  "app-store-assets/screenshots/04-lathe-bench-1440x900.png"
 ];
 const expectedManifestEntries = [
   {
@@ -41,6 +42,11 @@ const expectedManifestEntries = [
     filePath: "app-store-assets/screenshots/03-missing-files-1440x900.png",
     id: "missing",
     query: { "store-demo": "1", "store-shelf": "missing", "store-poster": "1" }
+  },
+  {
+    filePath: "app-store-assets/screenshots/04-lathe-bench-1440x900.png",
+    id: "lathe",
+    query: { "store-demo": "1", "store-shelf": "library", "store-poster": "1", "store-lathe": "1" }
   }
 ];
 const passes = [];

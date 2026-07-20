@@ -1,4 +1,4 @@
-import React, { ChangeEvent, CSSProperties, DragEvent, useEffect, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, CSSProperties, DragEvent, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   Pause,
   Play,
@@ -107,17 +107,97 @@ type TrackAnalysis = {
   levels: Uint8Array[];
 };
 
+// The Lathe: a per-cartridge cut stored in physical units (dB / ratio /
+// rate), never knob positions — the bench can be redesigned without
+// invalidating archived cuts.
+type ToneSettings = {
+  sub: number; // dB, -12..12 (lowshelf 60Hz)
+  bass: number; // dB, -12..12 (lowshelf 150Hz)
+  mid: number; // dB, -10..10 (peaking 1kHz Q 0.9)
+  treble: number; // dB, -12..12 (highshelf 5.5kHz)
+  width: number; // side gain, 0 mono .. 1 stock .. 1.6 wide
+  drive: number; // wet mix 0..1
+  speed: number; // playbackRate 0.8..1.25, 1 = stock
+};
+
+const flatTone: ToneSettings = { sub: 0, bass: 0, mid: 0, treble: 0, width: 1, drive: 0, speed: 1 };
+
+function isFlatCut(tone: ToneSettings | undefined): boolean {
+  if (!tone) {
+    return true;
+  }
+
+  return (
+    Math.abs(tone.sub) < 0.25 &&
+    Math.abs(tone.bass) < 0.25 &&
+    Math.abs(tone.mid) < 0.25 &&
+    Math.abs(tone.treble) < 0.25 &&
+    Math.abs(tone.width - 1) < 0.01 &&
+    tone.drive < 0.005 &&
+    Math.abs(tone.speed - 1) < 0.005
+  );
+}
+
+function sanitizeTone(raw: Partial<ToneSettings> | undefined): ToneSettings {
+  const bounded = (value: unknown, low: number, high: number, fallback: number) =>
+    typeof value === "number" && Number.isFinite(value) ? Math.min(high, Math.max(low, value)) : fallback;
+
+  return {
+    sub: bounded(raw?.sub, -12, 12, 0),
+    bass: bounded(raw?.bass, -12, 12, 0),
+    mid: bounded(raw?.mid, -10, 10, 0),
+    treble: bounded(raw?.treble, -12, 12, 0),
+    width: bounded(raw?.width, 0, 1.6, 1),
+    drive: bounded(raw?.drive, 0, 1, 0),
+    speed: bounded(raw?.speed, 0.8, 1.25, 1)
+  };
+}
+
+function formatCutSummary(tone: ToneSettings): string {
+  if (isFlatCut(tone)) {
+    return "STOCK";
+  }
+
+  const parts: string[] = [];
+  const db = (value: number, label: string) => {
+    if (Math.abs(value) >= 0.25) {
+      parts.push(`${value > 0 ? "+" : ""}${Math.round(value)}dB ${label}`);
+    }
+  };
+
+  db(tone.sub, "SUB");
+  db(tone.bass, "BASS");
+  db(tone.mid, "MID");
+  db(tone.treble, "TRB");
+
+  if (Math.abs(tone.width - 1) >= 0.01) {
+    parts.push(tone.width < 1 ? (tone.width < 0.05 ? "MONO" : "NARROW") : "WIDE");
+  }
+
+  if (tone.drive >= 0.005) {
+    parts.push(`DRV ${Math.round(tone.drive * 100)}%`);
+  }
+
+  if (Math.abs(tone.speed - 1) >= 0.005) {
+    parts.push(`${tone.speed.toFixed(2)}×`);
+  }
+
+  return parts.join(" · ");
+}
+
 type StoredState = {
   activeShelf?: ShelfView;
   currentId?: string;
   denseRows?: boolean;
   heroDock?: boolean;
   interference?: InterferenceMode;
+  latheOpen?: boolean;
   meter?: MeterMode;
   reducedMotion?: boolean;
   repeat?: RepeatMode;
   shelfSize?: ShelfSize;
   takeoutSongs?: TakeoutSong[];
+  toneByTrack?: Record<string, ToneSettings>;
   tracks?: Track[];
   volume?: number;
 };
@@ -177,11 +257,86 @@ function sanitizeStoredState(state: StoredState): StoredState {
     : undefined;
   const trackIds = new Set((tracks ?? []).map((track) => track.id));
 
+  // Archived cuts only survive for tracks that still exist, clamped to
+  // legal ranges; flat cuts are dropped so the map never accumulates noise.
+  const toneByTrack =
+    state.toneByTrack && typeof state.toneByTrack === "object"
+      ? Object.fromEntries(
+          Object.entries(state.toneByTrack)
+            .filter(([trackId]) => trackIds.has(trackId))
+            .map(([trackId, tone]) => [trackId, sanitizeTone(tone)])
+            .filter(([, tone]) => !isFlatCut(tone as ToneSettings))
+        )
+      : undefined;
+
   return {
     ...state,
     currentId: state.currentId && trackIds.has(state.currentId) ? state.currentId : "",
+    toneByTrack,
     tracks
   };
+}
+
+// The Lathe curve instrument: magnitude response of the four bench biquads,
+// computed off-graph so it works before first play and in the paused
+// store-demo. 128-point log sweep over the same 36Hz→15.6kHz basis as the
+// live spectrum bands.
+const toneCurvePoints = 128;
+let toneProbeContext: OfflineAudioContext | null = null;
+let toneProbeFilters: BiquadFilterNode[] | null = null;
+let toneProbeFrequencies: Float32Array | null = null;
+
+function computeToneCurve(tone: ToneSettings): Float32Array | null {
+  try {
+    if (!toneProbeContext) {
+      toneProbeContext = new OfflineAudioContext(1, toneCurvePoints, 44100);
+      toneProbeFrequencies = new Float32Array(toneCurvePoints);
+
+      for (let index = 0; index < toneCurvePoints; index += 1) {
+        toneProbeFrequencies[index] = 36 * Math.pow(15600 / 36, index / (toneCurvePoints - 1));
+      }
+
+      const spec: Array<{ type: BiquadFilterType; frequency: number; q?: number }> = [
+        { type: "lowshelf", frequency: 60 },
+        { type: "lowshelf", frequency: 150 },
+        { type: "peaking", frequency: 1000, q: 0.9 },
+        { type: "highshelf", frequency: 5500 }
+      ];
+      toneProbeFilters = spec.map((entry) => {
+        const filter = toneProbeContext!.createBiquadFilter();
+        filter.type = entry.type;
+        filter.frequency.value = entry.frequency;
+
+        if (entry.q) {
+          filter.Q.value = entry.q;
+        }
+
+        return filter;
+      });
+    }
+
+    if (!toneProbeFilters || !toneProbeFrequencies) {
+      return null;
+    }
+
+    const gains = [tone.sub, tone.bass, tone.mid, tone.treble];
+    const magnitude = new Float32Array(toneCurvePoints);
+    const phase = new Float32Array(toneCurvePoints);
+    const totalDb = new Float32Array(toneCurvePoints);
+
+    toneProbeFilters.forEach((filter, filterIndex) => {
+      filter.gain.value = gains[filterIndex];
+      filter.getFrequencyResponse(toneProbeFrequencies!, magnitude, phase);
+
+      for (let index = 0; index < toneCurvePoints; index += 1) {
+        totalDb[index] += 20 * Math.log10(Math.max(1e-6, magnitude[index]));
+      }
+    });
+
+    return totalDb;
+  } catch {
+    return null;
+  }
 }
 
 function isStoreDemoMode() {
@@ -312,8 +467,14 @@ function createStoreDemoState(): StoredState {
     activeShelf: getStoreDemoShelf(),
     currentId: demoTracks[0].id,
     interference: "low",
+    // A seeded Lathe cut so the CUT stamp, inspector line, and (with
+    // store-lathe=1) the open bench read alive in screenshots.
+    latheOpen: new URLSearchParams(window.location.search).get("store-lathe") === "1",
     reducedMotion: getStoreDemoReducedMotion(),
     takeoutSongs,
+    toneByTrack: {
+      [demoTracks[0].id]: { sub: 4, bass: 0, mid: -2, treble: 3, width: 1.3, drive: 0.35, speed: 1.05 }
+    },
     tracks: demoTracks,
     volume: 0.72
   };
@@ -1067,7 +1228,7 @@ function stripQueryQuotes(value: string) {
   return value.replace(/^["']|["']$/g, "").trim().toLowerCase();
 }
 
-function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
+function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string, context?: { cutIds: Set<string> }) {
   const tokens = rawQuery.match(/"[^"]+"|'[^']+'|\S+/g)?.map(stripQueryQuotes).filter(Boolean) ?? [];
 
   if (tokens.length === 0) {
@@ -1161,6 +1322,11 @@ function cardMatchesCatalogQuery(card: ShelfCard, rawQuery: string) {
       if (value === "takeout") {
         return isTakeoutMatched(track);
       }
+    }
+
+    if (key === "cut") {
+      const wantsCut = value === "yes" || value === "true" || value === "1";
+      return track ? (context?.cutIds.has(track.id) ?? false) === wantsCut : !wantsCut;
     }
 
     if (key === "match") {
@@ -1262,14 +1428,43 @@ function useTeletype(text: string, enabled: boolean) {
 // Rotary AMP knob: replaces the range slider but keeps role=slider + aria for
 // accessibility. Vertical drag / wheel / arrow keys adjust volume; the arc and
 // dB label read out the amp gain.
-function VolumeKnob({ value, onChange }: { value: number; onChange: (next: number) => void }) {
+type KnobProps = {
+  ariaLabel: string;
+  label?: string;
+  value: number; // normalized 0..1
+  onChange: (next: number) => void;
+  format: (value: number) => string;
+  defaultValue: number; // normalized; double-click reset + detent mark
+  bipolar?: boolean; // arc grows from the detent (center) instead of the floor
+  size?: "amp" | "bench";
+  disabled?: boolean;
+  title?: string;
+};
+
+function Knob({
+  ariaLabel,
+  label,
+  value,
+  onChange,
+  format,
+  defaultValue,
+  bipolar = false,
+  size = "amp",
+  disabled = false,
+  title
+}: KnobProps) {
   const dragRef = useRef<{ startY: number; startValue: number } | null>(null);
+  const capShadeId = useId();
 
   const clamp = (next: number) => Math.min(1, Math.max(0, next));
   const angle = -135 + value * 270;
-  const label = formatGain(value, 0);
+  const printed = format(value);
 
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (disabled) {
+      return;
+    }
+
     event.currentTarget.setPointerCapture(event.pointerId);
     dragRef.current = { startY: event.clientY, startValue: value };
   }
@@ -1292,10 +1487,18 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
   }
 
   function onWheel(event: React.WheelEvent<HTMLDivElement>) {
+    if (disabled) {
+      return;
+    }
+
     onChange(clamp(value - Math.sign(event.deltaY) * 0.04));
   }
 
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (disabled) {
+      return;
+    }
+
     if (event.key === "ArrowUp" || event.key === "ArrowRight") {
       event.preventDefault();
       // The knob owns its arrows — without this the global handler also
@@ -1309,29 +1512,50 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
     }
   }
 
+  // Arc geometry: pathLength 100 over 360°; CSS rotates the circle 135° so
+  // the path starts at the knob's -135° stop. Unipolar fills from the stop;
+  // bipolar fills from the detent (12 o'clock = 37.5 path units in).
+  const sweep = (value - 0.5) * 75;
+  const arcStyle = bipolar
+    ? {
+        strokeDasharray: `${Math.abs(sweep)} ${100 - Math.abs(sweep)}`,
+        strokeDashoffset: sweep >= 0 ? -37.5 : Math.abs(sweep) - 37.5
+      }
+    : { strokeDashoffset: 100 - value * 75 };
+
   return (
     <div
-      className="amp-knob"
+      className={`amp-knob ${size === "bench" ? "bench-knob" : ""} ${disabled ? "is-disabled" : ""}`}
       role="slider"
-      tabIndex={0}
-      aria-label="Volume"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={ariaLabel}
+      aria-disabled={disabled || undefined}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(value * 100)}
-      aria-valuetext={`${Math.round(value * 100)} percent, ${label}`}
-      title="Double-click to reset to stock gain"
+      aria-valuetext={printed}
+      title={title ?? "Double-click to reset"}
       style={{ "--knob-angle": `${angle}deg`, "--knob-fill": value.toFixed(3) } as CSSProperties}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
-      onDoubleClick={() => onChange(defaultVolume)}
+      onDoubleClick={() => {
+        if (!disabled) {
+          onChange(defaultValue);
+        }
+      }}
       onWheel={onWheel}
       onKeyDown={onKeyDown}
     >
+      {label ? (
+        <span className="bench-knob-label" aria-hidden="true">
+          {label}
+        </span>
+      ) : null}
       <svg viewBox="0 0 48 48" className="amp-knob-face" aria-hidden="true">
         <defs>
-          <radialGradient id="ampCapShade" cx="38%" cy="30%" r="85%">
+          <radialGradient id={capShadeId} cx="38%" cy="30%" r="85%">
             <stop offset="0%" stopColor="#33333b" />
             <stop offset="55%" stopColor="#1c1c22" />
             <stop offset="100%" stopColor="#0b0b0f" />
@@ -1351,35 +1575,41 @@ function VolumeKnob({ value, onChange }: { value: number; onChange: (next: numbe
           ))}
         </g>
         <circle className="amp-knob-arc-track" cx="24" cy="24" r="20" pathLength={100} />
-        <circle
-          className="amp-knob-arc-fill"
-          cx="24"
-          cy="24"
-          r="20"
-          pathLength={100}
-          style={{ strokeDashoffset: 100 - value * 75 }}
-        />
-        {/* Stock-gain detent mark. */}
+        <circle className="amp-knob-arc-fill" cx="24" cy="24" r="20" pathLength={100} style={arcStyle} />
+        {/* Reset-position detent mark. */}
         <line
           className="amp-knob-detent"
           x1="24"
           y1="1.2"
           x2="24"
           y2="5"
-          transform={`rotate(${-135 + defaultVolume * 270} 24 24)`}
+          transform={`rotate(${-135 + defaultValue * 270} 24 24)`}
         />
         {/* Knurled rim spins with the setting; the lit cap stays put. */}
         <g className="amp-knob-rotor">
           <circle className="amp-knob-knurl" cx="24" cy="24" r="15.6" pathLength={100} />
         </g>
-        <circle className="amp-knob-cap" cx="24" cy="24" r="13.2" fill="url(#ampCapShade)" />
+        <circle className="amp-knob-cap" cx="24" cy="24" r="13.2" fill={`url(#${capShadeId})`} />
         <circle className="amp-knob-cap-ring" cx="24" cy="24" r="9.6" />
         <g className="amp-knob-rotor">
           <line className="amp-knob-pointer" x1="24" y1="21.4" x2="24" y2="11.4" />
         </g>
       </svg>
-      <span className="amp-knob-db">{label}</span>
+      <span className="amp-knob-db">{printed}</span>
     </div>
+  );
+}
+
+function VolumeKnob({ value, onChange }: { value: number; onChange: (next: number) => void }) {
+  return (
+    <Knob
+      ariaLabel="Volume"
+      value={value}
+      onChange={onChange}
+      format={(next) => formatGain(next, 0)}
+      defaultValue={defaultVolume}
+      title="Double-click to reset to stock gain"
+    />
   );
 }
 
@@ -1430,6 +1660,20 @@ function App() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const ampGainRef = useRef<GainNode | null>(null);
   const toneShelfRef = useRef<BiquadFilterNode | null>(null);
+  // The Lathe: bench nodes + the latest bypass-resolved settings, applied
+  // immediately when the graph is (re)built.
+  const toneNodesRef = useRef<{
+    subShelf: BiquadFilterNode;
+    bassShelf: BiquadFilterNode;
+    midPeak: BiquadFilterNode;
+    trebleShelf: BiquadFilterNode;
+    msSideLevel: GainNode;
+    dryGain: GainNode;
+    wetGain: GainNode;
+  } | null>(null);
+  const toneApplyRef = useRef<ToneSettings>(flatTone);
+  const benchBypassRef = useRef(false);
+  const benchTickRef = useRef<{ curveDb: Float32Array | null }>({ curveDb: null });
   const splitterRef = useRef<ChannelSplitterNode | null>(null);
   const analyserLRef = useRef<AnalyserNode | null>(null);
   const analyserRRef = useRef<AnalyserNode | null>(null);
@@ -1531,6 +1775,11 @@ function App() {
   const waveHistoryRef = useRef<{ frames: Uint8Array[]; cursor: number }>({ frames: [], cursor: 0 });
   const heroTexturesRef = useRef<Map<string, string>>(new Map());
   const [heroDocked, setHeroDocked] = useState(() => initialState.heroDock === true);
+  const [toneByTrack, setToneByTrack] = useState<Record<string, ToneSettings>>(
+    () => initialState.toneByTrack ?? {}
+  );
+  const [benchOpen, setBenchOpen] = useState(() => initialState.latheOpen === true);
+  const [benchBypass, setBenchBypass] = useState(false);
   const [denseRows, setDenseRows] = useState(() => initialState.denseRows === true);
   const [meterMode, setMeterMode] = useState<MeterMode>(() =>
     meterModeOrder.includes(initialState.meter as MeterMode) ? (initialState.meter as MeterMode) : "track"
@@ -1583,6 +1832,31 @@ function App() {
   const [showKeyLegend, setShowKeyLegend] = useState(false);
 
   const currentTrack = tracks.find((track) => track.id === currentId);
+  // The Lathe: this cartridge's archived cut (stored entries are always
+  // non-flat, so the map's key set IS the cut list).
+  const currentTone = toneByTrack[currentId] ?? flatTone;
+  const cutIds = useMemo(() => new Set(Object.keys(toneByTrack)), [toneByTrack]);
+
+  function updateTone(partial: Partial<ToneSettings>) {
+    if (!currentId) {
+      return;
+    }
+
+    setToneByTrack((existing) => {
+      const next = sanitizeTone({ ...(existing[currentId] ?? flatTone), ...partial });
+
+      if (isFlatCut(next)) {
+        if (!(currentId in existing)) {
+          return existing;
+        }
+
+        const { [currentId]: _dropped, ...rest } = existing;
+        return rest;
+      }
+
+      return { ...existing, [currentId]: next };
+    });
+  }
   const currentPlayCount = currentTrack?.playCount ?? 0;
   const currentWearTier = currentPlayCount >= 25 ? 3 : currentPlayCount >= 10 ? 2 : currentPlayCount >= 3 ? 1 : 0;
   // Reading the spine cache during render is safe: spineRevision bumps a
@@ -1681,8 +1955,8 @@ function App() {
   }, [activeShelf, shelfTracks, takeoutMatchMap, takeoutSongs]);
 
   const filteredCards = useMemo(() => {
-    return shelfCards.filter((card) => cardMatchesCatalogQuery(card, query));
-  }, [query, shelfCards]);
+    return shelfCards.filter((card) => cardMatchesCatalogQuery(card, query, { cutIds }));
+  }, [cutIds, query, shelfCards]);
 
   const playbackQueue = query
     ? filteredCards.flatMap((card) => (card.kind === "track" ? [card.track] : []))
@@ -1917,6 +2191,78 @@ function App() {
     }
   }, [volume]);
 
+  useEffect(() => {
+    // The Lathe: one owner applies the bypass-resolved cut. The url dep
+    // re-asserts SPEED after the cartridge-swap load() resets playbackRate.
+    benchBypassRef.current = benchBypass;
+    const effective = benchBypass ? flatTone : toneByTrack[currentId] ?? flatTone;
+    applyToneSettings(effective);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentId, toneByTrack, benchBypass, currentTrack?.url]);
+
+  useEffect(() => {
+    // Verification hook: lets the shell smoke drive real cuts and read the
+    // effective tone state without coordinate-based UI automation.
+    (window as Window & { __codyBench?: object }).__codyBench = {
+      set: (partial: Partial<ToneSettings>) => updateTone(partial),
+      bypass: (on: boolean) => setBenchBypass(on),
+      flat: () => updateTone({ ...flatTone }),
+      state: () => ({ ...toneApplyRef.current, bypassed: benchBypassRef.current })
+    };
+  });
+
+  useEffect(() => {
+    // Cache the cut's response curve for the bench painter and repaint so
+    // paused knob drags read instantly (the tick loop only runs while
+    // playing).
+    if (!benchOpen) {
+      return;
+    }
+
+    benchTickRef.current.curveDb = computeToneCurve(toneByTrack[currentId] ?? flatTone);
+    paintGrooveLatticeRef.current();
+  }, [toneByTrack, currentId, benchBypass, benchOpen]);
+
+  function applyToneSettings(effective: ToneSettings, immediate = false) {
+    toneApplyRef.current = effective;
+    const context = audioContextRef.current;
+    const nodes = toneNodesRef.current;
+
+    if (context && nodes) {
+      const at = context.currentTime;
+      const ramp = (param: AudioParam, target: number) => {
+        if (immediate) {
+          param.value = target;
+        } else {
+          // 20ms ramps keep every knob move clickless (no zipper noise).
+          param.setTargetAtTime(target, at, 0.02);
+        }
+      };
+
+      ramp(nodes.subShelf.gain, effective.sub);
+      ramp(nodes.bassShelf.gain, effective.bass);
+      ramp(nodes.midPeak.gain, effective.mid);
+      ramp(nodes.trebleShelf.gain, effective.treble);
+      ramp(nodes.msSideLevel.gain, effective.width);
+      ramp(nodes.wetGain.gain, effective.drive);
+      ramp(nodes.dryGain.gain, 1 - effective.drive);
+    }
+
+    const audio = audioRef.current;
+
+    if (audio) {
+      // defaultPlaybackRate survives the load() reset on cartridge swap.
+      audio.defaultPlaybackRate = effective.speed;
+      audio.playbackRate = effective.speed;
+      (audio as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = false;
+    }
+
+    (window as Window & { __codyToneState?: object }).__codyToneState = {
+      ...effective,
+      bypassed: benchBypassRef.current
+    };
+  }
+
   function flashSystemMessage(message: string, durationMs = 900) {
     setTransientSystemMessage(message);
 
@@ -2028,6 +2374,10 @@ function App() {
     setTracing(null);
     setSpineRevision((revision) => revision + 1);
     setRepeatMode("off");
+    setToneByTrack({});
+    setBenchBypass(false);
+    setBenchOpen(false);
+    applyToneSettings(flatTone, true);
     setHeroDocked(false);
     setDenseRows(false);
     setMeterMode("track");
@@ -2729,17 +3079,22 @@ function App() {
         denseRows,
         heroDock: heroDocked,
         interference,
+        latheOpen: benchOpen,
         meter: meterMode,
         reducedMotion: initialState.reducedMotion === true,
         repeat: repeatMode,
         shelfSize,
         takeoutSongs,
+        toneByTrack: Object.fromEntries(
+          Object.entries(toneByTrack).filter(([trackId]) => durableTracks.some((track) => track.id === trackId))
+        ),
         tracks: durableTracks,
         volume
       } satisfies StoredState)
     );
   }, [
     activeShelf,
+    benchOpen,
     currentId,
     denseRows,
     heroDocked,
@@ -2750,6 +3105,7 @@ function App() {
     shelfSize,
     storeDemoMode,
     takeoutSongs,
+    toneByTrack,
     tracks,
     volume
   ]);
@@ -3569,7 +3925,139 @@ function App() {
     }
   }
 
-  paintGrooveLatticeRef.current = paintGrooveLattice;
+  // The Lathe instrument: the bench's real combined frequency response,
+  // key-tinted, plotted over the pressing's archived tonal profile (ghost).
+  // Same canvas slot as the lattice; the publish below swaps painters.
+  function paintLatheBench() {
+    const canvas = latticeCanvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    if (!canvas || !context) {
+      return;
+    }
+
+    const pixelRatio = Math.min(2, window.devicePixelRatio || 1);
+    const width = Math.round(canvas.clientWidth * pixelRatio);
+    const height = Math.round(canvas.clientHeight * pixelRatio);
+
+    if (!width || !height) {
+      return;
+    }
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    context.clearRect(0, 0, width, height);
+
+    const scene = currentSpineTickRef.current;
+    const hue = scene.hue;
+    const tone = toneApplyRef.current;
+    const bypassed = benchBypassRef.current;
+    const monoFont = `900 ${Math.round(8 * pixelRatio)}px "Courier New", monospace`;
+    const middle = height / 2;
+    const windowDb = 14;
+    const yFor = (db: number) => middle - (db / windowDb) * (height * 0.42);
+
+    // 0dB rail.
+    context.fillStyle = "rgba(156, 199, 216, 0.14)";
+    context.fillRect(0, middle, width, 1);
+
+    // Ghost: the pressing's natural tone (24-band spine profile, ±24dB).
+    if (scene.profile) {
+      context.strokeStyle = `hsla(${hue}, 40%, 60%, 0.16)`;
+      context.lineWidth = Math.max(1, pixelRatio);
+      context.beginPath();
+
+      for (let band = 0; band < scene.profile.length; band += 1) {
+        const x = (band / (scene.profile.length - 1)) * width;
+        const y = yFor(Math.max(-windowDb, Math.min(windowDb, scene.profile[band] * 24)));
+
+        if (band === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
+      }
+
+      context.stroke();
+    }
+
+    // The cut: combined biquad response. Bypassed → the live line is flat
+    // at 0dB and the cut dims to ghost strength (brightness only).
+    const curve = benchTickRef.current.curveDb;
+
+    if (curve) {
+      context.strokeStyle = bypassed ? `hsla(${hue}, 45%, 66%, 0.18)` : `hsla(${hue}, 52%, 68%, 0.85)`;
+      context.lineWidth = Math.max(1.5, 1.6 * pixelRatio);
+      context.beginPath();
+
+      for (let index = 0; index < curve.length; index += 1) {
+        const x = (index / (curve.length - 1)) * width;
+        const y = yFor(Math.max(-windowDb, Math.min(windowDb, curve[index])));
+
+        if (index === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
+      }
+
+      context.stroke();
+    }
+
+    if (bypassed) {
+      context.strokeStyle = `hsla(${hue}, 45%, 66%, 0.7)`;
+      context.lineWidth = Math.max(1.5, 1.6 * pixelRatio);
+      context.beginPath();
+      context.moveTo(0, middle);
+      context.lineTo(width, middle);
+      context.stroke();
+    }
+
+    // DRIVE reads as a dashed ceiling whose presence follows the wet mix.
+    if (tone.drive >= 0.005 && !bypassed) {
+      context.strokeStyle = `hsla(28, 70%, 60%, ${0.15 + tone.drive * 0.5})`;
+      context.lineWidth = Math.max(1, pixelRatio);
+      context.setLineDash([4 * pixelRatio, 4 * pixelRatio]);
+      context.beginPath();
+      context.moveTo(0, yFor(windowDb - 2));
+      context.lineTo(width, yFor(windowDb - 2));
+      context.stroke();
+      context.setLineDash([]);
+    }
+
+    // Corner readout: non-stock scalar settings only.
+    const cornerParts: string[] = [];
+
+    if (Math.abs(tone.width - 1) >= 0.01) {
+      cornerParts.push(`WIDTH ${tone.width.toFixed(2)}`);
+    }
+
+    if (tone.drive >= 0.005) {
+      cornerParts.push(`DRV ${Math.round(tone.drive * 100)}%`);
+    }
+
+    if (Math.abs(tone.speed - 1) >= 0.005) {
+      cornerParts.push(`${tone.speed.toFixed(2)}×`);
+    }
+
+    context.font = monoFont;
+    context.textAlign = "right";
+
+    if (bypassed) {
+      context.fillStyle = "rgba(255, 189, 79, 0.6)";
+      context.fillText("BYPASS", width - 6 * pixelRatio, 11 * pixelRatio);
+    } else if (cornerParts.length > 0) {
+      context.fillStyle = "rgba(156, 199, 216, 0.4)";
+      context.fillText(cornerParts.join(" · "), width - 6 * pixelRatio, 11 * pixelRatio);
+    }
+
+    context.textAlign = "left";
+  }
+
+  paintGrooveLatticeRef.current = benchOpen ? paintLatheBench : paintGrooveLattice;
 
   function writeBassVars(bass: number, beat: number) {
     const shell = shellRef.current;
@@ -4261,6 +4749,10 @@ function App() {
         }
 
         const averageBass = bassWeight > 0 ? bassEnergy / bassWeight / 255 : 0;
+        // Shell-smoke probe: un-normalized bass energy. __codyLiveLevel is
+        // envelope-adapted (a static EQ cut renormalizes away in ~1s), so
+        // tone assertions must read this raw value instead.
+        (window as Window & { __codyRawBass?: number }).__codyRawBass = averageBass;
         const fluxBass = heldFluxBass;
         const peakBass = bassPeak / 255;
         const rawBass = Math.min(
@@ -4613,11 +5105,104 @@ function App() {
     if (!sourceRef.current && analyserRef.current && ampGain && toneShelf) {
       sourceRef.current = context.createMediaElementSource(audio);
 
-      // source → toneShelf → ampGain → analyser → destination
+      // The Lathe: always-in-circuit bench between the warmth shelf and the
+      // AMP gain. BYPASS ramps every stage to neutral instead of
+      // reconnecting (the graph is built once; reconnects pop). All meters
+      // tap post-ampGain, so the cut reads on every instrument for free.
+      const subShelf = context.createBiquadFilter();
+      subShelf.type = "lowshelf";
+      subShelf.frequency.value = 60;
+      const bassShelf = context.createBiquadFilter();
+      bassShelf.type = "lowshelf";
+      bassShelf.frequency.value = 150;
+      const midPeak = context.createBiquadFilter();
+      midPeak.type = "peaking";
+      midPeak.frequency.value = 1000;
+      midPeak.Q.value = 0.9;
+      const trebleShelf = context.createBiquadFilter();
+      trebleShelf.type = "highshelf";
+      trebleShelf.frequency.value = 5500;
+
+      // WIDTH via mid/side: force stereo before the splitter so mono
+      // sources upmix (otherwise side = L/2 and the right channel dies).
+      const widthIn = context.createGain();
+      widthIn.channelCount = 2;
+      widthIn.channelCountMode = "explicit";
+      const msSplit = context.createChannelSplitter(2);
+      const msMid = context.createGain();
+      msMid.gain.value = 0.5;
+      const msInvR = context.createGain();
+      msInvR.gain.value = -1;
+      const msSide = context.createGain();
+      msSide.gain.value = 0.5;
+      const msSideLevel = context.createGain();
+      msSideLevel.gain.value = 1;
+      const msInvSide = context.createGain();
+      msInvSide.gain.value = -1;
+      const msMerge = context.createChannelMerger(2);
+
+      // DRIVE: tanh soft-clip on a wet path; postTrim restores unity
+      // small-signal gain so drive changes texture, not loudness.
+      const driveIn = context.createGain();
+      const dryGain = context.createGain();
+      dryGain.gain.value = 1;
+      const shaper = context.createWaveShaper();
+      const curve = new Float32Array(1024);
+
+      for (let index = 0; index < curve.length; index += 1) {
+        const x = (index / (curve.length - 1)) * 2 - 1;
+        curve[index] = Math.tanh(2.2 * x) / Math.tanh(2.2);
+      }
+
+      shaper.curve = curve;
+      shaper.oversample = "2x";
+      const postTrim = context.createGain();
+      postTrim.gain.value = Math.tanh(2.2) / 2.2;
+      const wetGain = context.createGain();
+      wetGain.gain.value = 0;
+      const benchOut = context.createGain();
+
+      // EQ ladder.
+      toneShelf.connect(subShelf);
+      subShelf.connect(bassShelf);
+      bassShelf.connect(midPeak);
+      midPeak.connect(trebleShelf);
+      trebleShelf.connect(widthIn);
+
+      // M/S matrix: mid = (L+R)/2 to both channels; side = (L-R)/2 scaled
+      // by WIDTH, added to L and subtracted from R.
+      widthIn.connect(msSplit);
+      msSplit.connect(msMid, 0);
+      msSplit.connect(msMid, 1);
+      msMid.connect(msMerge, 0, 0);
+      msMid.connect(msMerge, 0, 1);
+      msSplit.connect(msSide, 0);
+      msSplit.connect(msInvR, 1);
+      msInvR.connect(msSide);
+      msSide.connect(msSideLevel);
+      msSideLevel.connect(msMerge, 0, 0);
+      msSideLevel.connect(msInvSide);
+      msInvSide.connect(msMerge, 0, 1);
+
+      // Drive wet/dry into the bench output.
+      msMerge.connect(driveIn);
+      driveIn.connect(dryGain);
+      dryGain.connect(benchOut);
+      driveIn.connect(shaper);
+      shaper.connect(postTrim);
+      postTrim.connect(wetGain);
+      wetGain.connect(benchOut);
+
+      toneNodesRef.current = { subShelf, bassShelf, midPeak, trebleShelf, msSideLevel, dryGain, wetGain };
+
+      // source → toneShelf → [bench] → ampGain → analyser → destination
       sourceRef.current.connect(toneShelf);
-      toneShelf.connect(ampGain);
+      benchOut.connect(ampGain);
       ampGain.connect(analyserRef.current);
       analyserRef.current.connect(context.destination);
+
+      // First play picks up an archived cut with no audible ramp.
+      applyToneSettings(toneApplyRef.current, true);
 
       if (bassFilterRef.current && bassAnalyserRef.current) {
         ampGain.connect(bassFilterRef.current);
@@ -5617,6 +6202,10 @@ function App() {
                       : "no file"}
               </span>
               <span>
+                <span className="artifact-label">CUT</span>{" "}
+                {currentTrack ? (benchBypass ? "BYPASSED" : formatCutSummary(currentTone)) : "no file"}
+              </span>
+              <span>
                 <span className="artifact-label">ERRORS</span> {currentTagErrors}
               </span>
             </div>
@@ -5683,8 +6272,8 @@ function App() {
                     type="search"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="FIND / filter... artist:che missing:cover match:<80"
-                    title="Try artist:che, missing:cover, match:<80, type:flac, fav:yes, or tag:gap"
+                    placeholder="FIND / filter... artist:che missing:cover cut:yes"
+                    title="Try artist:che, missing:cover, match:<80, type:flac, fav:yes, tag:gap, or cut:yes"
                     aria-label="Filter catalog"
                   />
                   {query ? (
@@ -5918,7 +6507,14 @@ function App() {
                       <span className="metadata-album">{album}</span>
                       <span className="metadata-time">{track ? formatTime(track.duration) : "--:--"}</span>
                       <span className="metadata-quality" title={fullDetail}>
-                        <span>{qualityLine}</span>
+                        <span>
+                          {qualityLine}
+                          {track && cutIds.has(track.id) ? (
+                            <span className="cut-stamp" title="This cartridge carries an archived Lathe cut">
+                              CUT
+                            </span>
+                          ) : null}
+                        </span>
                         <small>
                           {track
                             ? `${formatFileSize(track.size)} · ${sourceDetail}`
@@ -6135,12 +6731,143 @@ function App() {
 
             <div className="meter-bank">
               <div
-                className="visualizer groove-lattice-wrap"
-                role="img"
-                aria-label="Groove lattice: live onsets measured against the song's beat grid"
-                title="GROOVE LATTICE — live hits vs the archived beat grid; LOCK% reads tightness"
+                className={`visualizer groove-lattice-wrap ${benchOpen ? "is-bench" : ""}`}
+                {...(benchOpen
+                  ? {}
+                  : {
+                      role: "img" as const,
+                      "aria-label": "Groove lattice: live onsets measured against the song's beat grid",
+                      title: "GROOVE LATTICE — live hits vs the archived beat grid; LOCK% reads tightness"
+                    })}
               >
                 <canvas ref={latticeCanvasRef} className="groove-lattice" aria-hidden="true" />
+                <button
+                  type="button"
+                  className={`bench-toggle ${benchOpen ? "engaged" : ""}`}
+                  aria-pressed={benchOpen}
+                  title={benchOpen ? "Close the tone bench" : "Open The Lathe — per-cartridge tone bench"}
+                  onClick={() => {
+                    setBenchOpen((open) => !open);
+                    flashSystemMessage(benchOpen ? "LATHE CLOSED" : "LATHE OPEN", 760);
+                  }}
+                >
+                  {benchOpen ? "▾ LATTICE" : "▴ TUNE"}
+                </button>
+                {benchOpen ? (
+                  <div className="lathe-bench" role="group" aria-label="The Lathe — tone bench">
+                    <Knob
+                      size="bench"
+                      bipolar
+                      label="SUB"
+                      ariaLabel="Sub shelf gain"
+                      value={currentTone.sub / 24 + 0.5}
+                      defaultValue={0.5}
+                      format={(next) => `${(next - 0.5) * 24 >= 0 ? "+" : ""}${Math.round((next - 0.5) * 24)}dB`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ sub: (next - 0.5) * 24 })}
+                    />
+                    <Knob
+                      size="bench"
+                      bipolar
+                      label="BASS"
+                      ariaLabel="Bass shelf gain"
+                      value={currentTone.bass / 24 + 0.5}
+                      defaultValue={0.5}
+                      format={(next) => `${(next - 0.5) * 24 >= 0 ? "+" : ""}${Math.round((next - 0.5) * 24)}dB`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ bass: (next - 0.5) * 24 })}
+                    />
+                    <Knob
+                      size="bench"
+                      bipolar
+                      label="MID"
+                      ariaLabel="Mid peak gain"
+                      value={currentTone.mid / 20 + 0.5}
+                      defaultValue={0.5}
+                      format={(next) => `${(next - 0.5) * 20 >= 0 ? "+" : ""}${Math.round((next - 0.5) * 20)}dB`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ mid: (next - 0.5) * 20 })}
+                    />
+                    <Knob
+                      size="bench"
+                      bipolar
+                      label="TREBLE"
+                      ariaLabel="Treble shelf gain"
+                      value={currentTone.treble / 24 + 0.5}
+                      defaultValue={0.5}
+                      format={(next) => `${(next - 0.5) * 24 >= 0 ? "+" : ""}${Math.round((next - 0.5) * 24)}dB`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ treble: (next - 0.5) * 24 })}
+                    />
+                    <Knob
+                      size="bench"
+                      bipolar
+                      label="WIDTH"
+                      ariaLabel="Stereo width"
+                      value={currentTone.width / 1.6}
+                      defaultValue={1 / 1.6}
+                      format={(next) => `${Math.round(next * 160)}%`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ width: next * 1.6 })}
+                    />
+                    <Knob
+                      size="bench"
+                      label="DRIVE"
+                      ariaLabel="Drive amount"
+                      value={currentTone.drive}
+                      defaultValue={0}
+                      format={(next) => `${Math.round(next * 100)}%`}
+                      disabled={!currentTrack}
+                      onChange={(next) => updateTone({ drive: next })}
+                    />
+                    <Knob
+                      size="bench"
+                      bipolar
+                      label="SPEED"
+                      ariaLabel="Playback speed"
+                      value={(currentTone.speed - 0.8) / 0.45}
+                      defaultValue={(1 - 0.8) / 0.45}
+                      format={(next) => `${(0.8 + next * 0.45).toFixed(2)}×`}
+                      disabled={!currentTrack}
+                      onChange={(next) => {
+                        let rate = 0.8 + next * 0.45;
+
+                        // Detent: snap onto stock speed.
+                        if (Math.abs(rate - 1) < 0.01) {
+                          rate = 1;
+                        }
+
+                        updateTone({ speed: rate });
+                      }}
+                    />
+                    <div className="lathe-switches">
+                      <button
+                        type="button"
+                        className={`lathe-switch ${benchBypass ? "engaged" : ""}`}
+                        aria-pressed={benchBypass}
+                        title="Bypass the cut (A/B against stock)"
+                        onClick={() => {
+                          setBenchBypass((bypass) => !bypass);
+                          flashSystemMessage(benchBypass ? "LATHE ENGAGED" : "LATHE BYPASSED", 760);
+                        }}
+                      >
+                        BYP
+                      </button>
+                      <button
+                        type="button"
+                        className="lathe-switch"
+                        disabled={isFlatCut(toneByTrack[currentId])}
+                        title="Reset this cartridge's cut to stock"
+                        onClick={() => {
+                          updateTone({ ...flatTone });
+                          flashSystemMessage("CUT FLATTENED", 900);
+                        }}
+                      >
+                        FLAT
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
               </div>
               <VuMeter
                 containerRef={vuMeterRef}

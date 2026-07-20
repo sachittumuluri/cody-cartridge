@@ -6324,3 +6324,143 @@ button:disabled {
 .deck-inspector {
   padding-right: 84px;
 }
+
+/* --- The Lathe: per-cartridge tone bench --- */
+/* The lattice strip grows to seat the knobs; the VU column (~104px) still
+   sets the meter-bank row height, so the 1440x900 deck does not reflow. */
+.groove-lattice-wrap {
+  position: relative;
+}
+
+.groove-lattice-wrap.is-bench {
+  height: 96px;
+}
+
+.bench-toggle {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  z-index: 6;
+  padding: 2px 7px;
+  border: 1px solid rgba(156, 199, 216, 0.24);
+  background: rgba(5, 5, 6, 0.72);
+  color: rgba(156, 199, 216, 0.62);
+  font-family: "Courier New", monospace;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.bench-toggle:hover,
+.bench-toggle:focus-visible {
+  color: #efefe7;
+  border-color: rgba(214, 199, 155, 0.6);
+  outline: none;
+}
+
+.bench-toggle.engaged {
+  color: #d6c79b;
+  border-color: rgba(214, 199, 155, 0.5);
+}
+
+.lathe-bench {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 4px 8px 6px;
+  pointer-events: none;
+}
+
+.lathe-bench > * {
+  pointer-events: auto;
+}
+
+/* Bench-size knob: same machined face, smaller panel footprint. */
+.bench-knob {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  width: 46px;
+}
+
+.bench-knob .amp-knob-face {
+  width: 40px;
+  height: 40px;
+}
+
+.bench-knob .amp-knob-db {
+  position: static;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 8px;
+  letter-spacing: 0.04em;
+}
+
+.bench-knob-label {
+  font-family: "Courier New", monospace;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: rgba(156, 199, 216, 0.55);
+}
+
+.amp-knob.is-disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lathe-switches {
+  display: grid;
+  gap: 4px;
+  align-self: center;
+}
+
+.lathe-switch {
+  padding: 3px 8px;
+  border: 1px solid rgba(156, 199, 216, 0.28);
+  background: rgba(5, 5, 6, 0.85);
+  color: rgba(239, 239, 231, 0.8);
+  font-family: "Courier New", monospace;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.lathe-switch:hover:not(:disabled),
+.lathe-switch:focus-visible {
+  border-color: rgba(214, 199, 155, 0.6);
+  color: #efefe7;
+  outline: none;
+}
+
+.lathe-switch:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lathe-switch.engaged {
+  color: #16130d;
+  background: linear-gradient(180deg, #efe4c4, #d8c79b);
+  box-shadow: inset 0 -2px 0 #8b111b;
+}
+
+/* Archived-cut stamp in the shelf row quality column. */
+.cut-stamp {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 3px;
+  border: 1px solid rgba(214, 199, 155, 0.55);
+  color: rgba(214, 199, 155, 0.8);
+  font-family: "Courier New", monospace;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  transform: rotate(-2deg);
+}

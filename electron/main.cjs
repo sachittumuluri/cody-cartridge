@@ -1524,6 +1524,75 @@ async function runShellSmoke(mainWindow) {
         `web audio graph carried no signal while playing (cross-origin mute?): ${JSON.stringify(playbackProbe)}`
       );
       passCount += 4;
+
+      // The Lathe: prove the bench audibly shapes the signal — a -12dB
+      // sub+bass cut must lower the live bass level and BYPASS must restore
+      // it. This is the only check that catches a cosmetically-wired bench.
+      const toneProbe = await mainWindow.webContents.executeJavaScript(
+        `(async () => {
+          const audio = document.querySelector("audio");
+          const bench = window.__codyBench;
+
+          if (!audio || !bench) {
+            return { skipped: true, reason: "no bench hook" };
+          }
+
+          const sample = async (settleMs) => {
+            // Raw (un-normalized) bass energy: the shaped live level adapts
+            // its envelope and would hide a static EQ cut within a second.
+            await new Promise((resolve) => setTimeout(resolve, settleMs));
+            let sum = 0;
+            const reads = 6;
+
+            for (let index = 0; index < reads; index += 1) {
+              sum += window.__codyRawBass ?? 0;
+              await new Promise((resolve) => setTimeout(resolve, 140));
+            }
+
+            return sum / reads;
+          };
+
+          await audio.play().catch(() => undefined);
+          const baseline = await sample(700);
+
+          if (baseline < 0.04) {
+            audio.pause();
+            return { skipped: true, reason: "baseline too quiet", baseline };
+          }
+
+          bench.set({ sub: -12, bass: -12 });
+          const cutLevel = await sample(900);
+          bench.bypass(true);
+          const restored = await sample(900);
+          // Read the flag after React committed the bypass state.
+          const bypassState = bench.state();
+          bench.bypass(false);
+          bench.flat();
+          audio.pause();
+          return {
+            skipped: false,
+            baseline,
+            cutLevel,
+            restored,
+            bypassFlagTruthful: bypassState.bypassed === true
+          };
+        })()`
+      );
+
+      if (toneProbe.skipped) {
+        logShellSmokeStep(`tone probe skipped: ${JSON.stringify(toneProbe)}`);
+      } else {
+        assertShellSmoke(
+          toneProbe.cutLevel < toneProbe.baseline * 0.8,
+          `Lathe bass cut did not lower the live level: ${JSON.stringify(toneProbe)}`
+        );
+        assertShellSmoke(
+          Math.abs(toneProbe.restored - toneProbe.baseline) < toneProbe.baseline * 0.35,
+          `Lathe BYPASS did not restore the stock level: ${JSON.stringify(toneProbe)}`
+        );
+        assertShellSmoke(toneProbe.bypassFlagTruthful, `__codyToneState bypass flag untruthful: ${JSON.stringify(toneProbe)}`);
+        passCount += 3;
+      }
     }
   }
 

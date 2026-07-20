@@ -22,3 +22,8 @@ app-store-assets/site.env.local
 app-store-assets/upload-logs/raw/
 security-scoped-bookmarks.json
 build/icon.iconset/
+
+# User media and working files — never publish
+CodyDemo/
+music copy
+*.pptx

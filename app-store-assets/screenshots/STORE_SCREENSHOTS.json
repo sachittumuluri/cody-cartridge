@@ -32,9 +32,9 @@
     "requiredFor": "Mac apps",
     "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
   },
-  "generatedAt": "2026-07-12T20:46:43.518Z",
+  "generatedAt": "2026-07-20T17:24:03.381Z",
   "renderer": "dist/index.html",
-  "screenshotCount": 3,
+  "screenshotCount": 4,
   "source": "store-demo",
   "viewport": {
     "height": 900,
@@ -42,7 +42,7 @@
   },
   "screenshots": [
     {
-      "bytes": 927961,
+      "bytes": 1527651,
       "filePath": "app-store-assets/screenshots/01-library-1440x900.png",
       "height": 900,
       "id": "library",
@@ -54,13 +54,13 @@
         "store-shelf": "library",
         "store-poster": "1"
       },
-      "sha256": "35627ab0708eef5787c8a421226c8d94642d6ecdaa9eecbc02a2af55f717f6c4",
+      "sha256": "eb5288986f88124a42bd4bfbc234e1415cc8fa2083e06afafa49f2a2dda1bd33",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 1058231,
+      "bytes": 1594533,
       "filePath": "app-store-assets/screenshots/02-takeout-map-1440x900.png",
       "height": 900,
       "id": "takeout",
@@ -72,13 +72,13 @@
         "store-shelf": "takeout",
         "store-poster": "1"
       },
-      "sha256": "5600e71a6696364d0e5f5efd2e01679557ce26785ffd1a024450a1294eeb7a1c",
+      "sha256": "4f718a0bf4610b055c9bda5a5d86416cadef24cc49229b2d2dc26a2c267efbee",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=takeout&store-poster=1",
       "width": 1440
     },
     {
-      "bytes": 843149,
+      "bytes": 1263968,
       "filePath": "app-store-assets/screenshots/03-missing-files-1440x900.png",
       "height": 900,
       "id": "missing",
@@ -90,9 +90,28 @@
         "store-shelf": "missing",
         "store-poster": "1"
       },
-      "sha256": "b9a7c48371082b383144d61b9795fbc0f62fb7cc9b8a1ec9986bd96eae0c643e",
+      "sha256": "e3e6b529f0ceba2029793676a6c4210dbb1cd7e163dc7afcac2d5ce9ddb4a1d9",
       "source": "store-demo",
       "sourceUrl": "dist/index.html?store-demo=1&store-shelf=missing&store-poster=1",
+      "width": 1440
+    },
+    {
+      "bytes": 1617638,
+      "filePath": "app-store-assets/screenshots/04-lathe-bench-1440x900.png",
+      "height": 900,
+      "id": "lathe",
+      "label": "The Lathe tone bench",
+      "appStoreConnectAccepted": true,
+      "format": "png",
+      "query": {
+        "store-demo": "1",
+        "store-shelf": "library",
+        "store-poster": "1",
+        "store-lathe": "1"
+      },
+      "sha256": "723d18575d6a28a83b44935c770e5900d347b209c809a7863d1b5d87b0129e4a",
+      "source": "store-demo",
+      "sourceUrl": "dist/index.html?store-demo=1&store-shelf=library&store-poster=1&store-lathe=1",
       "width": 1440
     }
   ]

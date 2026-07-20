@@ -220,6 +220,41 @@ async function main() {
     console.log(`- metadata rows: ${state.metadataButtonRows}`);
     console.log("- reduced motion: active");
     console.log("- keyboard shortcuts: search and catalog arrow navigation passed");
+
+    // The Lathe: the tone bench must expose labeled sliders + switches.
+    const bench = await window.webContents.executeJavaScript(`(async () => {
+      const toggle = document.querySelector(".bench-toggle");
+
+      if (!toggle) {
+        return { toggleFound: false };
+      }
+
+      toggle.click();
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      const sliders = [...document.querySelectorAll(".lathe-bench [role='slider']")];
+      const switches = [...document.querySelectorAll(".lathe-switch")];
+      const state = {
+        toggleFound: true,
+        togglePressed: toggle.getAttribute("aria-pressed"),
+        sliderCount: sliders.length,
+        labeledSliders: sliders.filter((el) => (el.getAttribute("aria-label") || "").trim().length > 0).length,
+        switchLabels: switches.map((el) => (el.textContent || "").trim())
+      };
+      toggle.click();
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      state.closedAgain = !document.querySelector(".lathe-bench");
+      return state;
+    })()`);
+
+    assert(bench.toggleFound, "Lathe TUNE toggle is missing.");
+    assert(bench.sliderCount === 7, `Expected 7 Lathe bench sliders, saw ${bench.sliderCount}.`);
+    assert(bench.labeledSliders === 7, `Lathe bench sliders missing aria-labels: ${JSON.stringify(bench)}`);
+    assert(
+      bench.switchLabels.includes("BYP") && bench.switchLabels.includes("FLAT"),
+      `Lathe bench switches missing: ${JSON.stringify(bench.switchLabels)}`
+    );
+    assert(bench.closedAgain, "Lathe bench did not close on second toggle.");
+    console.log("- lathe bench: 7 labeled tone sliders + BYP/FLAT switches passed");
   } finally {
     window.destroy();
   }
