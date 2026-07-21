@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T20:32:23.640Z",
+  "generatedAt": "2026-07-21T15:39:20.284Z",
   "app": {
     "name": "Cody Cartridge",
     "bundleId": "com.sachittumuluri.codycartridge",
@@ -22,8 +22,8 @@
   },
   "summary": {
     "requiredCount": 5,
-    "readyCount": 0,
-    "blockerCount": 5,
+    "readyCount": 4,
+    "blockerCount": 1,
     "readyForPublicInputs": false
   },
   "fields": [
@@ -35,10 +35,10 @@
       "validation": "HTTPS URL origin with no placeholder value",
       "example": "public HTTPS site origin",
       "nextAction": "Publish the generated support/privacy site and set CODY_SITE_URL to that HTTPS origin.",
-      "status": "blocked",
-      "valueState": "placeholder",
+      "status": "ready",
+      "valueState": "ready",
       "source": "store-env-file-or-shell",
-      "redactedValue": "placeholder"
+      "redactedValue": "configured"
     },
     {
       "id": "support-email",
@@ -48,10 +48,10 @@
       "validation": "Deliverable public support email address",
       "example": "public support email address",
       "nextAction": "Set the support inbox that should appear publicly on support/privacy pages.",
-      "status": "blocked",
-      "valueState": "placeholder",
+      "status": "ready",
+      "valueState": "ready",
       "source": "store-env-file-or-shell",
-      "redactedValue": "placeholder"
+      "redactedValue": "configured"
     },
     {
       "id": "review-contact-name",
@@ -61,10 +61,10 @@
       "validation": "Real non-placeholder contact name",
       "example": "Release Contact",
       "nextAction": "Set the person Apple should contact if review needs clarification.",
-      "status": "blocked",
-      "valueState": "placeholder",
+      "status": "ready",
+      "valueState": "ready",
       "source": "store-env-file-or-shell",
-      "redactedValue": "placeholder"
+      "redactedValue": "configured"
     },
     {
       "id": "review-contact-email",
@@ -74,10 +74,10 @@
       "validation": "Deliverable review contact email address",
       "example": "private App Review contact email address",
       "nextAction": "Set the private App Review contact email; it will be redacted in generated release artifacts.",
-      "status": "blocked",
-      "valueState": "placeholder",
+      "status": "ready",
+      "valueState": "ready",
       "source": "store-env-file-or-shell",
-      "redactedValue": "placeholder"
+      "redactedValue": "configured"
     },
     {
       "id": "review-contact-phone",

@@ -48,8 +48,8 @@ Fields:
 - Product Page / Screenshot Inventory: ready (APP_STORE_CONNECT_FIELDS.json screenshots)
 
 External checks:
-- Public support/privacy URLs are real: blocker | 0/5 public release value(s) ready | npm run public-release:store:published:node
-- macOS screenshots are accepted by App Store Connect dimensions: ready | 3 screenshot(s) recorded | npm run screenshots:store
+- Public support/privacy URLs are real: blocker | 4/5 public release value(s) ready | npm run public-release:store:published:node
+- macOS screenshots are accepted by App Store Connect dimensions: ready | 4 screenshot(s) recorded | npm run screenshots:store
 
 Commands:
 - `npm run copy-map:store`

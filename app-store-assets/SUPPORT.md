@@ -35,3 +35,23 @@ Cody Cartridge currently scans common local audio formats including MP3, M4A, AA
 ### How do I reset the app's local library?
 
 Use File > Reset Local Library. This clears Cody Cartridge's local index, imported YouTube Music Takeout rows, saved slots, playback state, and stored file-access bookmarks. It does not delete or modify your audio files.
+
+## Troubleshooting
+
+### A track will not play
+
+Confirm the file still exists at the path shown in the inspector's SOURCE
+row. If the file moved, re-import it (File > Import Audio Files) — the deck
+never edits or relocates your audio.
+
+### The scope or meters look frozen
+
+macOS Reduce Motion switches the deck into its static instrument mode by
+design. Toggle it in System Settings > Accessibility > Display if you want
+the full animation set.
+
+### A CUT export did not appear
+
+The Lathe writes only to the location you pick in the save dialog. Check
+the folder you chose (Downloads by default); exports are stereo 16-bit WAV
+files named after the track and edition.

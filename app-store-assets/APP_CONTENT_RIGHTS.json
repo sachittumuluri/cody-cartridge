@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-07-21T15:41:31.908Z",
+  "app": {
+    "name": "Cody Cartridge",
+    "bundleId": "com.sachittumuluri.codycartridge",
+    "version": "0.1.0",
+    "buildVersion": "0.1.0"
+  },
+  "summary": {
+    "status": "ready-for-app-store-content-rights",
+    "factCount": 10,
+    "passedCount": 10,
+    "failedCount": 0,
+    "packagedMediaFileCount": 0,
+    "highRiskDependencyCount": 0,
+    "highRiskRuntimeReferenceCount": 0,
+    "contactValuesStored": false
+  },
+  "sourceArtifacts": [
+    "package.json",
+    "build/entitlements.mas.plist",
+    "electron/main.cjs",
+    "src/App.tsx",
+    "src/vite-env.d.ts",
+    "app-store-assets/APP_STORE_CONNECT_FIELDS.json",
+    "app-store-assets/APP_STORE_COMPLIANCE.json",
+    "app-store-assets/screenshots/STORE_SCREENSHOTS.json"
+  ],
+  "facts": [
+    {
+      "id": "no-packaged-media",
+      "label": "Packaged app inputs contain no audio or video files",
+      "status": "pass",
+      "evidence": "0 media file(s) found in packaged roots",
+      "source": "package.json build.files / packaged roots"
+    },
+    {
+      "id": "no-high-risk-deps",
+      "label": "Dependencies do not include media downloader libraries",
+      "status": "pass",
+      "evidence": "0 high-risk dependency match(es)",
+      "source": "package.json"
+    },
+    {
+      "id": "no-high-risk-runtime-refs",
+      "label": "Runtime source has no downloader/scraping implementation references",
+      "status": "pass",
+      "evidence": "0 source file(s) with high-risk references",
+      "source": "electron/ and src/"
+    },
+    {
+      "id": "no-external-open",
+      "label": "Runtime does not open external streaming URLs",
+      "status": "pass",
+      "evidence": "openExternal scan complete",
+      "source": "electron/main.cjs and src/App.tsx"
+    },
+    {
+      "id": "takeout-metadata-only",
+      "label": "YouTube Music Takeout handling is metadata-only",
+      "status": "pass",
+      "evidence": "CSV rows provide titles/artists/albums/video ids only; no account or download flow",
+      "source": "electron/main.cjs"
+    },
+    {
+      "id": "local-media-protocols",
+      "label": "Playback and artwork use local app protocols",
+      "status": "pass",
+      "evidence": "cody-media and cody-art require allowed local paths and security-scoped access",
+      "source": "electron/main.cjs"
+    },
+    {
+      "id": "sandbox-no-network",
+      "label": "MAS entitlements omit network client access",
+      "status": "pass",
+      "evidence": "network client entitlement is absent",
+      "source": "build/entitlements.mas.plist"
+    },
+    {
+      "id": "rights-copy",
+      "label": "App Store copy states no bundled/downloaded media",
+      "status": "pass",
+      "evidence": "listing, review notes, and rights copy checked",
+      "source": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
+    },
+    {
+      "id": "store-demo-synthetic",
+      "label": "Store screenshots use synthetic demo metadata only",
+      "status": "pass",
+      "evidence": "store-demo source and screenshot inventory checked for media files",
+      "source": "src/App.tsx / app-store-assets/screenshots"
+    },
+    {
+      "id": "compliance-linkage",
+      "label": "Compliance packet carries content-rights answer",
+      "status": "pass",
+      "evidence": "compliance status=ready-for-app-store-connect-entry",
+      "source": "app-store-assets/APP_STORE_COMPLIANCE.json"
+    }
+  ],
+  "finalNotes": [
+    "This packet supports App Store content-rights and reviewer clarification. It does not grant rights to user media.",
+    "Cody Cartridge ships without music and relies on user-selected local files that the user is responsible for owning or having rights to use.",
+    "Regenerate this packet after changing import, Takeout, playback, screenshot-demo, packaging, or rights/compliance code."
+  ]
+}

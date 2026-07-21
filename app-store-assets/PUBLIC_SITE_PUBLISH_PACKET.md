@@ -10,34 +10,34 @@ This packet is the release-machine handoff for publishing the static support/pri
 - Bundle ID: `com.sachittumuluri.codycartridge`
 - Version: 0.1.0
 - Build version: 0.1.0
-- Generated: 2026-06-20T20:32:23.827Z
+- Generated: 2026-07-21T15:39:20.446Z
 - Release env source: app-store-assets/site.env
-- Publish status: blocked
-- Pages ready: 0/5
-- Public origin: blocked (placeholder)
-- Support email: placeholder
+- Publish status: ready
+- Pages ready: 5/5
+- Public origin: ready (ready)
+- Support email: ready
 - Archive: `app-store-assets/public-site/cody-cartridge-public-site.zip`
-- Archive status: blocked
-- Placeholder publish values: yes
-- Companion files ready: 0/2
+- Archive status: ready
+- Placeholder publish values: no
+- Companion files ready: 2/2
 - Static host config files ready: 2/2
 
 ## Pages To Publish
 
 | Page | File | Publish status | URL status | Matches archive | Expected URL |
 | --- | --- | --- | --- | --- | --- |
-| Marketing landing page | `index.html` | blocked | blocked | yes | pending-public-site-url |
-| Support page | `support.html` | blocked | blocked | yes | pending-public-site-url |
-| Privacy policy | `privacy.html` | blocked | blocked | yes | pending-public-site-url |
-| Accessibility statement | `accessibility.html` | blocked | blocked | yes | pending-public-site-url |
-| Third-party notices | `third-party-notices.html` | blocked | blocked | yes | pending-public-site-url |
+| Marketing landing page | `index.html` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/index.html |
+| Support page | `support.html` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/support.html |
+| Privacy policy | `privacy.html` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/privacy.html |
+| Accessibility statement | `accessibility.html` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html |
+| Third-party notices | `third-party-notices.html` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/third-party-notices.html |
 
 ## Companion Files To Publish
 
 | File | Name | Publish status | URL status | Matches archive | Expected URL |
 | --- | --- | --- | --- | --- | --- |
-| Robots policy | `robots.txt` | blocked | blocked | yes | pending-public-site-url |
-| Sitemap | `sitemap.xml` | blocked | blocked | yes | pending-public-site-url |
+| Robots policy | `robots.txt` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/robots.txt |
+| Sitemap | `sitemap.xml` | ready | ready | yes | https://sachittumuluri.github.io/cody-cartridge/site/sitemap.xml |
 
 ## Static Host Config Files
 
@@ -51,20 +51,20 @@ These files are included in the public-site archive for static hosts that consum
 ## Hosting Requirements
 
 - Public origin must be HTTPS: yes
-- Public origin status: blocked
+- Public origin status: ready
 - Upload source: `app-store-assets/public-site/cody-cartridge-public-site.zip` or `app-store-assets/site/`
-- Required hosted files: 2/9 ready
+- Required hosted files: 9/9 ready
 - Private env files excluded: `app-store-assets/site.env`, `app-store-assets/site.env.local`
 
 | File | Publish path | Expected content type | Cache-Control | Publish status |
 | --- | --- | --- | --- | --- |
-| `index.html` | `/index.html` | `text/html; charset=utf-8` | `public, max-age=300` | blocked |
-| `support.html` | `/support.html` | `text/html; charset=utf-8` | `public, max-age=300` | blocked |
-| `privacy.html` | `/privacy.html` | `text/html; charset=utf-8` | `public, max-age=300` | blocked |
-| `accessibility.html` | `/accessibility.html` | `text/html; charset=utf-8` | `public, max-age=300` | blocked |
-| `third-party-notices.html` | `/third-party-notices.html` | `text/html; charset=utf-8` | `public, max-age=300` | blocked |
-| `robots.txt` | `/robots.txt` | `text/plain; charset=utf-8` | `public, max-age=3600` | blocked |
-| `sitemap.xml` | `/sitemap.xml` | `application/xml; charset=utf-8` | `public, max-age=3600` | blocked |
+| `index.html` | `/index.html` | `text/html; charset=utf-8` | `public, max-age=300` | ready |
+| `support.html` | `/support.html` | `text/html; charset=utf-8` | `public, max-age=300` | ready |
+| `privacy.html` | `/privacy.html` | `text/html; charset=utf-8` | `public, max-age=300` | ready |
+| `accessibility.html` | `/accessibility.html` | `text/html; charset=utf-8` | `public, max-age=300` | ready |
+| `third-party-notices.html` | `/third-party-notices.html` | `text/html; charset=utf-8` | `public, max-age=300` | ready |
+| `robots.txt` | `/robots.txt` | `text/plain; charset=utf-8` | `public, max-age=3600` | ready |
+| `sitemap.xml` | `/sitemap.xml` | `application/xml; charset=utf-8` | `public, max-age=3600` | ready |
 | `_headers` | `/_headers` | `text/plain; charset=utf-8` | `public, max-age=3600` | ready |
 | `vercel.json` | `/vercel.json` | `application/json; charset=utf-8` | `public, max-age=3600` | ready |
 

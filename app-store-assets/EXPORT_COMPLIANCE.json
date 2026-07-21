@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T20:02:07.933Z",
+  "generatedAt": "2026-07-21T15:41:31.407Z",
   "artifactPath": "app-store-assets/EXPORT_COMPLIANCE.json",
   "markdownPath": "app-store-assets/EXPORT_COMPLIANCE.md",
   "app": {
@@ -75,14 +75,15 @@
       "evidence": "package.json build.mac.extendInfo sets ITSAppUsesNonExemptEncryption=false."
     },
     {
-      "id": "sandbox-read-only-files",
-      "label": "MAS sandbox file access is user-selected and read-only",
+      "id": "sandbox-user-selected-files",
+      "label": "MAS sandbox file access is user-selected only",
       "status": "pass",
-      "evidence": "MAS entitlements use read-only user-selected files, app-scope bookmarks, and inherited child sandboxing."
+      "evidence": "MAS entitlements limit file access to user-selected paths (read-write solely for the save-dialog WAV export), app-scope bookmarks, and inherited child sandboxing."
     }
   ],
   "evidence": {
     "directDependencies": [
+      "@paper-design/shaders-react",
       "@types/react",
       "@types/react-dom",
       "@vitejs/plugin-react",

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-21T15:35:00.263Z",
+  "generatedAt": "2026-07-21T15:43:45.995Z",
   "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
-  "archiveSha256": "9c63d310967abe81738e0590402c03956b0f1815606cbfbd4f77299debe77221",
-  "archiveSizeBytes": 69396,
+  "archiveSha256": "2ca4608a266c2f9e9dcd83a236861a5a0326f32b49eb4db0534cba703b8d2221",
+  "archiveSizeBytes": 70110,
   "supportEmail": "sstumuluri@umass.edu",
   "siteUrl": "https://sachittumuluri.github.io/cody-cartridge/site",
   "appStoreUrls": {
@@ -26,8 +26,8 @@
     },
     {
       "name": "support.html",
-      "sha256": "03e2d3586e8d3ad2c8e7d1d59e67c084df292b6b59865cf97f553b46f63566be",
-      "sizeBytes": 6486,
+      "sha256": "dec486646cf3b1c48983c9d7bae12a203c64a77e337d5625daede0d3336105ac",
+      "sizeBytes": 7200,
       "sourcePath": "app-store-assets/site/support.html"
     },
     {
@@ -38,7 +38,7 @@
     },
     {
       "name": "third-party-notices.html",
-      "sha256": "3b53cc2b712f7e70082b4edf35962c1cb26000cf497a97a550e92f4a8b84f348",
+      "sha256": "96f28e9dd98919d92eac9ba1a056c1f5fb21c561db56d5ca58af16a57d725e2d",
       "sizeBytes": 36938,
       "sourcePath": "app-store-assets/site/third-party-notices.html"
     },

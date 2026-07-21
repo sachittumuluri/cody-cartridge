@@ -10,22 +10,22 @@ This packet lists the public URL/contact values required before strict App Store
 - Bundle ID: `com.sachittumuluri.codycartridge`
 - Version: 0.1.0
 - Build version: 0.1.0
-- Generated: 2026-06-20T20:32:23.640Z
+- Generated: 2026-07-21T15:39:20.284Z
 - Release env source: app-store-assets/site.env
 - Release env precedence: shell env > app-store-assets/site.env.local > app-store-assets/site.env
 - Required fields: 5
-- Ready fields: 0
-- Blocked fields: 5
+- Ready fields: 4
+- Blocked fields: 1
 - Ready for public-input phase: no
 
 ## Required Values
 
 | Key | Field | Status | Value state | App Store use | Next action |
 | --- | --- | --- | --- | --- | --- |
-| `CODY_SITE_URL` | Public site origin | blocked | placeholder | Support URL, Privacy Policy URL, Marketing URL, Accessibility URL | Publish the generated support/privacy site and set CODY_SITE_URL to that HTTPS origin. |
-| `CODY_SUPPORT_EMAIL` | Public support email | blocked | placeholder | Support page, privacy policy, TestFlight feedback email | Set the support inbox that should appear publicly on support/privacy pages. |
-| `CODY_REVIEW_CONTACT_NAME` | App Review contact name | blocked | placeholder | App Store Connect App Review Information | Set the person Apple should contact if review needs clarification. |
-| `CODY_REVIEW_CONTACT_EMAIL` | App Review contact email | blocked | placeholder | App Store Connect App Review Information | Set the private App Review contact email; it will be redacted in generated release artifacts. |
+| `CODY_SITE_URL` | Public site origin | ready | ready | Support URL, Privacy Policy URL, Marketing URL, Accessibility URL | Publish the generated support/privacy site and set CODY_SITE_URL to that HTTPS origin. |
+| `CODY_SUPPORT_EMAIL` | Public support email | ready | ready | Support page, privacy policy, TestFlight feedback email | Set the support inbox that should appear publicly on support/privacy pages. |
+| `CODY_REVIEW_CONTACT_NAME` | App Review contact name | ready | ready | App Store Connect App Review Information | Set the person Apple should contact if review needs clarification. |
+| `CODY_REVIEW_CONTACT_EMAIL` | App Review contact email | ready | ready | App Store Connect App Review Information | Set the private App Review contact email; it will be redacted in generated release artifacts. |
 | `CODY_REVIEW_CONTACT_PHONE` | App Review contact phone | blocked | placeholder | App Store Connect App Review Information | Set the private App Review phone number; it will be redacted in generated release artifacts. |
 
 ## Release Env File

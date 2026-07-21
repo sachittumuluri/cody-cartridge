@@ -125,12 +125,12 @@ function main() {
         : "package.json build.mac.extendInfo does not set ITSAppUsesNonExemptEncryption=false."
     ),
     fact(
-      "sandbox-read-only-files",
-      "MAS sandbox file access is user-selected and read-only",
-      appEntitlements.includes("com.apple.security.files.user-selected.read-only") &&
+      "sandbox-user-selected-files",
+      "MAS sandbox file access is user-selected only",
+      appEntitlements.includes("com.apple.security.files.user-selected.read-write") &&
         appEntitlements.includes("com.apple.security.files.bookmarks.app-scope") &&
         childEntitlements.includes("com.apple.security.inherit"),
-      "MAS entitlements use read-only user-selected files, app-scope bookmarks, and inherited child sandboxing."
+      "MAS entitlements limit file access to user-selected paths (read-write solely for the save-dialog WAV export), app-scope bookmarks, and inherited child sandboxing."
     )
   ];
   const reviewCount = facts.filter((item) => item.status !== "pass").length;

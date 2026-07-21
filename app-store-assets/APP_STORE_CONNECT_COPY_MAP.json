@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T00:45:47.112Z",
+  "generatedAt": "2026-07-21T15:39:20.610Z",
   "app": {
     "appId": "com.sachittumuluri.codycartridge",
     "buildVersion": "0.1.0",
@@ -637,7 +637,7 @@
       "readyStepCount": 2,
       "warningStepCount": 1,
       "blockerStepCount": 4,
-      "publicInputBlockerCount": 5,
+      "publicInputBlockerCount": 1,
       "releaseBlockerCount": 17,
       "uploadReady": false
     },
@@ -765,7 +765,7 @@
             "status": "blocker",
             "command": "npm run public-release:store:published:node",
             "action": "Set CODY_SITE_URL and CODY_SUPPORT_EMAIL, publish the static site, then regenerate the packet.",
-            "evidence": "0/5 public release value(s) ready"
+            "evidence": "4/5 public release value(s) ready"
           },
           {
             "id": "screenshots",
@@ -773,7 +773,7 @@
             "status": "ready",
             "command": "npm run screenshots:store",
             "action": "Regenerate screenshots if any image is missing or rejected.",
-            "evidence": "3 screenshot(s) recorded"
+            "evidence": "4 screenshot(s) recorded"
           }
         ],
         "commands": [

@@ -38,7 +38,7 @@ This is a release-operator prep artifact for App Store Connect. It is not legal 
 | Remote URL literals are metadata-only | pass | Only YouTube Music watch URLs appear as metadata references; the app does not open or fetch them. |
 | Privacy manifest declares no tracking or collected data | pass | build/PrivacyInfo.xcprivacy is present and declares no tracking/collected data categories. |
 | Info.plist declares no non-exempt encryption | pass | package.json build.mac.extendInfo sets ITSAppUsesNonExemptEncryption=false. |
-| MAS sandbox file access is user-selected and read-only | pass | MAS entitlements use read-only user-selected files, app-scope bookmarks, and inherited child sandboxing. |
+| MAS sandbox file access is user-selected only | pass | MAS entitlements limit file access to user-selected paths (read-write solely for the save-dialog WAV export), app-scope bookmarks, and inherited child sandboxing. |
 
 ## Release Actions
 

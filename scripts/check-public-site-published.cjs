@@ -21,9 +21,9 @@ const failures = [];
 const pageNeedles = {
   home: ["local-first music player", "Import Your Files"],
   support: ["Import Audio Files", "Troubleshooting"],
-  privacy: ["does not collect personal data", "Local Files"],
+  privacy: ["does not collect personal data", "Local Data The App Uses"],
   accessibility: ["Reduced Motion", "Keyboard"],
-  "third-party-notices": ["Third-Party Notices", "Production Dependencies"]
+  "third-party-notices": ["Third-Party Notices", "Direct Runtime Dependencies"]
 };
 
 function pass(message) {

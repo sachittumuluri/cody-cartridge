@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T20:32:22.501Z",
+  "generatedAt": "2026-07-21T15:41:31.710Z",
   "app": {
     "name": "Cody Cartridge",
     "bundleId": "com.sachittumuluri.codycartridge",
@@ -12,8 +12,8 @@
     "status": "blocked",
     "sectionCount": 4,
     "taskCount": 17,
-    "manualCount": 12,
-    "blockedCount": 5,
+    "manualCount": 15,
+    "blockedCount": 2,
     "complianceManualCount": 5,
     "contactValuesRedacted": true
   },
@@ -47,8 +47,8 @@
       "id": "product-page",
       "title": "Product Page",
       "taskCount": 4,
-      "manualCount": 2,
-      "blockedCount": 2,
+      "manualCount": 4,
+      "blockedCount": 0,
       "tasks": [
         {
           "id": "product-page-copy",
@@ -56,7 +56,7 @@
           "label": "Enter product page copy",
           "status": "manual",
           "location": "Product Page > App Information / Version Information",
-          "evidence": "name=14/30 subtitle=27/30 keywords=70/100 description=593/4000",
+          "evidence": "name=14/30 subtitle=27/30 keywords=81/100 description=937/4000",
           "action": "Paste name, subtitle, promotional text, description, keywords, category, and copyright from the generated packet.",
           "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
         },
@@ -66,7 +66,7 @@
           "label": "Upload Mac screenshots",
           "status": "manual",
           "location": "Product Page > Media Manager",
-          "evidence": "3 screenshot(s) in store screenshot manifest",
+          "evidence": "4 screenshot(s) in store screenshot manifest",
           "action": "Upload the generated Mac screenshots in order and re-check the App Store screenshot inventory.",
           "sourceArtifact": "app-store-assets/screenshots/STORE_SCREENSHOTS.json"
         },
@@ -74,9 +74,9 @@
           "id": "support-url",
           "section": "Product Page",
           "label": "Enter Support URL",
-          "status": "blocked",
+          "status": "manual",
           "location": "Product Page > Support URL",
-          "evidence": "supportUrl=placeholder",
+          "evidence": "https://sachittumuluri.github.io/cody-cartridge/site/support.html",
           "action": "Publish the support page, then enter the public HTTPS support URL.",
           "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
         },
@@ -84,9 +84,9 @@
           "id": "privacy-policy-url",
           "section": "Product Page",
           "label": "Enter Privacy Policy URL",
-          "status": "blocked",
+          "status": "manual",
           "location": "Product Page > Privacy Policy URL",
-          "evidence": "privacyPolicyUrl=placeholder",
+          "evidence": "https://sachittumuluri.github.io/cody-cartridge/site/privacy.html",
           "action": "Publish the privacy page, then enter the public HTTPS privacy policy URL.",
           "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
         }
@@ -175,8 +175,8 @@
       "id": "testflight-review",
       "title": "TestFlight And Review",
       "taskCount": 5,
-      "manualCount": 2,
-      "blockedCount": 3,
+      "manualCount": 3,
+      "blockedCount": 2,
       "tasks": [
         {
           "id": "testflight-internal-group",
@@ -192,9 +192,9 @@
           "id": "testflight-feedback-email",
           "section": "TestFlight And Review",
           "label": "Set TestFlight feedback email",
-          "status": "blocked",
+          "status": "manual",
           "location": "TestFlight > Test Information",
-          "evidence": "feedbackEmail=placeholder",
+          "evidence": "feedbackEmail=configured",
           "action": "Set the public support inbox as the TestFlight feedback email.",
           "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
         },
@@ -204,7 +204,7 @@
           "label": "Set App Review contact",
           "status": "blocked",
           "location": "App Review Information",
-          "evidence": "reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder",
+          "evidence": "reviewName=configured reviewEmail=configured reviewPhone=placeholder",
           "action": "Enter private App Review contact details in App Store Connect.",
           "sourceArtifact": "app-store-assets/APP_STORE_CONNECT_FIELDS.json"
         },

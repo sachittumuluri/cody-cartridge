@@ -12,18 +12,18 @@ This packet consolidates account-side App Store Connect tasks that cannot be com
 - Version: 0.1.0
 - Build version: 0.1.0
 - Status: blocked
-- Manual tasks ready for account entry: 12
-- Blocked tasks: 5
+- Manual tasks ready for account entry: 15
+- Blocked tasks: 2
 
 ## Task Matrix
 
 | Section | Status | Task | App Store Connect Location | Evidence | Action |
 | --- | --- | --- | --- | --- | --- |
 | App Record | manual | Create or verify the App Store Connect app record | My Apps > New App / App Information | name=Cody Cartridge bundleId=com.sachittumuluri.codycartridge sku=cody-cartridge-mac | Create the macOS app record or confirm the existing record uses this bundle id, SKU, category, and copyright. |
-| Product Page | manual | Enter product page copy | Product Page > App Information / Version Information | name=14/30 subtitle=27/30 keywords=70/100 description=593/4000 | Paste name, subtitle, promotional text, description, keywords, category, and copyright from the generated packet. |
-| Product Page | manual | Upload Mac screenshots | Product Page > Media Manager | 3 screenshot(s) in store screenshot manifest | Upload the generated Mac screenshots in order and re-check the App Store screenshot inventory. |
-| Product Page | blocked | Enter Support URL | Product Page > Support URL | supportUrl=placeholder | Publish the support page, then enter the public HTTPS support URL. |
-| Product Page | blocked | Enter Privacy Policy URL | Product Page > Privacy Policy URL | privacyPolicyUrl=placeholder | Publish the privacy page, then enter the public HTTPS privacy policy URL. |
+| Product Page | manual | Enter product page copy | Product Page > App Information / Version Information | name=14/30 subtitle=27/30 keywords=81/100 description=937/4000 | Paste name, subtitle, promotional text, description, keywords, category, and copyright from the generated packet. |
+| Product Page | manual | Upload Mac screenshots | Product Page > Media Manager | 4 screenshot(s) in store screenshot manifest | Upload the generated Mac screenshots in order and re-check the App Store screenshot inventory. |
+| Product Page | manual | Enter Support URL | Product Page > Support URL | https://sachittumuluri.github.io/cody-cartridge/site/support.html | Publish the support page, then enter the public HTTPS support URL. |
+| Product Page | manual | Enter Privacy Policy URL | Product Page > Privacy Policy URL | https://sachittumuluri.github.io/cody-cartridge/site/privacy.html | Publish the privacy page, then enter the public HTTPS privacy policy URL. |
 | Privacy And Compliance | manual | Complete App Privacy answers | App Privacy | No, this app does not collect data from the app. | Answer App Privacy as no data collected and confirm no tracking, analytics, ads, or developer off-device data collection were added. |
 | Privacy And Compliance | manual | Complete age rating questionnaire | General > App Information > Age Ratings | 4+ candidate; App Store Connect generates the final rating from Apple's questionnaire.; 6 questionnaire note(s) | Answer Apple's questionnaire against the final shipped app behavior. |
 | Privacy And Compliance | manual | Set price | Monetization > Pricing and Availability | Free candidate for first release. | Set the final launch price in App Store Connect. |
@@ -32,8 +32,8 @@ This packet consolidates account-side App Store Connect tasks that cannot be com
 | Privacy And Compliance | manual | Confirm tax category | Monetization > Pricing and Availability | General app/software candidate; confirm in App Store Connect before submission. | Confirm the final tax category in App Store Connect. |
 | Privacy And Compliance | manual | Complete rights, export compliance, and EU DSA entries | App Information / Business / Compliance | contentRights=prepared export=prepared dsa=manual | Copy content-rights/export-compliance answers and complete trader/non-trader status before EU distribution. |
 | TestFlight And Review | manual | Create internal TestFlight group | TestFlight > Internal Testing | 2 recommended group(s) | Create the internal smoke group, add the processed build, and paste What To Test. |
-| TestFlight And Review | blocked | Set TestFlight feedback email | TestFlight > Test Information | feedbackEmail=placeholder | Set the public support inbox as the TestFlight feedback email. |
-| TestFlight And Review | blocked | Set App Review contact | App Review Information | reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder | Enter private App Review contact details in App Store Connect. |
+| TestFlight And Review | manual | Set TestFlight feedback email | TestFlight > Test Information | feedbackEmail=configured | Set the public support inbox as the TestFlight feedback email. |
+| TestFlight And Review | blocked | Set App Review contact | App Review Information | reviewName=configured reviewEmail=configured reviewPhone=placeholder | Enter private App Review contact details in App Store Connect. |
 | TestFlight And Review | manual | Paste App Review notes | App Review Information > Notes | 713/4000 bytes | Paste the generated review notes and keep the no-download/no-scraping disclosure intact. |
 | TestFlight And Review | blocked | Select the processed signed build | App Store version > Build | requires uploaded, processed, current-version signed MAS build | Upload the signed MAS package, wait for processing, then select the matching build before Add for Review. |
 

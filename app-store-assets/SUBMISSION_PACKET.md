@@ -56,14 +56,14 @@ music,player,local,audio,mp3,album,library,visualizer,cassette,oscilloscope,retr
 
 ## URLs
 
-- Support URL: supportUrl=placeholder
-- Privacy Policy URL: privacyPolicyUrl=placeholder
-- Marketing URL: marketingUrl=placeholder
-- Accessibility URL: accessibilityUrl=placeholder
-- Third-Party Notices URL: thirdPartyNoticesUrl=placeholder
-- Support contact: supportEmail=placeholder
+- Support URL: https://sachittumuluri.github.io/cody-cartridge/site/support.html
+- Privacy Policy URL: https://sachittumuluri.github.io/cody-cartridge/site/privacy.html
+- Marketing URL: https://sachittumuluri.github.io/cody-cartridge/site/index.html
+- Accessibility URL: https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html
+- Third-Party Notices URL: https://sachittumuluri.github.io/cody-cartridge/site/third-party-notices.html
+- Support contact: sstumuluri@umass.edu
 - Public site archive: app-store-assets/public-site/cody-cartridge-public-site.zip
-- Public site archive SHA-256: 8c58269676f6995a55c92d48e4ecd5c948af7c7b050e991068288dc929954de7
+- Public site archive SHA-256: 9c63d310967abe81738e0590402c03956b0f1815606cbfbd4f77299debe77221
 
 ## App Review Notes
 
@@ -77,8 +77,8 @@ Sandbox file access is intentionally read-only and uses user-selected file/folde
 
 ## App Review Contact
 
-- Name: reviewName=placeholder
-- Email: reviewEmail=placeholder
+- Name: Sachit Tumuluri
+- Email: sstumuluri@umass.edu
 - Phone: reviewPhone=placeholder
 
 ## Review Test Instructions
@@ -96,8 +96,8 @@ Demo account: None. The app has no account system.
 ## TestFlight Beta Test Plan
 
 - App Store Connect location: TestFlight > Test Information; TestFlight > Internal Testing > Build > What to Test
-- Feedback email: supportEmail=placeholder
-- Contact: reviewName=placeholder / reviewEmail=placeholder / reviewPhone=placeholder
+- Feedback email: sstumuluri@umass.edu
+- Contact: Sachit Tumuluri / sstumuluri@umass.edu / reviewPhone=placeholder
 - Demo account: None. The app has no account system, server login, subscription, or in-app purchase flow.
 
 ### Beta App Description
@@ -165,7 +165,7 @@ Cody Cartridge is a local-first macOS music player for testing user-selected aud
 ## Accessibility Nutrition Labels
 
 - App Store Connect location: App Accessibility > Accessibility Nutrition Labels
-- Accessibility URL: accessibilityUrl=placeholder
+- Accessibility URL: https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html
 - Reduced Motion: Supported. The app reads the macOS/browser prefers-reduced-motion setting, disables the requestAnimationFrame visualizer loop, avoids smooth scrolling, and collapses CSS animation/transition durations.
 - VoiceOver: Candidate support. Core controls use native buttons, range inputs, visible labels, aria-labels, and live status text; verify full VoiceOver task coverage on the signed MAS build before marking Supported.
 - Keyboard access: Candidate support. Playback, seeking, catalog search, shelf navigation, and import flows are reachable with native controls and app shortcuts; verify on a clean macOS user account before submission.
@@ -246,7 +246,7 @@ Release actions:
 
 ## Screenshot Inventory
 
-- Manifest: `app-store-assets/screenshots/STORE_SCREENSHOTS.json` (3 screenshots, store-demo, 1440 x 900)
+- Manifest: `app-store-assets/screenshots/STORE_SCREENSHOTS.json` (4 screenshots, store-demo, 1440 x 900)
 - App Store Connect spec: macOS Mac apps, 1-10 screenshots, 16:10, accepted sizes 1280 x 800, 1440 x 900, 2560 x 1600, 2880 x 1800 (https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
 - app-store-assets/screenshots/01-library-1440x900.png: 1440 x 900 · png · accepted Mac screenshot
 - app-store-assets/screenshots/02-takeout-map-1440x900.png: 1440 x 900 · png · accepted Mac screenshot

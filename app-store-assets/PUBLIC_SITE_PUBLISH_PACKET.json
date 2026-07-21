@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T20:32:23.827Z",
+  "generatedAt": "2026-07-21T15:39:20.446Z",
   "app": {
     "name": "Cody Cartridge",
     "bundleId": "com.sachittumuluri.codycartridge",
@@ -14,7 +14,7 @@
       "app-store-assets/site.env",
       "app-store-assets/site.env.local"
     ],
-    "publicInputReadyCount": 0,
+    "publicInputReadyCount": 4,
     "publicInputRequiredCount": 5
   },
   "appStoreUrls": {
@@ -25,40 +25,37 @@
     "thirdPartyNoticesUrl": "Optional or TODO_PUBLIC_SITE_URL/third-party-notices.html"
   },
   "summary": {
-    "publishStatus": "blocked",
+    "publishStatus": "ready",
     "requiredPageCount": 5,
-    "readyPageCount": 0,
-    "blockedPageCount": 5,
+    "readyPageCount": 5,
+    "blockedPageCount": 0,
     "missingOrMismatchedPageCount": 0,
     "requiredCompanionFileCount": 2,
-    "readyCompanionFileCount": 0,
-    "blockedCompanionFileCount": 2,
+    "readyCompanionFileCount": 2,
+    "blockedCompanionFileCount": 0,
     "missingOrMismatchedCompanionFileCount": 0,
     "requiredHostingConfigFileCount": 2,
     "readyHostingConfigFileCount": 2,
     "blockedHostingConfigFileCount": 0,
     "missingOrMismatchedHostingConfigFileCount": 0,
-    "publicOriginStatus": "blocked",
-    "publicOriginValueState": "placeholder",
-    "supportEmailStatus": "placeholder",
-    "placeholderPublishValues": true,
+    "publicOriginStatus": "ready",
+    "publicOriginValueState": "ready",
+    "supportEmailStatus": "ready",
+    "placeholderPublishValues": false,
     "blockerCount": 17
   },
   "archive": {
     "path": "app-store-assets/public-site/cody-cartridge-public-site.zip",
-    "status": "blocked",
+    "status": "ready",
     "exists": true,
-    "sizeBytes": 69000,
-    "sha256": "8c58269676f6995a55c92d48e4ecd5c948af7c7b050e991068288dc929954de7",
+    "sizeBytes": 69396,
+    "sha256": "9c63d310967abe81738e0590402c03956b0f1815606cbfbd4f77299debe77221",
     "manifestPath": "app-store-assets/public-site/PUBLIC_SITE_ARCHIVE.json",
-    "manifestSha256": "fb5bb647ec0a838391f10c594077347494e1bd6a6169478a434b6b8d7a287684",
+    "manifestSha256": "2baf738b3acbcba006f63b41798d9d801d92e60b595f804630f682336da97d0a",
     "placeholderState": {
-      "supportEmail": true,
-      "siteUrl": true,
-      "files": [
-        "robots.txt",
-        "sitemap.xml"
-      ]
+      "supportEmail": false,
+      "siteUrl": false,
+      "files": []
     }
   },
   "pages": [
@@ -70,18 +67,18 @@
       "sourcePath": "app-store-assets/site/index.html",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/index.html",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/index.html",
       "expectedContentType": "text/html; charset=utf-8",
       "cacheControl": "public, max-age=300",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 8884,
-      "sourceSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
+      "sourceSizeBytes": 9153,
+      "sourceSha256": "7e7e453db421111a69be47bebd510b096dc204966da596eda6b7e2c2cffe1f0b",
       "archiveEntryExists": true,
-      "archiveSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
-      "archiveSizeBytes": 8884,
+      "archiveSha256": "7e7e453db421111a69be47bebd510b096dc204966da596eda6b7e2c2cffe1f0b",
+      "archiveSizeBytes": 9153,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     },
     {
       "id": "support",
@@ -91,18 +88,18 @@
       "sourcePath": "app-store-assets/site/support.html",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/support.html",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/support.html",
       "expectedContentType": "text/html; charset=utf-8",
       "cacheControl": "public, max-age=300",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 6572,
-      "sourceSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
+      "sourceSizeBytes": 6486,
+      "sourceSha256": "03e2d3586e8d3ad2c8e7d1d59e67c084df292b6b59865cf97f553b46f63566be",
       "archiveEntryExists": true,
-      "archiveSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
-      "archiveSizeBytes": 6572,
+      "archiveSha256": "03e2d3586e8d3ad2c8e7d1d59e67c084df292b6b59865cf97f553b46f63566be",
+      "archiveSizeBytes": 6486,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     },
     {
       "id": "privacy",
@@ -112,18 +109,18 @@
       "sourcePath": "app-store-assets/site/privacy.html",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/privacy.html",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/privacy.html",
       "expectedContentType": "text/html; charset=utf-8",
       "cacheControl": "public, max-age=300",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 7003,
-      "sourceSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
+      "sourceSizeBytes": 6917,
+      "sourceSha256": "d16bf5ee8e92dec8d7265cf4587458080401b27a1852169222a98a89d70a6e10",
       "archiveEntryExists": true,
-      "archiveSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
-      "archiveSizeBytes": 7003,
+      "archiveSha256": "d16bf5ee8e92dec8d7265cf4587458080401b27a1852169222a98a89d70a6e10",
+      "archiveSizeBytes": 6917,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     },
     {
       "id": "accessibility",
@@ -133,18 +130,18 @@
       "sourcePath": "app-store-assets/site/accessibility.html",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/accessibility.html",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html",
       "expectedContentType": "text/html; charset=utf-8",
       "cacheControl": "public, max-age=300",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 6329,
-      "sourceSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
+      "sourceSizeBytes": 6243,
+      "sourceSha256": "7276100b45a2461971d876eb05c83b0c954796aa2f332f790e341f9d27ebee77",
       "archiveEntryExists": true,
-      "archiveSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
-      "archiveSizeBytes": 6329,
+      "archiveSha256": "7276100b45a2461971d876eb05c83b0c954796aa2f332f790e341f9d27ebee77",
+      "archiveSizeBytes": 6243,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     },
     {
       "id": "third-party-notices",
@@ -154,18 +151,18 @@
       "sourcePath": "app-store-assets/site/third-party-notices.html",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/third-party-notices.html",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/third-party-notices.html",
       "expectedContentType": "text/html; charset=utf-8",
       "cacheControl": "public, max-age=300",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 36835,
-      "sourceSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
+      "sourceSizeBytes": 36938,
+      "sourceSha256": "3b53cc2b712f7e70082b4edf35962c1cb26000cf497a97a550e92f4a8b84f348",
       "archiveEntryExists": true,
-      "archiveSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
-      "archiveSizeBytes": 36835,
+      "archiveSha256": "3b53cc2b712f7e70082b4edf35962c1cb26000cf497a97a550e92f4a8b84f348",
+      "archiveSizeBytes": 36938,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     }
   ],
   "companionFiles": [
@@ -177,18 +174,18 @@
       "sourcePath": "app-store-assets/site/robots.txt",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/robots.txt",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/robots.txt",
       "expectedContentType": "text/plain; charset=utf-8",
       "cacheControl": "public, max-age=3600",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 66,
-      "sourceSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
+      "sourceSizeBytes": 98,
+      "sourceSha256": "5364e59838bf1cdc9c8dc2b6044fc33bc59d88bdf3635316aa3aa92c406729d9",
       "archiveEntryExists": true,
-      "archiveSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
-      "archiveSizeBytes": 66,
+      "archiveSha256": "5364e59838bf1cdc9c8dc2b6044fc33bc59d88bdf3635316aa3aa92c406729d9",
+      "archiveSizeBytes": 98,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     },
     {
       "id": "sitemap",
@@ -198,18 +195,18 @@
       "sourcePath": "app-store-assets/site/sitemap.xml",
       "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "publishPath": "/sitemap.xml",
-      "expectedUrl": "pending-public-site-url",
+      "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/sitemap.xml",
       "expectedContentType": "application/xml; charset=utf-8",
       "cacheControl": "public, max-age=3600",
-      "urlStatus": "blocked",
+      "urlStatus": "ready",
       "sourceExists": true,
-      "sourceSizeBytes": 416,
-      "sourceSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
+      "sourceSizeBytes": 666,
+      "sourceSha256": "fc3cbde317c1ef9e8db52c89747b18229efa3d33e19c26156088a0f25f9363af",
       "archiveEntryExists": true,
-      "archiveSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
-      "archiveSizeBytes": 416,
+      "archiveSha256": "fc3cbde317c1ef9e8db52c89747b18229efa3d33e19c26156088a0f25f9363af",
+      "archiveSizeBytes": 666,
       "sourceMatchesArchive": true,
-      "publishStatus": "blocked"
+      "publishStatus": "ready"
     }
   ],
   "hostingConfigFiles": [
@@ -258,15 +255,15 @@
   ],
   "hosting": {
     "httpsRequired": true,
-    "publicOrigin": "pending-public-site-url",
-    "publicOriginStatus": "blocked",
+    "publicOrigin": "https://sachittumuluri.github.io/cody-cartridge/site",
+    "publicOriginStatus": "ready",
     "uploadSources": [
       "app-store-assets/public-site/cody-cartridge-public-site.zip",
       "app-store-assets/site/"
     ],
     "requiredFileCount": 9,
-    "readyFileCount": 2,
-    "blockedFileCount": 7,
+    "readyFileCount": 9,
+    "blockedFileCount": 0,
     "requiredFiles": [
       {
         "fileName": "index.html",
@@ -274,12 +271,12 @@
         "appStoreUse": "Marketing URL",
         "sourcePath": "app-store-assets/site/index.html",
         "publishPath": "/index.html",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/index.html",
         "expectedContentType": "text/html; charset=utf-8",
         "cacheControl": "public, max-age=300",
-        "sourceSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
-        "archiveSha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
-        "publishStatus": "blocked"
+        "sourceSha256": "7e7e453db421111a69be47bebd510b096dc204966da596eda6b7e2c2cffe1f0b",
+        "archiveSha256": "7e7e453db421111a69be47bebd510b096dc204966da596eda6b7e2c2cffe1f0b",
+        "publishStatus": "ready"
       },
       {
         "fileName": "support.html",
@@ -287,12 +284,12 @@
         "appStoreUse": "Support URL",
         "sourcePath": "app-store-assets/site/support.html",
         "publishPath": "/support.html",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/support.html",
         "expectedContentType": "text/html; charset=utf-8",
         "cacheControl": "public, max-age=300",
-        "sourceSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
-        "archiveSha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
-        "publishStatus": "blocked"
+        "sourceSha256": "03e2d3586e8d3ad2c8e7d1d59e67c084df292b6b59865cf97f553b46f63566be",
+        "archiveSha256": "03e2d3586e8d3ad2c8e7d1d59e67c084df292b6b59865cf97f553b46f63566be",
+        "publishStatus": "ready"
       },
       {
         "fileName": "privacy.html",
@@ -300,12 +297,12 @@
         "appStoreUse": "Privacy Policy URL",
         "sourcePath": "app-store-assets/site/privacy.html",
         "publishPath": "/privacy.html",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/privacy.html",
         "expectedContentType": "text/html; charset=utf-8",
         "cacheControl": "public, max-age=300",
-        "sourceSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
-        "archiveSha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
-        "publishStatus": "blocked"
+        "sourceSha256": "d16bf5ee8e92dec8d7265cf4587458080401b27a1852169222a98a89d70a6e10",
+        "archiveSha256": "d16bf5ee8e92dec8d7265cf4587458080401b27a1852169222a98a89d70a6e10",
+        "publishStatus": "ready"
       },
       {
         "fileName": "accessibility.html",
@@ -313,12 +310,12 @@
         "appStoreUse": "Accessibility URL",
         "sourcePath": "app-store-assets/site/accessibility.html",
         "publishPath": "/accessibility.html",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html",
         "expectedContentType": "text/html; charset=utf-8",
         "cacheControl": "public, max-age=300",
-        "sourceSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
-        "archiveSha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
-        "publishStatus": "blocked"
+        "sourceSha256": "7276100b45a2461971d876eb05c83b0c954796aa2f332f790e341f9d27ebee77",
+        "archiveSha256": "7276100b45a2461971d876eb05c83b0c954796aa2f332f790e341f9d27ebee77",
+        "publishStatus": "ready"
       },
       {
         "fileName": "third-party-notices.html",
@@ -326,12 +323,12 @@
         "appStoreUse": "Support/legal reference",
         "sourcePath": "app-store-assets/site/third-party-notices.html",
         "publishPath": "/third-party-notices.html",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/third-party-notices.html",
         "expectedContentType": "text/html; charset=utf-8",
         "cacheControl": "public, max-age=300",
-        "sourceSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
-        "archiveSha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
-        "publishStatus": "blocked"
+        "sourceSha256": "3b53cc2b712f7e70082b4edf35962c1cb26000cf497a97a550e92f4a8b84f348",
+        "archiveSha256": "3b53cc2b712f7e70082b4edf35962c1cb26000cf497a97a550e92f4a8b84f348",
+        "publishStatus": "ready"
       },
       {
         "fileName": "robots.txt",
@@ -339,12 +336,12 @@
         "appStoreUse": "Public site crawler metadata",
         "sourcePath": "app-store-assets/site/robots.txt",
         "publishPath": "/robots.txt",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/robots.txt",
         "expectedContentType": "text/plain; charset=utf-8",
         "cacheControl": "public, max-age=3600",
-        "sourceSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
-        "archiveSha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
-        "publishStatus": "blocked"
+        "sourceSha256": "5364e59838bf1cdc9c8dc2b6044fc33bc59d88bdf3635316aa3aa92c406729d9",
+        "archiveSha256": "5364e59838bf1cdc9c8dc2b6044fc33bc59d88bdf3635316aa3aa92c406729d9",
+        "publishStatus": "ready"
       },
       {
         "fileName": "sitemap.xml",
@@ -352,12 +349,12 @@
         "appStoreUse": "Public site crawler metadata",
         "sourcePath": "app-store-assets/site/sitemap.xml",
         "publishPath": "/sitemap.xml",
-        "expectedUrl": "pending-public-site-url",
+        "expectedUrl": "https://sachittumuluri.github.io/cody-cartridge/site/sitemap.xml",
         "expectedContentType": "application/xml; charset=utf-8",
         "cacheControl": "public, max-age=3600",
-        "sourceSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
-        "archiveSha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
-        "publishStatus": "blocked"
+        "sourceSha256": "fc3cbde317c1ef9e8db52c89747b18229efa3d33e19c26156088a0f25f9363af",
+        "archiveSha256": "fc3cbde317c1ef9e8db52c89747b18229efa3d33e19c26156088a0f25f9363af",
+        "publishStatus": "ready"
       },
       {
         "fileName": "_headers",
@@ -478,7 +475,7 @@
       "id": "upload-tooling-strict",
       "label": "App Store upload tooling and MAS package are available",
       "action": "Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict.",
-      "evidence": "strict check failed · 1 failure(s) · 1 warning(s)"
+      "evidence": "strict check failed · 2 failure(s) · 3 warning(s)"
     },
     {
       "categoryId": "submission",

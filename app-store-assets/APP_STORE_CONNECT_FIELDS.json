@@ -19,15 +19,15 @@
     "name": "Cody Cartridge",
     "promotionalText": "Play your own music through a hardware-style deck: a live reactive oscilloscope, analog VU meters, a rotary amp knob, album art, and Takeout metadata.",
     "subtitle": "Local music, signal mapped.",
-    "supportUrl": "TODO_PUBLIC_SITE_URL/support.html",
-    "privacyPolicyUrl": "TODO_PUBLIC_SITE_URL/privacy.html",
-    "marketingUrl": "Optional or TODO_PUBLIC_SITE_URL/index.html"
+    "supportUrl": "https://sachittumuluri.github.io/cody-cartridge/site/support.html",
+    "privacyPolicyUrl": "https://sachittumuluri.github.io/cody-cartridge/site/privacy.html",
+    "marketingUrl": "https://sachittumuluri.github.io/cody-cartridge/site/index.html"
   },
   "review": {
     "notes": "Cody Cartridge is a local-first desktop music player. It plays files selected by the user through the macOS open panel or drag/drop. It can optionally read a user-provided YouTube Music Takeout CSV to match metadata against local files.\n\nThe app does not download music, scrape YouTube Music, access streaming accounts, provide copyrighted media, or transmit the user's library off device. Testers can use the picker flow with local audio files. Store screenshots are captured from `?store-demo=1`, which uses synthetic demo metadata only.\n\nSandbox file access is intentionally read-only and uses user-selected file/folder access plus security-scoped bookmarks for persistent playback access after picker imports.",
     "contact": {
-      "name": "TODO_REVIEW_CONTACT_NAME",
-      "email": "TODO_SUPPORT_EMAIL",
+      "name": "Sachit Tumuluri",
+      "email": "sstumuluri@umass.edu",
       "phone": "TODO_REVIEW_CONTACT_PHONE"
     },
     "demoAccount": "None. The app has no account system.",
@@ -44,10 +44,10 @@
   "testFlight": {
     "appStoreConnectLocation": "TestFlight > Test Information; TestFlight > Internal Testing > Build > What to Test",
     "betaAppDescription": "Cody Cartridge is a local-first macOS music player for testing user-selected audio imports, embedded artwork and metadata display, YouTube Music Takeout CSV matching, visual shelf browsing, and sandboxed local playback.",
-    "feedbackEmail": "TODO_SUPPORT_EMAIL",
+    "feedbackEmail": "sstumuluri@umass.edu",
     "contactInformation": {
-      "name": "TODO_REVIEW_CONTACT_NAME",
-      "email": "TODO_SUPPORT_EMAIL",
+      "name": "Sachit Tumuluri",
+      "email": "sstumuluri@umass.edu",
       "phone": "TODO_REVIEW_CONTACT_PHONE"
     },
     "demoAccount": "None. The app has no account system, server login, subscription, or in-app purchase flow.",
@@ -104,7 +104,7 @@
   },
   "accessibility": {
     "appStoreConnectLocation": "App Accessibility > Accessibility Nutrition Labels",
-    "accessibilityUrl": "Optional or TODO_PUBLIC_SITE_URL/accessibility.html",
+    "accessibilityUrl": "https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html",
     "reducedMotion": "Supported. The app reads the macOS/browser prefers-reduced-motion setting, disables the requestAnimationFrame visualizer loop, avoids smooth scrolling, and collapses CSS animation/transition durations.",
     "voiceOverCandidate": "Candidate support. Core controls use native buttons, range inputs, visible labels, aria-labels, and live status text; verify full VoiceOver task coverage on the signed MAS build before marking Supported.",
     "keyboardCandidate": "Candidate support. Playback, seeking, catalog search, shelf navigation, and import flows are reachable with native controls and app shortcuts; verify on a clean macOS user account before submission.",
@@ -304,12 +304,12 @@
     ]
   },
   "urls": {
-    "supportEmail": "TODO_SUPPORT_EMAIL",
-    "supportUrl": "TODO_PUBLIC_SITE_URL/support.html",
-    "privacyPolicyUrl": "TODO_PUBLIC_SITE_URL/privacy.html",
-    "thirdPartyNoticesUrl": "Optional or TODO_PUBLIC_SITE_URL/third-party-notices.html",
+    "supportEmail": "sstumuluri@umass.edu",
+    "supportUrl": "https://sachittumuluri.github.io/cody-cartridge/site/support.html",
+    "privacyPolicyUrl": "https://sachittumuluri.github.io/cody-cartridge/site/privacy.html",
+    "thirdPartyNoticesUrl": "https://sachittumuluri.github.io/cody-cartridge/site/third-party-notices.html",
     "publicSiteArchivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
-    "publicSiteArchiveSha256": "8c58269676f6995a55c92d48e4ecd5c948af7c7b050e991068288dc929954de7"
+    "publicSiteArchiveSha256": "9c63d310967abe81738e0590402c03956b0f1815606cbfbd4f77299debe77221"
   },
   "screenshotManifest": {
     "filePath": "app-store-assets/screenshots/STORE_SCREENSHOTS.json",
@@ -346,8 +346,8 @@
       "requiredFor": "Mac apps",
       "sourceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
     },
-    "generatedAt": "2026-07-03T00:45:38.014Z",
-    "screenshotCount": 3,
+    "generatedAt": "2026-07-20T19:59:28.571Z",
+    "screenshotCount": 4,
     "source": "store-demo",
     "viewport": {
       "height": 900,
@@ -393,7 +393,7 @@
     "testFlightWhatToTestCharacters": 1317,
     "futureWhatsNewCharacters": 225,
     "futureWhatsNewLimit": 4000,
-    "supportUrlComplete": false,
-    "privacyPolicyUrlComplete": false
+    "supportUrlComplete": true,
+    "privacyPolicyUrlComplete": true
   }
 }
