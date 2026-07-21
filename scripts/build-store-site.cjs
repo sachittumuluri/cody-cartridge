@@ -537,7 +537,7 @@ function buildLandingHtml() {
       <main>
         <section class="hero">
           <h1>Local music, <span>signal mapped</span>.</h1>
-          <p class="tagline">A Mac music player styled as a noir hardware deck. It decodes the files you already own, gives every track a visual body, and hands you a lathe to re-cut them — slowed, widened, driven, reverbed, and pressed back to disk. Nothing leaves your machine.</p>
+          <p class="tagline">A local-first music player for the Mac, styled as a noir hardware deck. It decodes the files you already own, gives every track a visual body, and hands you a lathe to re-cut them — slowed, widened, driven, reverbed, and pressed back to disk. Nothing leaves your machine.</p>
           <div class="cta">
             <span class="store">Mac App Store — submission in progress</span>
             <a class="demo" href="${demoUrl}/">Play the web demo</a>

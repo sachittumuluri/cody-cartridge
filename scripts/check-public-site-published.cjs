@@ -19,7 +19,7 @@ const warnings = [];
 const failures = [];
 
 const pageNeedles = {
-  home: ["local-first music player", "Import Your Files"],
+  home: ["local-first music player", "The Lathe"],
   support: ["Import Audio Files", "Troubleshooting"],
   privacy: ["does not collect personal data", "Local Data The App Uses"],
   accessibility: ["Reduced Motion", "Keyboard"],
