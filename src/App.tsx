@@ -202,6 +202,7 @@ type ToneNodes = {
   wetGain: GainNode;
   reverbDry: GainNode;
   reverbWet: GainNode;
+  benchTrim: GainNode;
 };
 
 // The Lathe hall: a synthesized stereo impulse — exponential-decay noise,
@@ -283,11 +284,30 @@ function buildBenchChain(context: BaseAudioContext, input: AudioNode): { output:
   shaper.oversample = "2x";
   const postTrim = context.createGain();
   postTrim.gain.value = Math.tanh(2.2) / 2.2;
+  // Tape-style emphasis: drive the highs harder into the shaper, then undo
+  // the tilt — warmth without full-band bass fizz.
+  const preEmph = context.createBiquadFilter();
+  preEmph.type = "highshelf";
+  preEmph.frequency.value = 3000;
+  preEmph.gain.value = 4;
+  const deEmph = context.createBiquadFilter();
+  deEmph.type = "highshelf";
+  deEmph.frequency.value = 3000;
+  deEmph.gain.value = -4;
   const wetGain = context.createGain();
   wetGain.gain.value = 0;
   const benchOut = context.createGain();
 
-  // REVERB: the hall sits after the drive so driven signals bloom.
+  // REVERB: the hall sits after the drive so driven signals bloom. The
+  // send is filtered — high-passed so the tail never smears the low end,
+  // low-passed so it darkens like a real room.
+  const sendHPF = context.createBiquadFilter();
+  sendHPF.type = "highpass";
+  sendHPF.frequency.value = 180;
+  sendHPF.Q.value = 0.7;
+  const sendDamp = context.createBiquadFilter();
+  sendDamp.type = "lowpass";
+  sendDamp.frequency.value = 5200;
   const convolver = context.createConvolver();
   convolver.buffer = createHallImpulse(context);
   const reverbDry = context.createGain();
@@ -295,6 +315,9 @@ function buildBenchChain(context: BaseAudioContext, input: AudioNode): { output:
   const reverbWet = context.createGain();
   reverbWet.gain.value = 0;
   const latheOut = context.createGain();
+  // Loudness-matching output trim (see estimateCutGainDb).
+  const benchTrim = context.createGain();
+  benchTrim.gain.value = 1;
 
   // EQ ladder.
   input.connect(subShelf);
@@ -313,7 +336,14 @@ function buildBenchChain(context: BaseAudioContext, input: AudioNode): { output:
   msSplit.connect(msSide, 0);
   msSplit.connect(msInvR, 1);
   msInvR.connect(msSide);
-  msSide.connect(msSideLevel);
+  // Bass-mono: side content below 120Hz is removed, so WIDTH widens the
+  // mids and highs while the lows stay phase-solid.
+  const sideHPF = context.createBiquadFilter();
+  sideHPF.type = "highpass";
+  sideHPF.frequency.value = 120;
+  sideHPF.Q.value = 0.7;
+  msSide.connect(sideHPF);
+  sideHPF.connect(msSideLevel);
   msSideLevel.connect(msMerge, 0, 0);
   msSideLevel.connect(msInvSide);
   msInvSide.connect(msMerge, 0, 1);
@@ -322,21 +352,26 @@ function buildBenchChain(context: BaseAudioContext, input: AudioNode): { output:
   msMerge.connect(driveIn);
   driveIn.connect(dryGain);
   dryGain.connect(benchOut);
-  driveIn.connect(shaper);
+  driveIn.connect(preEmph);
+  preEmph.connect(shaper);
   shaper.connect(postTrim);
-  postTrim.connect(wetGain);
+  postTrim.connect(deEmph);
+  deEmph.connect(wetGain);
   wetGain.connect(benchOut);
 
-  // Reverb wet/dry into the lathe output.
+  // Reverb wet/dry into the lathe output, then the loudness trim.
   benchOut.connect(reverbDry);
   reverbDry.connect(latheOut);
-  benchOut.connect(convolver);
+  benchOut.connect(sendHPF);
+  sendHPF.connect(sendDamp);
+  sendDamp.connect(convolver);
   convolver.connect(reverbWet);
   reverbWet.connect(latheOut);
+  latheOut.connect(benchTrim);
 
   return {
-    output: latheOut,
-    nodes: { subShelf, bassShelf, midPeak, trebleShelf, msSideLevel, dryGain, wetGain, reverbDry, reverbWet }
+    output: benchTrim,
+    nodes: { subShelf, bassShelf, midPeak, trebleShelf, msSideLevel, dryGain, wetGain, reverbDry, reverbWet, benchTrim }
   };
 }
 
@@ -363,7 +398,7 @@ const latheEditions: Array<{ id: string; label: string; tone: ToneSettings }> = 
 
 // Stereo 16-bit PCM at the buffer's true sample rate — the CUT export
 // container. Interleaved, 44-byte canonical header.
-function encodeWavStereo(buffer: AudioBuffer): Uint8Array {
+function encodeWavStereo(buffer: AudioBuffer, dither = false): Uint8Array {
   const length = buffer.length;
   const sampleRate = buffer.sampleRate;
   const dataSize = length * 4;
@@ -393,14 +428,27 @@ function encodeWavStereo(buffer: AudioBuffer): Uint8Array {
   const right = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : left;
   let offset = 44;
 
+  // TPDF dither: ±1 LSB triangular noise decorrelates quantization error —
+  // the difference between "converted" and "mastered" at 16-bit.
+  const lsb = 1 / 32768;
+  const noise = () => (dither ? (Math.random() - Math.random()) * lsb : 0);
+
   for (let index = 0; index < length; index += 1) {
-    view.setInt16(offset, Math.round(Math.max(-1, Math.min(1, left[index])) * 32767), true);
+    view.setInt16(offset, Math.round(Math.max(-1, Math.min(1, left[index] + noise())) * 32767), true);
     offset += 2;
-    view.setInt16(offset, Math.round(Math.max(-1, Math.min(1, right[index])) * 32767), true);
+    view.setInt16(offset, Math.round(Math.max(-1, Math.min(1, right[index] + noise())) * 32767), true);
     offset += 2;
   }
 
   return bytes;
+}
+
+// Analytic loudness estimate of a cut, in dB. Drives the auto-trim that
+// keeps BYPASS an honest A/B: the louder side must not win by volume.
+function estimateCutGainDb(tone: ToneSettings): number {
+  const estimate =
+    tone.sub * 0.25 + tone.bass * 0.3 + tone.mid * 0.25 + tone.treble * 0.2 + tone.drive * 1.5 + tone.reverb * 1.2;
+  return Math.max(-9, Math.min(9, estimate));
 }
 
 function matchEdition(tone: ToneSettings): string | null {
@@ -1899,6 +1947,7 @@ function App() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const ampGainRef = useRef<GainNode | null>(null);
+  const masterLimiterRef = useRef<DynamicsCompressorNode | null>(null);
   const toneShelfRef = useRef<BiquadFilterNode | null>(null);
   // The Lathe: bench nodes + the latest bypass-resolved settings, applied
   // immediately when the graph is (re)built.
@@ -2158,11 +2207,61 @@ function App() {
       bench.nodes.dryGain.gain.value = 1 - effective.drive;
       bench.nodes.reverbWet.gain.value = effective.reverb * 0.9;
       bench.nodes.reverbDry.gain.value = 1 - effective.reverb * 0.3;
-      bench.output.connect(offline.destination);
+      bench.nodes.benchTrim.gain.value = Math.pow(10, -estimateCutGainDb(effective) / 20);
+
+      // The same master safety as live playback, baked into the file.
+      const exportLimiter = offline.createDynamicsCompressor();
+      exportLimiter.threshold.value = -3;
+      exportLimiter.knee.value = 0;
+      exportLimiter.ratio.value = 20;
+      exportLimiter.attack.value = 0.002;
+      exportLimiter.release.value = 0.15;
+      bench.output.connect(exportLimiter);
+      exportLimiter.connect(offline.destination);
       sourceNode.start(0);
 
       const rendered = await offline.startRendering();
-      const wavBytes = encodeWavStereo(rendered);
+
+      // Mastering pass: peak-normalize to -1dBFS (gain-up capped +12dB)
+      // and guard the edges with short fades.
+      let peak = 0;
+
+      for (let channel = 0; channel < rendered.numberOfChannels; channel += 1) {
+        const data = rendered.getChannelData(channel);
+
+        for (let index = 0; index < data.length; index += 1) {
+          const magnitude = Math.abs(data[index]);
+
+          if (magnitude > peak) {
+            peak = magnitude;
+          }
+        }
+      }
+
+      const targetPeak = Math.pow(10, -1 / 20);
+      const normalize = peak > 0 ? Math.min(targetPeak / peak, Math.pow(10, 12 / 20)) : 1;
+      const fadeInSamples = Math.floor(sampleRate * 0.006);
+      const fadeOutSamples = Math.floor(sampleRate * 0.06);
+
+      for (let channel = 0; channel < rendered.numberOfChannels; channel += 1) {
+        const data = rendered.getChannelData(channel);
+
+        for (let index = 0; index < data.length; index += 1) {
+          let gain = normalize;
+
+          if (index < fadeInSamples) {
+            gain *= index / fadeInSamples;
+          }
+
+          if (index >= data.length - fadeOutSamples) {
+            gain *= (data.length - index) / fadeOutSamples;
+          }
+
+          data[index] *= gain;
+        }
+      }
+
+      const wavBytes = encodeWavStereo(rendered, true);
       const editionLabel = matchEdition(effective);
       const suffix = editionLabel && editionLabel !== "STOCK" ? editionLabel : "Cut";
       const base = (track.title || track.fileName || "track").replace(/[\\/:*?"<>|]/g, "_").slice(0, 120);
@@ -2170,7 +2269,21 @@ function App() {
 
       if (window.musicHost?.exportCut) {
         const result = await window.musicHost.exportCut({ suggestedName, bytes: wavBytes.buffer });
-        flashSystemMessage(result?.saved ? `CUT PRESSED · ${suggestedName.toUpperCase()}` : "CUT SHELVED", 1800);
+
+        if (result?.saved && result.filePath && window.musicHost.importAudioPaths) {
+          // PRESS TO SHELF: the finished edit rejoins the archive as a
+          // first-class cartridge — spine, pressing, and all.
+          const imported = await window.musicHost.importAudioPaths([result.filePath]).catch(() => []);
+
+          if (imported?.length) {
+            mergeTracks(enhanceHostTracks(imported));
+            flashSystemMessage(`PRESSED TO SHELF · ${suggestedName.toUpperCase()}`, 2000);
+          } else {
+            flashSystemMessage(`CUT PRESSED · ${suggestedName.toUpperCase()}`, 1800);
+          }
+        } else {
+          flashSystemMessage(result?.saved ? `CUT PRESSED · ${suggestedName.toUpperCase()}` : "CUT SHELVED", 1800);
+        }
       } else {
         const blob = new Blob([wavBytes], { type: "audio/wav" });
         const anchor = document.createElement("a");
@@ -2579,6 +2692,9 @@ function App() {
       // Loudness-sane hall mix: wet rides up faster than dry ducks.
       ramp(nodes.reverbWet.gain, effective.reverb * 0.9);
       ramp(nodes.reverbDry.gain, 1 - effective.reverb * 0.3);
+      // Honest A/B: trim the cut's estimated loudness delta so BYPASS
+      // compares character, not volume. Flat settings estimate to 0dB.
+      ramp(nodes.benchTrim.gain, Math.pow(10, -estimateCutGainDb(effective) / 20));
     }
 
     const audio = audioRef.current;
@@ -2592,6 +2708,7 @@ function App() {
 
     (window as Window & { __codyToneState?: object }).__codyToneState = {
       ...effective,
+      trimDb: -estimateCutGainDb(effective),
       bypassed: benchBypassRef.current
     };
   }
@@ -5531,22 +5648,33 @@ function App() {
       const bench = buildBenchChain(context, toneShelf);
       toneNodesRef.current = bench.nodes;
 
-      // source → toneShelf → [bench incl. reverb] → ampGain → analyser → destination
+      // Master safety: a brickwall-ish limiter after the AMP so no cut can
+      // clip the DAC; every meter taps post-limiter and reads the truth.
+      const masterLimiter = context.createDynamicsCompressor();
+      masterLimiter.threshold.value = -3;
+      masterLimiter.knee.value = 0;
+      masterLimiter.ratio.value = 20;
+      masterLimiter.attack.value = 0.002;
+      masterLimiter.release.value = 0.15;
+      masterLimiterRef.current = masterLimiter;
+
+      // source → toneShelf → [bench incl. reverb] → ampGain → limiter → analyser → destination
       sourceRef.current.connect(toneShelf);
       bench.output.connect(ampGain);
-      ampGain.connect(analyserRef.current);
+      ampGain.connect(masterLimiter);
+      masterLimiter.connect(analyserRef.current);
       analyserRef.current.connect(context.destination);
 
       // First play picks up an archived cut with no audible ramp.
       applyToneSettings(toneApplyRef.current, true);
 
       if (bassFilterRef.current && bassAnalyserRef.current) {
-        ampGain.connect(bassFilterRef.current);
+        masterLimiter.connect(bassFilterRef.current);
         bassFilterRef.current.connect(bassAnalyserRef.current);
       }
 
       if (splitterRef.current && analyserLRef.current && analyserRRef.current) {
-        ampGain.connect(splitterRef.current);
+        masterLimiter.connect(splitterRef.current);
         splitterRef.current.connect(analyserLRef.current, 0);
         splitterRef.current.connect(analyserRRef.current, 1);
       }

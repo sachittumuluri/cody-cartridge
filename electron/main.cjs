@@ -1573,6 +1573,9 @@ async function runShellSmoke(mainWindow) {
           bench.set({ sub: 0, bass: 0, reverb: 0.9 });
           await new Promise((resolve) => setTimeout(resolve, 400));
           const reverbState = (window.__codyToneState || {}).reverb;
+          bench.set({ sub: 12, bass: 12, reverb: 0 });
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          const trimDb = (window.__codyToneState || {}).trimDb;
           bench.flat();
           audio.pause();
           return {
@@ -1581,6 +1584,7 @@ async function runShellSmoke(mainWindow) {
             cutLevel,
             restored,
             reverbState,
+            trimDb,
             bypassFlagTruthful: bypassState.bypassed === true
           };
         })()`
@@ -1602,7 +1606,11 @@ async function runShellSmoke(mainWindow) {
           Math.abs((toneProbe.reverbState ?? 0) - 0.9) < 0.001,
           `Lathe reverb state untruthful: ${JSON.stringify(toneProbe)}`
         );
-        passCount += 4;
+        assertShellSmoke(
+          typeof toneProbe.trimDb === "number" && toneProbe.trimDb < -4,
+          `loudness trim not engaged for a +12dB boost: ${JSON.stringify(toneProbe)}`
+        );
+        passCount += 5;
       }
     }
   }
@@ -1943,11 +1951,17 @@ app.whenReady().then(async () => {
     const result = await dialog.showSaveDialog({
       title: "Press this cut to disk",
       defaultPath: path.join(app.getPath("downloads"), suggested),
+      securityScopedBookmarks: true,
       filters: [{ name: "WAV audio", extensions: ["wav"] }]
     });
 
     if (result.canceled || !result.filePath) {
       return { saved: false };
+    }
+
+    if (result.bookmark) {
+      securityScopedBookmarks.set(path.resolve(result.filePath), result.bookmark);
+      saveSecurityScopedBookmarks();
     }
 
     await fs.writeFile(result.filePath, Buffer.from(bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes));
