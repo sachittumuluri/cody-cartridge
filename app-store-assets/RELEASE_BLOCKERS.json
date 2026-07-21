@@ -6,85 +6,15 @@
     "version": "0.1.0"
   },
   "blockers": [
-    "Public Site And Contact Inputs: CODY_SITE_URL is a real HTTPS URL. Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
-    "Public Site And Contact Inputs: CODY_SUPPORT_EMAIL is real. Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.",
-    "Public Site And Contact Inputs: App Review contact name is real. Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.",
-    "Public Site And Contact Inputs: App Review contact email is real. Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.",
     "Public Site And Contact Inputs: App Review contact phone is real. Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
-    "Public Site And Contact Inputs: Generated App Store fields have HTTPS support/privacy URLs. Run npm run packet:store after real CODY_SITE_URL is available.",
-    "Generated Public Site: Generated public site has no raw placeholder tokens. Set real CODY_* values, then run npm run site:store.",
-    "Generated Public Site: Generated public site has publish-ready contact and origin. Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.",
-    "Generated Public Site: Public site archive has no publish placeholders. Run npm run site:archive after generating the site with real public values.",
     "Signing And MAS Package: MAS signing assets are installed. Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict.",
     "Signing And MAS Package: Signed MAS package boundary passes. Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements.",
     "Submission Gates: Generated public release values are synced. Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.",
     "Submission Gates: App Store upload tooling and MAS package are available. Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict.",
     "Submission Gates: App Store Connect upload credentials are configured. Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict.",
-    "Submission Gates: Public URL reachability gate is ready to run. After publishing the public site, run npm run check:store-urls -- --strict.",
-    "Submission Gates: Published public-site pages match the generated source. After publishing the public site, run npm run check:published-site -- --strict.",
     "Submission Gates: Generated App Store Connect copy has no placeholder contact data. Run npm run packet:store after real public support and App Review contact values are set."
   ],
   "blockerDetails": [
-    {
-      "action": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
-      "categoryId": "public-inputs",
-      "categoryLabel": "Public Site And Contact Inputs",
-      "checkId": "public-site-url",
-      "command": null,
-      "details": [],
-      "evidence": "value is placeholder",
-      "id": "public-inputs:public-site-url",
-      "label": "CODY_SITE_URL is a real HTTPS URL",
-      "order": 1,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.",
-      "categoryId": "public-inputs",
-      "categoryLabel": "Public Site And Contact Inputs",
-      "checkId": "support-email",
-      "command": null,
-      "details": [],
-      "evidence": "value is placeholder",
-      "id": "public-inputs:support-email",
-      "label": "CODY_SUPPORT_EMAIL is real",
-      "order": 2,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.",
-      "categoryId": "public-inputs",
-      "categoryLabel": "Public Site And Contact Inputs",
-      "checkId": "review-contact-name",
-      "command": null,
-      "details": [],
-      "evidence": "value is placeholder",
-      "id": "public-inputs:review-contact-name",
-      "label": "App Review contact name is real",
-      "order": 3,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.",
-      "categoryId": "public-inputs",
-      "categoryLabel": "Public Site And Contact Inputs",
-      "checkId": "review-contact-email",
-      "command": null,
-      "details": [],
-      "evidence": "value is placeholder",
-      "id": "public-inputs:review-contact-email",
-      "label": "App Review contact email is real",
-      "order": 4,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
     {
       "action": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
       "categoryId": "public-inputs",
@@ -95,67 +25,7 @@
       "evidence": "value is placeholder",
       "id": "public-inputs:review-contact-phone",
       "label": "App Review contact phone is real",
-      "order": 5,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Run npm run packet:store after real CODY_SITE_URL is available.",
-      "categoryId": "public-inputs",
-      "categoryLabel": "Public Site And Contact Inputs",
-      "checkId": "generated-fields-public-urls",
-      "command": null,
-      "details": [],
-      "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder",
-      "id": "public-inputs:generated-fields-public-urls",
-      "label": "Generated App Store fields have HTTPS support/privacy URLs",
-      "order": 6,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Set real CODY_* values, then run npm run site:store.",
-      "categoryId": "generated-site",
-      "categoryLabel": "Generated Public Site",
-      "checkId": "site-no-placeholders",
-      "command": null,
-      "details": [],
-      "evidence": "raw placeholder token remains in generated public site",
-      "id": "generated-site:site-no-placeholders",
-      "label": "Generated public site has no raw placeholder tokens",
       "order": 1,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.",
-      "categoryId": "generated-site",
-      "categoryLabel": "Generated Public Site",
-      "checkId": "site-publish-values-ready",
-      "command": null,
-      "details": [],
-      "evidence": "siteUrl=placeholder supportEmail=placeholder",
-      "id": "generated-site:site-publish-values-ready",
-      "label": "Generated public site has publish-ready contact and origin",
-      "order": 2,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "Run npm run site:archive after generating the site with real public values.",
-      "categoryId": "generated-site",
-      "categoryLabel": "Generated Public Site",
-      "checkId": "archive-no-placeholders",
-      "command": null,
-      "details": [],
-      "evidence": "placeholder files: robots.txt, sitemap.xml",
-      "id": "generated-site:archive-no-placeholders",
-      "label": "Public site archive has no publish placeholders",
-      "order": 3,
       "owner": "release-machine",
       "requiresExternalInput": true,
       "status": "blocked"
@@ -167,12 +37,11 @@
       "checkId": "mas-signing-strict",
       "command": "node scripts/check-mas-signing.cjs --strict",
       "details": [
-        "No valid code-signing identities found in the keychain",
         "Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity",
         "Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export",
         "No installed provisioning profiles found"
       ],
-      "evidence": "strict check failed · 4 failure(s) · 0 warning(s)",
+      "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
       "id": "signing-package:mas-signing-strict",
       "label": "MAS signing assets are installed",
       "order": 1,
@@ -204,14 +73,10 @@
       "checkId": "public-release-sync-strict",
       "command": "node scripts/check-public-release-sync.cjs --strict",
       "details": [
-        "CODY_SITE_URL is missing, placeholder, or invalid.",
-        "CODY_SUPPORT_EMAIL is missing, placeholder, or invalid.",
-        "CODY_REVIEW_CONTACT_NAME is missing, placeholder, or invalid.",
-        "CODY_REVIEW_CONTACT_EMAIL is missing, placeholder, or invalid.",
         "CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.",
         "Public release sync skipped until all CODY_* release values are configured."
       ],
-      "evidence": "strict check failed · 6 failure(s) · 0 warning(s)",
+      "evidence": "strict check failed · 2 failure(s) · 0 warning(s)",
       "id": "submission:public-release-sync-strict",
       "label": "Generated public release values are synced",
       "order": 1,
@@ -257,55 +122,16 @@
       "status": "blocked"
     },
     {
-      "action": "After publishing the public site, run npm run check:store-urls -- --strict.",
-      "categoryId": "submission",
-      "categoryLabel": "Submission Gates",
-      "checkId": "support-url-reachable-gate",
-      "command": null,
-      "details": [],
-      "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder",
-      "id": "submission:support-url-reachable-gate",
-      "label": "Public URL reachability gate is ready to run",
-      "order": 4,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
-      "action": "After publishing the public site, run npm run check:published-site -- --strict.",
-      "categoryId": "submission",
-      "categoryLabel": "Submission Gates",
-      "checkId": "published-site-strict",
-      "command": "node scripts/check-public-site-published.cjs --strict",
-      "details": [
-        "Public site publish packet is blocked before live verification",
-        "index.html expected URL is missing, placeholder, or not HTTPS",
-        "support.html expected URL is missing, placeholder, or not HTTPS",
-        "privacy.html expected URL is missing, placeholder, or not HTTPS",
-        "accessibility.html expected URL is missing, placeholder, or not HTTPS",
-        "third-party-notices.html expected URL is missing, placeholder, or not HTTPS",
-        "robots.txt expected URL is missing, placeholder, or not HTTPS",
-        "sitemap.xml expected URL is missing, placeholder, or not HTTPS"
-      ],
-      "evidence": "strict check failed · 8 failure(s) · 0 warning(s)",
-      "id": "submission:published-site-strict",
-      "label": "Published public-site pages match the generated source",
-      "order": 5,
-      "owner": "release-machine",
-      "requiresExternalInput": true,
-      "status": "blocked"
-    },
-    {
       "action": "Run npm run packet:store after real public support and App Review contact values are set.",
       "categoryId": "submission",
       "categoryLabel": "Submission Gates",
       "checkId": "app-store-connect-copy-ready",
       "command": null,
       "details": [],
-      "evidence": "supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder",
+      "evidence": "supportEmail=ready reviewName=ready reviewEmail=ready reviewPhone=placeholder",
       "id": "submission:app-store-connect-copy-ready",
       "label": "Generated App Store Connect copy has no placeholder contact data",
-      "order": 6,
+      "order": 4,
       "owner": "release-machine",
       "requiresExternalInput": true,
       "status": "blocked"
@@ -313,7 +139,7 @@
   ],
   "categories": [
     {
-      "blockerCount": 6,
+      "blockerCount": 1,
       "checks": [
         {
           "action": "Run npm run init:store-env, fill ignored app-store-assets/site.env with real values, keep it chmod 600, or export the CODY_* values in the release shell.",
@@ -325,35 +151,35 @@
         },
         {
           "action": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
-          "evidence": "value is placeholder",
+          "evidence": "value is ready",
           "id": "public-site-url",
           "label": "CODY_SITE_URL is a real HTTPS URL",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.",
-          "evidence": "value is placeholder",
+          "evidence": "value is ready",
           "id": "support-email",
           "label": "CODY_SUPPORT_EMAIL is real",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.",
-          "evidence": "value is placeholder",
+          "evidence": "value is ready",
           "id": "review-contact-name",
           "label": "App Review contact name is real",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.",
-          "evidence": "value is placeholder",
+          "evidence": "value is ready",
           "id": "review-contact-email",
           "label": "App Review contact email is real",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
@@ -365,11 +191,11 @@
         },
         {
           "action": "Run npm run packet:store after real CODY_SITE_URL is available.",
-          "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder",
+          "evidence": "supportUrl=ready privacyPolicyUrl=ready",
           "id": "generated-fields-public-urls",
           "label": "Generated App Store fields have HTTPS support/privacy URLs",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         }
       ],
       "id": "public-inputs",
@@ -377,7 +203,7 @@
       "status": "blocked"
     },
     {
-      "blockerCount": 3,
+      "blockerCount": 0,
       "checks": [
         {
           "action": "Run npm run site:store.",
@@ -389,19 +215,19 @@
         },
         {
           "action": "Set real CODY_* values, then run npm run site:store.",
-          "evidence": "raw placeholder token remains in generated public site",
+          "evidence": "no raw placeholder tokens detected",
           "id": "site-no-placeholders",
           "label": "Generated public site has no raw placeholder tokens",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.",
-          "evidence": "siteUrl=placeholder supportEmail=placeholder",
+          "evidence": "siteUrl=ready supportEmail=ready",
           "id": "site-publish-values-ready",
           "label": "Generated public site has publish-ready contact and origin",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Run npm run site:archive after rebuilding the public site.",
@@ -413,16 +239,16 @@
         },
         {
           "action": "Run npm run site:archive after generating the site with real public values.",
-          "evidence": "placeholder files: robots.txt, sitemap.xml",
+          "evidence": "archive placeholder manifest inspected",
           "id": "archive-no-placeholders",
           "label": "Public site archive has no publish placeholders",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         }
       ],
       "id": "generated-site",
       "label": "Generated Public Site",
-      "status": "blocked"
+      "status": "pass"
     },
     {
       "blockerCount": 2,
@@ -431,12 +257,11 @@
           "action": "Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict.",
           "command": "node scripts/check-mas-signing.cjs --strict",
           "details": [
-            "No valid code-signing identities found in the keychain",
             "Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity",
             "Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export",
             "No installed provisioning profiles found"
           ],
-          "evidence": "strict check failed · 4 failure(s) · 0 warning(s)",
+          "evidence": "strict check failed · 3 failure(s) · 0 warning(s)",
           "id": "mas-signing-strict",
           "label": "MAS signing assets are installed",
           "owner": "release-machine",
@@ -460,7 +285,7 @@
       "status": "blocked"
     },
     {
-      "blockerCount": 6,
+      "blockerCount": 4,
       "checks": [
         {
           "action": "Run npm run export-compliance:store, npm run packet:store, then npm run check:export-compliance.",
@@ -476,14 +301,10 @@
           "action": "Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.",
           "command": "node scripts/check-public-release-sync.cjs --strict",
           "details": [
-            "CODY_SITE_URL is missing, placeholder, or invalid.",
-            "CODY_SUPPORT_EMAIL is missing, placeholder, or invalid.",
-            "CODY_REVIEW_CONTACT_NAME is missing, placeholder, or invalid.",
-            "CODY_REVIEW_CONTACT_EMAIL is missing, placeholder, or invalid.",
             "CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.",
             "Public release sync skipped until all CODY_* release values are configured."
           ],
-          "evidence": "strict check failed · 6 failure(s) · 0 warning(s)",
+          "evidence": "strict check failed · 2 failure(s) · 0 warning(s)",
           "id": "public-release-sync-strict",
           "label": "Generated public release values are synced",
           "owner": "release-machine",
@@ -518,34 +339,25 @@
         },
         {
           "action": "After publishing the public site, run npm run check:store-urls -- --strict.",
-          "evidence": "supportUrl=placeholder privacyPolicyUrl=placeholder",
+          "evidence": "supportUrl=ready privacyPolicyUrl=ready",
           "id": "support-url-reachable-gate",
           "label": "Public URL reachability gate is ready to run",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "After publishing the public site, run npm run check:published-site -- --strict.",
           "command": "node scripts/check-public-site-published.cjs --strict",
-          "details": [
-            "Public site publish packet is blocked before live verification",
-            "index.html expected URL is missing, placeholder, or not HTTPS",
-            "support.html expected URL is missing, placeholder, or not HTTPS",
-            "privacy.html expected URL is missing, placeholder, or not HTTPS",
-            "accessibility.html expected URL is missing, placeholder, or not HTTPS",
-            "third-party-notices.html expected URL is missing, placeholder, or not HTTPS",
-            "robots.txt expected URL is missing, placeholder, or not HTTPS",
-            "sitemap.xml expected URL is missing, placeholder, or not HTTPS"
-          ],
-          "evidence": "strict check failed · 8 failure(s) · 0 warning(s)",
+          "details": [],
+          "evidence": "strict check passed · 0 failure(s) · 0 warning(s)",
           "id": "published-site-strict",
           "label": "Published public-site pages match the generated source",
           "owner": "release-machine",
-          "status": "blocked"
+          "status": "pass"
         },
         {
           "action": "Run npm run packet:store after real public support and App Review contact values are set.",
-          "evidence": "supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder",
+          "evidence": "supportEmail=ready reviewName=ready reviewEmail=ready reviewPhone=placeholder",
           "id": "app-store-connect-copy-ready",
           "label": "Generated App Store Connect copy has no placeholder contact data",
           "owner": "release-machine",
@@ -557,27 +369,17 @@
       "status": "blocked"
     }
   ],
-  "generatedAt": "2026-07-03T00:46:20.614Z",
+  "generatedAt": "2026-07-21T15:53:14.406Z",
   "nextActionQueue": [
     {
-      "blockerCount": 6,
+      "blockerCount": 1,
       "categoryId": "public-inputs",
       "categoryLabel": "Public Site And Contact Inputs",
-      "firstBlockedCheckId": "public-site-url",
-      "firstBlockedCheckLabel": "CODY_SITE_URL is a real HTTPS URL",
-      "nextAction": "Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.",
+      "firstBlockedCheckId": "review-contact-phone",
+      "firstBlockedCheckLabel": "App Review contact phone is real",
+      "nextAction": "Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.",
       "order": 1,
       "recommendedCommand": "npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\" && npm run configure:store-env -- --site-url https://your-public-site.example --support-email \"<support-email>\" --review-name \"<review-contact-name>\" --review-email \"<review-contact-email>\" --review-phone \"<review-contact-phone>\" && npm run public-release:store:node -- --self-test && npm run public-inputs:store && npm run check:store-env && npm run check:release-runtime:node -- --strict"
-    },
-    {
-      "blockerCount": 3,
-      "categoryId": "generated-site",
-      "categoryLabel": "Generated Public Site",
-      "firstBlockedCheckId": "site-no-placeholders",
-      "firstBlockedCheckLabel": "Generated public site has no raw placeholder tokens",
-      "nextAction": "Set real CODY_* values, then run npm run site:store.",
-      "order": 2,
-      "recommendedCommand": "npm run public-release:store -- --self-test && npm run public-release:store -- --dry-run"
     },
     {
       "blockerCount": 2,
@@ -586,26 +388,26 @@
       "firstBlockedCheckId": "mas-signing-strict",
       "firstBlockedCheckLabel": "MAS signing assets are installed",
       "nextAction": "Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict.",
-      "order": 3,
+      "order": 2,
       "recommendedCommand": "npm run signing-assets:store && npm run check:mas-signing -- --strict"
     },
     {
-      "blockerCount": 6,
+      "blockerCount": 4,
       "categoryId": "submission",
       "categoryLabel": "Submission Gates",
       "firstBlockedCheckId": "public-release-sync-strict",
       "firstBlockedCheckLabel": "Generated public release values are synced",
       "nextAction": "Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.",
-      "order": 4,
+      "order": 3,
       "recommendedCommand": "npm run public-release:store -- --self-test && npm run check:public-release-sync -- --strict"
     }
   ],
   "redaction": "Contact values and signing identities are intentionally summarized or redacted.",
   "summary": {
-    "blockedCategoryCount": 4,
-    "blockerCount": 17,
-    "blockerDetailCount": 17,
-    "nextActionCount": 4,
+    "blockedCategoryCount": 3,
+    "blockerCount": 7,
+    "blockerDetailCount": 7,
+    "nextActionCount": 3,
     "readyForStrictPreflight": false
   }
 }

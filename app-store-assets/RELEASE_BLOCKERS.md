@@ -6,90 +6,69 @@ This report intentionally redacts contact values and signing identity details. U
 
 ## Summary
 
-- Generated: 2026-07-03T00:46:20.614Z
+- Generated: 2026-07-21T15:53:14.406Z
 - App: Cody Cartridge
 - Bundle ID: `com.sachittumuluri.codycartridge`
 - Version: 0.1.0
 - Build version: 0.1.0
-- Blockers: 17
+- Blockers: 7
 - Ready for strict preflight: no
 
 ## Blockers
 
-- Public Site And Contact Inputs: CODY_SITE_URL is a real HTTPS URL. Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest.
-- Public Site And Contact Inputs: CODY_SUPPORT_EMAIL is real. Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages.
-- Public Site And Contact Inputs: App Review contact name is real. Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information.
-- Public Site And Contact Inputs: App Review contact email is real. Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information.
 - Public Site And Contact Inputs: App Review contact phone is real. Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information.
-- Public Site And Contact Inputs: Generated App Store fields have HTTPS support/privacy URLs. Run npm run packet:store after real CODY_SITE_URL is available.
-- Generated Public Site: Generated public site has no raw placeholder tokens. Set real CODY_* values, then run npm run site:store.
-- Generated Public Site: Generated public site has publish-ready contact and origin. Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store.
-- Generated Public Site: Public site archive has no publish placeholders. Run npm run site:archive after generating the site with real public values.
 - Signing And MAS Package: MAS signing assets are installed. Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict.
 - Signing And MAS Package: Signed MAS package boundary passes. Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements.
 - Submission Gates: Generated public release values are synced. Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict.
 - Submission Gates: App Store upload tooling and MAS package are available. Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict.
 - Submission Gates: App Store Connect upload credentials are configured. Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict.
-- Submission Gates: Public URL reachability gate is ready to run. After publishing the public site, run npm run check:store-urls -- --strict.
-- Submission Gates: Published public-site pages match the generated source. After publishing the public site, run npm run check:published-site -- --strict.
 - Submission Gates: Generated App Store Connect copy has no placeholder contact data. Run npm run packet:store after real public support and App Review contact values are set.
 
 ## Next Action Queue
 
 | # | Area | Blockers | Recommended command | First next action |
 | --- | --- | --- | --- | --- |
-| 1 | Public Site And Contact Inputs | 6 | `npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email "<support-email>" --review-name "<review-contact-name>" --review-email "<review-contact-email>" --review-phone "<review-contact-phone>" && npm run configure:store-env -- --site-url https://your-public-site.example --support-email "<support-email>" --review-name "<review-contact-name>" --review-email "<review-contact-email>" --review-phone "<review-contact-phone>" && npm run public-release:store:node -- --self-test && npm run public-inputs:store && npm run check:store-env && npm run check:release-runtime:node -- --strict` | Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest. |
-| 2 | Generated Public Site | 3 | `npm run public-release:store -- --self-test && npm run public-release:store -- --dry-run` | Set real CODY_* values, then run npm run site:store. |
-| 3 | Signing And MAS Package | 2 | `npm run signing-assets:store && npm run check:mas-signing -- --strict` | Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict. |
-| 4 | Submission Gates | 6 | `npm run public-release:store -- --self-test && npm run check:public-release-sync -- --strict` | Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict. |
+| 1 | Public Site And Contact Inputs | 1 | `npm run configure:store-env -- --dry-run --site-url https://your-public-site.example --support-email "<support-email>" --review-name "<review-contact-name>" --review-email "<review-contact-email>" --review-phone "<review-contact-phone>" && npm run configure:store-env -- --site-url https://your-public-site.example --support-email "<support-email>" --review-name "<review-contact-name>" --review-email "<review-contact-email>" --review-phone "<review-contact-phone>" && npm run public-release:store:node -- --self-test && npm run public-inputs:store && npm run check:store-env && npm run check:release-runtime:node -- --strict` | Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information. |
+| 2 | Signing And MAS Package | 2 | `npm run signing-assets:store && npm run check:mas-signing -- --strict` | Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict. |
+| 3 | Submission Gates | 4 | `npm run public-release:store -- --self-test && npm run check:public-release-sync -- --strict` | Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict. |
 
 ## Structured Blocker Details
 
 | Area | Check ID | Owner | Evidence | Next action |
 | --- | --- | --- | --- | --- |
-| Public Site And Contact Inputs | public-site-url | release-machine | value is placeholder | Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest. |
-| Public Site And Contact Inputs | support-email | release-machine | value is placeholder | Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages. |
-| Public Site And Contact Inputs | review-contact-name | release-machine | value is placeholder | Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information. |
-| Public Site And Contact Inputs | review-contact-email | release-machine | value is placeholder | Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information. |
 | Public Site And Contact Inputs | review-contact-phone | release-machine | value is placeholder | Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information. |
-| Public Site And Contact Inputs | generated-fields-public-urls | release-machine | supportUrl=placeholder privacyPolicyUrl=placeholder | Run npm run packet:store after real CODY_SITE_URL is available. |
-| Generated Public Site | site-no-placeholders | release-machine | raw placeholder token remains in generated public site | Set real CODY_* values, then run npm run site:store. |
-| Generated Public Site | site-publish-values-ready | release-machine | siteUrl=placeholder supportEmail=placeholder | Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store. |
-| Generated Public Site | archive-no-placeholders | release-machine | placeholder files: robots.txt, sitemap.xml | Run npm run site:archive after generating the site with real public values. |
-| Signing And MAS Package | mas-signing-strict | release-machine | strict check failed · 4 failure(s) · 0 warning(s) | Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict. |
+| Signing And MAS Package | mas-signing-strict | release-machine | strict check failed · 3 failure(s) · 0 warning(s) | Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict. |
 | Signing And MAS Package | mas-package-strict | release-machine | strict check failed · 1 failure(s) · 0 warning(s) | Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements. |
-| Submission Gates | public-release-sync-strict | release-machine | strict check failed · 6 failure(s) · 0 warning(s) | Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict. |
+| Submission Gates | public-release-sync-strict | release-machine | strict check failed · 2 failure(s) · 0 warning(s) | Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict. |
 | Submission Gates | upload-tooling-strict | release-machine | strict check failed · 2 failure(s) · 3 warning(s) | Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict. |
 | Submission Gates | upload-credentials-strict | release-machine | strict check failed · 3 failure(s) · 0 warning(s) | Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict. |
-| Submission Gates | support-url-reachable-gate | release-machine | supportUrl=placeholder privacyPolicyUrl=placeholder | After publishing the public site, run npm run check:store-urls -- --strict. |
-| Submission Gates | published-site-strict | release-machine | strict check failed · 8 failure(s) · 0 warning(s) | After publishing the public site, run npm run check:published-site -- --strict. |
-| Submission Gates | app-store-connect-copy-ready | release-machine | supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder | Run npm run packet:store after real public support and App Review contact values are set. |
+| Submission Gates | app-store-connect-copy-ready | release-machine | supportEmail=ready reviewName=ready reviewEmail=ready reviewPhone=placeholder | Run npm run packet:store after real public support and App Review contact values are set. |
 
 ## Checks
 
 | Area | Status | Check | Evidence | Next action |
 | --- | --- | --- | --- | --- |
 | Public Site And Contact Inputs | pass | Release env source exists | loaded app-store-assets/site.env | Run npm run init:store-env, fill ignored app-store-assets/site.env with real values, keep it chmod 600, or export the CODY_* values in the release shell. |
-| Public Site And Contact Inputs | blocked | CODY_SITE_URL is a real HTTPS URL | value is placeholder | Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest. |
-| Public Site And Contact Inputs | blocked | CODY_SUPPORT_EMAIL is real | value is placeholder | Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages. |
-| Public Site And Contact Inputs | blocked | App Review contact name is real | value is placeholder | Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information. |
-| Public Site And Contact Inputs | blocked | App Review contact email is real | value is placeholder | Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information. |
+| Public Site And Contact Inputs | pass | CODY_SITE_URL is a real HTTPS URL | value is ready | Set CODY_SITE_URL to the final public site origin, then rebuild the site, archive, packet, and manifest. |
+| Public Site And Contact Inputs | pass | CODY_SUPPORT_EMAIL is real | value is ready | Set CODY_SUPPORT_EMAIL to the public support contact that will appear on support/privacy pages. |
+| Public Site And Contact Inputs | pass | App Review contact name is real | value is ready | Set CODY_REVIEW_CONTACT_NAME for App Store Connect App Review contact information. |
+| Public Site And Contact Inputs | pass | App Review contact email is real | value is ready | Set CODY_REVIEW_CONTACT_EMAIL for App Store Connect App Review contact information. |
 | Public Site And Contact Inputs | blocked | App Review contact phone is real | value is placeholder | Set CODY_REVIEW_CONTACT_PHONE for App Store Connect App Review contact information. |
-| Public Site And Contact Inputs | blocked | Generated App Store fields have HTTPS support/privacy URLs | supportUrl=placeholder privacyPolicyUrl=placeholder | Run npm run packet:store after real CODY_SITE_URL is available. |
+| Public Site And Contact Inputs | pass | Generated App Store fields have HTTPS support/privacy URLs | supportUrl=ready privacyPolicyUrl=ready | Run npm run packet:store after real CODY_SITE_URL is available. |
 | Generated Public Site | pass | Generated public site files exist | 10/10 generated files present | Run npm run site:store. |
-| Generated Public Site | blocked | Generated public site has no raw placeholder tokens | raw placeholder token remains in generated public site | Set real CODY_* values, then run npm run site:store. |
-| Generated Public Site | blocked | Generated public site has publish-ready contact and origin | siteUrl=placeholder supportEmail=placeholder | Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store. |
+| Generated Public Site | pass | Generated public site has no raw placeholder tokens | no raw placeholder tokens detected | Set real CODY_* values, then run npm run site:store. |
+| Generated Public Site | pass | Generated public site has publish-ready contact and origin | siteUrl=ready supportEmail=ready | Set real CODY_SITE_URL and CODY_SUPPORT_EMAIL, then run npm run site:store. |
 | Generated Public Site | pass | Public site archive exists | archive exists | Run npm run site:archive after rebuilding the public site. |
-| Generated Public Site | blocked | Public site archive has no publish placeholders | placeholder files: robots.txt, sitemap.xml | Run npm run site:archive after generating the site with real public values. |
-| Signing And MAS Package | blocked | MAS signing assets are installed | strict check failed · 4 failure(s) · 0 warning(s) No valid code-signing identities found in the keychain; Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity; Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export; No installed provisioning profiles found | Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict. |
+| Generated Public Site | pass | Public site archive has no publish placeholders | archive placeholder manifest inspected | Run npm run site:archive after generating the site with real public values. |
+| Signing And MAS Package | blocked | MAS signing assets are installed | strict check failed · 3 failure(s) · 0 warning(s) Missing Apple Distribution, Mac App Distribution, or 3rd Party Mac Developer Application identity; Missing Mac Installer Distribution or 3rd Party Mac Developer Installer identity for final MAS package export; No installed provisioning profiles found | Install Apple Distribution/Mac App Distribution plus Mac Installer Distribution identities and a matching macOS/Mac App Store provisioning profile, then run npm run check:mas-signing -- --strict. |
 | Signing And MAS Package | blocked | Signed MAS package boundary passes | strict check failed · 1 failure(s) · 0 warning(s) MAS app bundle is missing at dist/mas-arm64/Cody Cartridge.app; run npm run dist:mas on the release machine before upload. | Run npm run dist:mas on the signed release machine, then npm run check:mas-package -- --strict to verify the app bundle, signed current-version installer package, signature, embedded provisioning profile, and MAS entitlements. |
 | Submission Gates | pass | Export compliance prep is current | strict check passed · 0 failure(s) · 0 warning(s) | Run npm run export-compliance:store, npm run packet:store, then npm run check:export-compliance. |
-| Submission Gates | blocked | Generated public release values are synced | strict check failed · 6 failure(s) · 0 warning(s) CODY_SITE_URL is missing, placeholder, or invalid.; CODY_SUPPORT_EMAIL is missing, placeholder, or invalid.; CODY_REVIEW_CONTACT_NAME is missing, placeholder, or invalid.; CODY_REVIEW_CONTACT_EMAIL is missing, placeholder, or invalid.; CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.; Public release sync skipped until all CODY_* release values are configured. | Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict. |
+| Submission Gates | blocked | Generated public release values are synced | strict check failed · 2 failure(s) · 0 warning(s) CODY_REVIEW_CONTACT_PHONE is missing, placeholder, or invalid.; Public release sync skipped until all CODY_* release values are configured. | Set real CODY_* values, then run npm run site:store, npm run site:archive, npm run packet:store, npm run review-brief:store, npm run copy-map:store, and npm run check:public-release-sync -- --strict. |
 | Submission Gates | blocked | App Store upload tooling and MAS package are available | strict check failed · 2 failure(s) · 3 warning(s) No Transporter app, altool, or iTMSTransporter upload path is available; No MAS .pkg upload artifact found in dist; run npm run dist:mas on the release machine before upload | Install Transporter from the Mac App Store or full Xcode command-line upload tools, run npm run dist:mas, verify the signed current-version package with npm run check:mas-package -- --strict, then run npm run check:upload-tooling -- --strict. |
 | Submission Gates | blocked | App Store Connect upload credentials are configured | strict check failed · 3 failure(s) · 0 warning(s) App Store Connect API key id env is missing; set ASC_KEY_ID or APP_STORE_CONNECT_KEY_ID; App Store Connect issuer id env is missing; set ASC_ISSUER_ID or APP_STORE_CONNECT_ISSUER_ID; App Store Connect private key path is missing; set ASC_PRIVATE_KEY_PATH or APP_STORE_CONNECT_PRIVATE_KEY_PATH | Run npm run install:asc-key -- --key-id <asc-key-id> --issuer-id <asc-issuer-id> --file /path/to/AuthKey_<key-id>.p8 --dry-run, install the key outside the project if validation passes, export ASC_KEY_ID and ASC_ISSUER_ID, then run npm run check:upload-credentials -- --strict. |
-| Submission Gates | blocked | Public URL reachability gate is ready to run | supportUrl=placeholder privacyPolicyUrl=placeholder | After publishing the public site, run npm run check:store-urls -- --strict. |
-| Submission Gates | blocked | Published public-site pages match the generated source | strict check failed · 8 failure(s) · 0 warning(s) Public site publish packet is blocked before live verification; index.html expected URL is missing, placeholder, or not HTTPS; support.html expected URL is missing, placeholder, or not HTTPS; privacy.html expected URL is missing, placeholder, or not HTTPS; accessibility.html expected URL is missing, placeholder, or not HTTPS; third-party-notices.html expected URL is missing, placeholder, or not HTTPS; robots.txt expected URL is missing, placeholder, or not HTTPS; sitemap.xml expected URL is missing, placeholder, or not HTTPS | After publishing the public site, run npm run check:published-site -- --strict. |
-| Submission Gates | blocked | Generated App Store Connect copy has no placeholder contact data | supportEmail=placeholder reviewName=placeholder reviewEmail=placeholder reviewPhone=placeholder | Run npm run packet:store after real public support and App Review contact values are set. |
+| Submission Gates | pass | Public URL reachability gate is ready to run | supportUrl=ready privacyPolicyUrl=ready | After publishing the public site, run npm run check:store-urls -- --strict. |
+| Submission Gates | pass | Published public-site pages match the generated source | strict check passed · 0 failure(s) · 0 warning(s) | After publishing the public site, run npm run check:published-site -- --strict. |
+| Submission Gates | blocked | Generated App Store Connect copy has no placeholder contact data | supportEmail=ready reviewName=ready reviewEmail=ready reviewPhone=placeholder | Run npm run packet:store after real public support and App Review contact values are set. |
 
 ## Release Commands
 
