@@ -17,8 +17,15 @@ const pages = [
     description: "Cody Cartridge is a local-first music player for macOS.",
     fileName: "index.html",
     nav: "Home",
-    source: "app-store-assets/APP_STORE_LISTING.md",
+    source: "",
     title: "Cody Cartridge"
+  },
+  {
+    description: "App Store listing draft for Cody Cartridge.",
+    fileName: "listing.html",
+    nav: "Listing",
+    source: "app-store-assets/APP_STORE_LISTING.md",
+    title: "App Store Listing"
   },
   {
     description: "Privacy policy for Cody Cartridge.",
@@ -371,15 +378,221 @@ function layout(page, body) {
 `;
 }
 
+const landingShots = [
+  { file: "01-library-1440x900.png", caption: "The archive shelf — every track wears its own signal lane" },
+  { file: "04-lathe-bench-1440x900.png", caption: "The Lathe — per-cartridge tone bench with a real response curve" },
+  { file: "02-takeout-map-1440x900.png", caption: "YouTube Music Takeout mapped against your local files" },
+  { file: "03-missing-files-1440x900.png", caption: "The ghost shelf — missing signals rendered honestly" }
+];
+
+const landingFeatures = [
+  {
+    title: "Every track gets a body",
+    text: "The deck decodes each file once and traces a spectral spine — a 240-column signature with BPM, key, and brightness. It becomes the seek bar, the shelf lanes, and generated pressing artwork."
+  },
+  {
+    title: "Real instrumentation",
+    text: "A live Web Audio graph drives the spectrum bank, twin glass-face VU meters with true ballistics, a groove lattice measuring rhythm tightness, and a machined AMP stage."
+  },
+  {
+    title: "The Lathe",
+    text: "A per-cartridge tone bench: EQ, stereo width, drive, reverb, and true varispeed with one-press EDITIONS (SLOWED+RVB, NIGHTCORE, NEXT ROOM). CUT presses your edit to a mastered WAV — rendered through the exact live chain."
+  },
+  {
+    title: "Takeout, mapped",
+    text: "Drop a YouTube Music Takeout export and the deck fuzzy-matches it against your files, scores confidence, and renders the unmatched remainder as a ghost library."
+  },
+  {
+    title: "A machine, not a list",
+    text: "Play locks the signal into alignment. Pause freezes the trace and shows the song's structure. Skips wind the tape. Interference lives inside the instruments."
+  },
+  {
+    title: "Local by design",
+    text: "No network entitlement, no scraping, no telemetry. Analysis, artwork, matching, and exports all run on-device against files you already own."
+  }
+];
+
+function buildLandingHtml() {
+  const demoUrl = siteUrl.replace(/\/site$/, "") || "https://sachittumuluri.github.io/cody-cartridge";
+  const navigation = pages
+    .map((item) => {
+      const active = item.fileName === "index.html" ? ' aria-current="page"' : "";
+      return `<a${active} href="${item.fileName}">${item.nav}</a>`;
+    })
+    .join("");
+  const shots = landingShots
+    .map(
+      (shot) => `
+        <figure>
+          <img src="shots/${shot.file}" alt="${escapeHtml(shot.caption)}" loading="lazy" width="1440" height="900" />
+          <figcaption>${escapeHtml(shot.caption)}</figcaption>
+        </figure>`
+    )
+    .join("");
+  const features = landingFeatures
+    .map(
+      (feature) => `
+        <article>
+          <h3>${escapeHtml(feature.title)}</h3>
+          <p>${escapeHtml(feature.text)}</p>
+        </article>`
+    )
+    .join("");
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Cody Cartridge — a local-first Mac music player styled as a noir hardware deck. Every track gets a body; The Lathe re-cuts it." />
+    <title>Local Music, Signal Mapped - Cody Cartridge</title>
+    <style>
+      :root {
+        --bg: #08070c;
+        --panel: #0e0d14;
+        --line: rgba(156, 199, 216, 0.18);
+        --text: #efefe7;
+        --muted: rgba(239, 239, 231, 0.66);
+        --accent: #9cc7d8;
+        --ember: #8b111b;
+        --bone: #d6c79b;
+      }
+
+      * { box-sizing: border-box; margin: 0; }
+
+      body {
+        background:
+          repeating-linear-gradient(0deg, transparent 0 46px, rgba(156, 199, 216, 0.03) 46px 47px),
+          var(--bg);
+        color: var(--text);
+        font-family: "Courier New", ui-monospace, monospace;
+        line-height: 1.55;
+      }
+
+      .shell { max-width: 1060px; margin: 0 auto; padding: 26px 22px 60px; }
+
+      header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+
+      .brand { display: flex; align-items: center; gap: 12px; }
+      .brand img { width: 44px; height: 44px; }
+      .eyebrow { display: block; color: var(--accent); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; }
+      .brand strong { font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+      nav { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+      nav a { color: var(--muted); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; }
+      nav a:hover, nav a:focus-visible { color: var(--text); }
+      nav a[aria-current="page"] { color: var(--bone); }
+
+      .hero { padding: 54px 0 34px; text-align: left; }
+      .hero h1 { font-size: clamp(28px, 5vw, 46px); letter-spacing: 0.04em; text-transform: uppercase; text-wrap: balance; }
+      .hero h1 span { color: var(--ember); }
+      .tagline { margin-top: 10px; max-width: 60ch; color: var(--muted); font-size: 16px; }
+
+      .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .cta a, .cta span {
+        display: inline-block; padding: 12px 20px; border: 1px solid var(--line);
+        color: var(--text); font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+        text-transform: uppercase; text-decoration: none;
+      }
+      .cta a.demo { border-color: rgba(214, 199, 155, 0.55); color: var(--bone); }
+      .cta a.demo:hover { background: rgba(214, 199, 155, 0.08); }
+      .cta span.store { color: var(--muted); border-style: dashed; }
+
+      section { margin-top: 46px; }
+      h2 { font-size: 13px; color: var(--accent); letter-spacing: 0.22em; text-transform: uppercase; padding-bottom: 12px; }
+
+      .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+      .features article { padding: 18px; border: 1px solid var(--line); background: var(--panel); }
+      .features h3 { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bone); padding-bottom: 8px; }
+      .features p { color: var(--muted); font-size: 13.5px; }
+
+      .gallery { display: grid; gap: 22px; }
+      .gallery figure { border: 1px solid var(--line); background: var(--panel); padding: 10px; }
+      .gallery img { display: block; width: 100%; height: auto; }
+      .gallery figcaption { padding-top: 9px; color: var(--muted); font-size: 12px; letter-spacing: 0.06em; }
+
+      .posture { border: 1px solid rgba(139, 17, 27, 0.45); background: rgba(139, 17, 27, 0.08); padding: 18px; }
+      .posture p { color: var(--muted); font-size: 13.5px; max-width: 78ch; }
+
+      footer { margin-top: 52px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; }
+
+      @media (max-width: 720px) {
+        header { flex-direction: column; align-items: flex-start; }
+        .hero { padding-top: 34px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <img src="icon.png" alt="" width="44" height="44" />
+          <span>
+            <span class="eyebrow">Cody Noir // Local Index</span>
+            <strong>Cody Cartridge</strong>
+          </span>
+        </div>
+        <nav aria-label="Site">${navigation}</nav>
+      </header>
+      <main>
+        <section class="hero">
+          <h1>Local music, <span>signal mapped</span>.</h1>
+          <p class="tagline">A Mac music player styled as a noir hardware deck. It decodes the files you already own, gives every track a visual body, and hands you a lathe to re-cut them — slowed, widened, driven, reverbed, and pressed back to disk. Nothing leaves your machine.</p>
+          <div class="cta">
+            <span class="store">Mac App Store — submission in progress</span>
+            <a class="demo" href="${demoUrl}/">Play the web demo</a>
+          </div>
+        </section>
+        <section aria-label="Features">
+          <h2>The Deck</h2>
+          <div class="features">${features}</div>
+        </section>
+        <section aria-label="Screenshots">
+          <h2>On The Bench</h2>
+          <div class="gallery">${shots}</div>
+        </section>
+        <section aria-label="Privacy posture">
+          <h2>Posture</h2>
+          <div class="posture">
+            <p>Local-only by design. No network entitlement, no accounts, no telemetry, no scraping — playback, analysis, artwork generation, Takeout matching, and WAV exports all run on-device against files you already own. Play counts and traces live in local storage and never leave the machine.</p>
+          </div>
+        </section>
+      </main>
+      <footer>
+        <span>Copyright © 2026 Sachit Tumuluri</span>
+        <span><a href="support.html" style="color: inherit;">Support</a> · <a href="privacy.html" style="color: inherit;">Privacy</a></span>
+      </footer>
+    </div>
+  </body>
+</html>
+`;
+}
+
 async function main() {
   await fs.rm(outputDir, { force: true, recursive: true });
   await fs.mkdir(outputDir, { recursive: true });
 
   for (const page of pages) {
+    if (!page.source) {
+      continue;
+    }
+
     const sourcePath = path.join(projectRoot, page.source);
     const markdown = await fs.readFile(sourcePath, "utf8");
     const html = layout(page, markdownToHtml(markdown));
     await fs.writeFile(path.join(outputDir, page.fileName), html, "utf8");
+  }
+
+  // Marketing landing: hero, screenshots, features, and the compliance nav.
+  await fs.writeFile(path.join(outputDir, "index.html"), buildLandingHtml(), "utf8");
+  await fs.mkdir(path.join(outputDir, "shots"), { recursive: true });
+  await fs.copyFile(path.join(projectRoot, "build/icon.png"), path.join(outputDir, "icon.png"));
+
+  for (const shot of landingShots) {
+    await fs.copyFile(
+      path.join(projectRoot, "app-store-assets/screenshots", shot.file),
+      path.join(outputDir, "shots", shot.file)
+    );
   }
 
   await fs.writeFile(

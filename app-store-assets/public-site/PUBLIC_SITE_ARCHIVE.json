@@ -1,57 +1,57 @@
 {
-  "generatedAt": "2026-06-20T20:01:09.868Z",
+  "generatedAt": "2026-07-21T15:35:00.263Z",
   "archivePath": "app-store-assets/public-site/cody-cartridge-public-site.zip",
-  "archiveSha256": "8c58269676f6995a55c92d48e4ecd5c948af7c7b050e991068288dc929954de7",
-  "archiveSizeBytes": 69000,
-  "supportEmail": "supportEmail=placeholder",
-  "siteUrl": "siteUrl=placeholder",
+  "archiveSha256": "9c63d310967abe81738e0590402c03956b0f1815606cbfbd4f77299debe77221",
+  "archiveSizeBytes": 69396,
+  "supportEmail": "sstumuluri@umass.edu",
+  "siteUrl": "https://sachittumuluri.github.io/cody-cartridge/site",
   "appStoreUrls": {
-    "supportUrl": "supportUrl=placeholder",
-    "privacyPolicyUrl": "privacyPolicyUrl=placeholder",
-    "accessibilityUrl": "accessibilityUrl=placeholder",
-    "thirdPartyNoticesUrl": "thirdPartyNoticesUrl=placeholder"
+    "supportUrl": "https://sachittumuluri.github.io/cody-cartridge/site/support.html",
+    "privacyPolicyUrl": "https://sachittumuluri.github.io/cody-cartridge/site/privacy.html",
+    "accessibilityUrl": "https://sachittumuluri.github.io/cody-cartridge/site/accessibility.html",
+    "thirdPartyNoticesUrl": "https://sachittumuluri.github.io/cody-cartridge/site/third-party-notices.html"
   },
   "entries": [
     {
       "name": "index.html",
-      "sha256": "0e3b568b9d7e1df53f37c48641c135b244f3df5a75f533dbe90bb68e5752df8b",
-      "sizeBytes": 8884,
+      "sha256": "7e7e453db421111a69be47bebd510b096dc204966da596eda6b7e2c2cffe1f0b",
+      "sizeBytes": 9153,
       "sourcePath": "app-store-assets/site/index.html"
     },
     {
       "name": "privacy.html",
-      "sha256": "eb5634078f8cf8c7bbf8205a0049b2c63f78d630db2d314c86b5342074442992",
-      "sizeBytes": 7003,
+      "sha256": "d16bf5ee8e92dec8d7265cf4587458080401b27a1852169222a98a89d70a6e10",
+      "sizeBytes": 6917,
       "sourcePath": "app-store-assets/site/privacy.html"
     },
     {
       "name": "support.html",
-      "sha256": "eb54a6bc1ee36cd5a0baddc45defe5e9898396168a484dd433f6b53802f7d044",
-      "sizeBytes": 6572,
+      "sha256": "03e2d3586e8d3ad2c8e7d1d59e67c084df292b6b59865cf97f553b46f63566be",
+      "sizeBytes": 6486,
       "sourcePath": "app-store-assets/site/support.html"
     },
     {
       "name": "accessibility.html",
-      "sha256": "021fde13f07e54b3bc13e86e053d942e26cdd9d3b0b2164448e74c9e93f5128e",
-      "sizeBytes": 6329,
+      "sha256": "7276100b45a2461971d876eb05c83b0c954796aa2f332f790e341f9d27ebee77",
+      "sizeBytes": 6243,
       "sourcePath": "app-store-assets/site/accessibility.html"
     },
     {
       "name": "third-party-notices.html",
-      "sha256": "dc7868209b0c2f261b81f40a88aeaba77f44e56d765dcfb7b9ab0af3cac09c9d",
-      "sizeBytes": 36835,
+      "sha256": "3b53cc2b712f7e70082b4edf35962c1cb26000cf497a97a550e92f4a8b84f348",
+      "sizeBytes": 36938,
       "sourcePath": "app-store-assets/site/third-party-notices.html"
     },
     {
       "name": "robots.txt",
-      "sha256": "a2f8be3645c190f24aadd0e6425e791575637bfe5b8e21fbf34d73fe29c8b95a",
-      "sizeBytes": 66,
+      "sha256": "5364e59838bf1cdc9c8dc2b6044fc33bc59d88bdf3635316aa3aa92c406729d9",
+      "sizeBytes": 98,
       "sourcePath": "app-store-assets/site/robots.txt"
     },
     {
       "name": "sitemap.xml",
-      "sha256": "de2ea1a955d6d69fcb348f84477cbe240ecc6622da254c5445035ba42c580bd2",
-      "sizeBytes": 416,
+      "sha256": "fc3cbde317c1ef9e8db52c89747b18229efa3d33e19c26156088a0f25f9363af",
+      "sizeBytes": 666,
       "sourcePath": "app-store-assets/site/sitemap.xml"
     },
     {
@@ -74,11 +74,8 @@
     }
   ],
   "placeholders": {
-    "supportEmail": true,
-    "siteUrl": true,
-    "files": [
-      "robots.txt",
-      "sitemap.xml"
-    ]
+    "supportEmail": false,
+    "siteUrl": false,
+    "files": []
   }
 }

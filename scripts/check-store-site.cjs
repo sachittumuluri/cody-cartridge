@@ -14,9 +14,10 @@ const pages = [
   "privacy.html",
   "support.html",
   "accessibility.html",
-  "third-party-notices.html"
+  "third-party-notices.html",
+  "listing.html"
 ];
-const requiredFiles = [...pages, "robots.txt", "sitemap.xml", "README.txt", "_headers", "vercel.json"];
+const requiredFiles = [...pages, "robots.txt", "sitemap.xml", "README.txt", "_headers", "vercel.json", "icon.png", "shots/01-library-1440x900.png", "shots/02-takeout-map-1440x900.png", "shots/03-missing-files-1440x900.png", "shots/04-lathe-bench-1440x900.png"];
 const passes = [];
 const warnings = [];
 const failures = [];

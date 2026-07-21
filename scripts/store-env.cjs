@@ -90,6 +90,9 @@ function loadStoreEnv(projectRoot) {
 }
 
 function normalizedHttpsOrigin(value) {
+  // Accepts an HTTPS base URL: a bare origin, or an origin plus a stable
+  // path (GitHub Pages project sites always live under a path). Query,
+  // hash, and credentials are still rejected.
   const trimmedValue = String(value ?? "").trim();
 
   if (!trimmedValue || /[\r\n]/.test(trimmedValue)) {
@@ -98,20 +101,13 @@ function normalizedHttpsOrigin(value) {
 
   try {
     const parsed = new URL(trimmedValue);
-    const withoutTrailingSlash = trimmedValue.replace(/\/+$/, "");
 
-    if (
-      parsed.protocol !== "https:" ||
-      parsed.username ||
-      parsed.password ||
-      parsed.search ||
-      parsed.hash ||
-      parsed.origin !== withoutTrailingSlash
-    ) {
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.search || parsed.hash) {
       return null;
     }
 
-    return parsed.origin;
+    const normalizedPath = parsed.pathname.replace(/\/+$/, "");
+    return `${parsed.origin}${normalizedPath}`;
   } catch {
     return null;
   }
